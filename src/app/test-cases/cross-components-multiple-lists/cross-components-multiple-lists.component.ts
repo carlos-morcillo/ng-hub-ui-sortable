@@ -6,8 +6,7 @@ import { ChildComponentComponent } from './child-component/child-component.compo
     selector: 'app-cross-components-multiple-lists',
     templateUrl: './cross-components-multiple-lists.component.html',
     styleUrls: ['./cross-components-multiple-lists.component.css'],
-    standalone: true,
-    imports: [ChildComponentComponent, JsonPipe],
+    imports: [ChildComponentComponent, JsonPipe]
 })
 export class CrossComponentsMultipleListsComponent {
 

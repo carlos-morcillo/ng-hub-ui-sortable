@@ -7,8 +7,7 @@ import { SortablejsDirective } from '../../../../../projects/ngx-sortablejs/src/
     selector: 'app-child-component',
     templateUrl: './child-component.component.html',
     styleUrls: ['./child-component.component.css'],
-    standalone: true,
-    imports: [SortablejsDirective, NgFor],
+    imports: [SortablejsDirective, NgFor]
 })
 export class ChildComponentComponent {
 

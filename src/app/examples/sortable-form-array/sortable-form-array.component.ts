@@ -7,13 +7,12 @@ import { SortablejsDirective } from '../../../../projects/ngx-sortablejs/src/lib
     selector: 'app-sortable-form-array',
     templateUrl: './sortable-form-array.component.html',
     styleUrls: ['./sortable-form-array.component.css'],
-    standalone: true,
     imports: [
         SortablejsDirective,
         NgFor,
         ReactiveFormsModule,
         JsonPipe,
-    ],
+    ]
 })
 export class SortableFormArrayComponent {
 

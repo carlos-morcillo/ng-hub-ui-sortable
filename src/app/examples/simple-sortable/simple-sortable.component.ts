@@ -6,12 +6,11 @@ import { SortablejsDirective } from '../../../../projects/ngx-sortablejs/src/lib
     selector: 'app-simple-sortable',
     templateUrl: './simple-sortable.component.html',
     styleUrls: ['./simple-sortable.component.css'],
-    standalone: true,
     imports: [
         SortablejsDirective,
         NgFor,
         JsonPipe,
-    ],
+    ]
 })
 export class SimpleSortableComponent {
 

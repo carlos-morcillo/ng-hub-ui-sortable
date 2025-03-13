@@ -7,12 +7,11 @@ import { SortablejsDirective } from '../../../../projects/ngx-sortablejs/src/lib
     selector: 'app-multiple-lists',
     templateUrl: './multiple-lists.component.html',
     styleUrls: ['./multiple-lists.component.css'],
-    standalone: true,
     imports: [
         SortablejsDirective,
         NgFor,
         JsonPipe,
-    ],
+    ]
 })
 export class MultipleListsComponent {
 

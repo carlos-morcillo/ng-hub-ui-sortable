@@ -9,8 +9,7 @@ describe('SortablejsDirective', () => {
         <div *ngFor="let item of items">{{item}}</div>
       </div>
     `,
-    standalone: true,
-    imports: [SortablejsModule],
+    imports: [SortablejsModule]
 })
   class TestComponent1 {
     items = [1, 2, 3, 4, 5];

@@ -7,12 +7,11 @@ import { SortablejsDirective } from '../../../../projects/ngx-sortablejs/src/lib
     selector: 'app-sortable-with-options',
     templateUrl: './sortable-with-options.component.html',
     styleUrls: ['./sortable-with-options.component.css'],
-    standalone: true,
     imports: [
         SortablejsDirective,
         NgFor,
         JsonPipe,
-    ],
+    ]
 })
 export class SortableWithOptionsComponent {
 
