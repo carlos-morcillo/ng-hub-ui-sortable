@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [19.0.0-next.0](https://github.com/worktile/ngx-sortablejs/compare/18.0.0...19.0.0-next.0) (2025-03-18)
+
+
+
 # [18.0.0](https://github.com/worktile/ngx-sortablejs/compare/17.0.0...18.0.0) (2024-08-16)
 
 
