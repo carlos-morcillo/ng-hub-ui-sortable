@@ -13,6 +13,7 @@
     "gh-pages": "git reset && cpr dist/ng-hub-ui-sortable-app docs -d  && cpr docs/index.html docs/404.html && git add docs",
     "gh-pages:apply": "yarn run gh-pages && git commit -m 'docs: update github pages' && git push",
     "release": "wpm release --release-branch-format release-v{{version}}",
+    "publish:npm": "npm run build:lib && cd dist/ng-hub-ui-sortable && npm publish --access=public",
     "pub-only": "cd dist/ng-hub-ui-sortable && npm publish --access=public",
     "pub": "wpm publish && npm run pub-only"
   },
