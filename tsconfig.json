@@ -20,11 +20,11 @@
       "dom"
     ],
     "paths": {
-      "ngx-sortablejs": [
-        "./projects/ngx-sortablejs"
+      "ng-hub-ui-sortable": [
+        "./projects/ng-hub-ui-sortable"
       ],
-      "ngx-sortablejs/*": [
-        "./projects/ngx-sortablejs/*"
+      "ng-hub-ui-sortable/*": [
+        "./projects/ng-hub-ui-sortable/*"
       ]
     }
   }

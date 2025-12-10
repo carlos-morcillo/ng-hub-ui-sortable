@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { SortablejsModule } from 'ngx-sortablejs';
+import { SortablejsModule } from 'ng-hub-ui-sortable';
 import { ChildComponentComponent } from './child-component/child-component.component';
 import { CrossComponentsMultipleListsComponent } from './cross-components-multiple-lists.component';
 

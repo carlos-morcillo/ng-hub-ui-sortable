@@ -1,272 +1,424 @@
-# ngx-sortablejs
+# ng-hub-ui-sortable
 
-This package is an Angular 2+ binding for [Sortable.js](https://github.com/RubaXa/Sortable). Supports standard arrays and Angular `FormArray`.
+[![npm version](https://badge.fury.io/js/ng-hub-ui-sortable.svg)](https://badge.fury.io/js/ng-hub-ui-sortable)
 
-Previously known as angular-sortablejs.
+## Part of ng-hub-ui Family
 
-## Demo
+This component is part of the ng-hub-ui ecosystem, which includes:
 
-See the library in action in a [demo](https://sortablejs.github.io/ngx-sortablejs) project (the source is located in `src` directory).
+- [ng-hub-ui-paginable](https://www.npmjs.com/package/ng-hub-ui-paginable)
+- [ng-hub-ui-modal](https://www.npmjs.com/package/ng-hub-ui-modal)
+- [ng-hub-ui-stepper](https://www.npmjs.com/package/ng-hub-ui-stepper)
+- [ng-hub-ui-breadcrumbs](https://www.npmjs.com/package/ng-hub-ui-breadcrumbs)
+- [ng-hub-ui-portal](https://www.npmjs.com/package/ng-hub-ui-portal)
+- [ng-hub-ui-avatar](https://www.npmjs.com/package/ng-hub-ui-avatar)
+- [ng-hub-ui-accordion](https://www.npmjs.com/package/ng-hub-ui-accordion)
+- [ng-hub-ui-board](https://www.npmjs.com/package/ng-hub-ui-board)
 
-Trees are also supported: [tree with fake root element (\*ngFor once, root can also be hidden anyway)](https://stackblitz.com/edit/angular-o1pq84) or [without (\*ngFor 2 times)](https://stackblitz.com/edit/angular-ptu94s).
+## Description
+
+Angular bindings for [SortableJS](https://github.com/SortableJS/Sortable), providing a powerful and flexible directive for creating drag-and-drop sortable lists. This package is a fork of `@worktile/ngx-sortablejs`, keeping the same API while refreshing the branding and metadata to align with the ng-hub-ui family.
+
+## Features
+
+- **Directive-based** - Simple directive API for adding sortable functionality to any container
+- **Array binding** - Automatically syncs drag-and-drop operations with your data array
+- **FormArray support** - Native integration with Angular Reactive Forms FormArray
+- **Full SortableJS API** - Access to all SortableJS options and events
+- **Zone integration** - Events are properly proxied into Angular's zone for predictable change detection
+- **Clone mode** - Support for cloning items with custom clone functions
+- **Multi-list support** - Drag items between multiple connected lists
+- **TypeScript support** - Full type safety with proper typings
 
 ## Installation
 
-```sh
-npm i -S ngx-sortablejs sortablejs
-npm i -D @types/sortablejs
+```bash
+# Install the component and SortableJS
+npm install ng-hub-ui-sortable sortablejs
+
+# Install types for development
+npm install -D @types/sortablejs
 ```
 
-You are configured now. If you use Webpack or Angular CLI go to the usage. If you have SystemJS, that's sad, but you can go to the end of the document to find configuration steps there.
+Or using yarn:
+
+```bash
+yarn add ng-hub-ui-sortable sortablejs
+yarn add -D @types/sortablejs
+```
+
+### Peer Requirements
+
+- Angular `>=18.0.0`
+- SortableJS `>=1.7.0`
+
+## Quick Start
+
+Here's a quick example to get you started with `ng-hub-ui-sortable`.
+
+### 1. Import the module
+
+```typescript
+import { SortablejsModule } from 'ng-hub-ui-sortable';
+
+@NgModule({
+  imports: [
+    SortablejsModule.forRoot({ animation: 150 })
+  ]
+})
+export class AppModule {}
+```
+
+### 2. Create your component
+
+```typescript
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-sortable-demo',
+  templateUrl: './sortable-demo.component.html'
+})
+export class SortableDemoComponent {
+  items = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
+}
+```
+
+### 3. Use in your template
+
+```html
+<div [sortablejs]="items" [sortablejsOptions]="{ animation: 150 }">
+  @for (item of items; track item) {
+    <div class="sortable-item">{{ item }}</div>
+  }
+</div>
+```
 
 ## Usage
 
-First, import `SortablejsModule.forRoot({ /* and here some global settings if needed */ })` into the root module of your application:
+The component can be used in two ways:
+
+### 1. Module Import with Global Options (Recommended)
 
 ```typescript
-imports: [
-  // ...
-  SortablejsModule.forRoot({ animation: 150 }),
-  // ...
-]
+import { NgModule } from '@angular/core';
+import { SortablejsModule } from 'ng-hub-ui-sortable';
+
+@NgModule({
+  imports: [
+    SortablejsModule.forRoot({ animation: 150 })
+  ]
+})
+export class AppModule {}
 ```
 
-Then import `SortablejsModule` into the other angular modules where you want to use it:
+### 2. Standalone Component Import
 
 ```typescript
-imports: [
-  // ...
-  SortablejsModule,
-  // ...
-]
-```
+import { Component } from '@angular/core';
+import { SortablejsModule } from 'ng-hub-ui-sortable';
 
-Then use `sortablejs` property on a container HTML element to tell Angular that this is a sortable container; also pass the `items` array to both `*ngFor` and `[sortablejs]` to register the changes automatically.
+@Component({
+  selector: 'app-sortable-list',
+  standalone: true,
+  imports: [SortablejsModule],
+  template: `
+    <div [sortablejs]="items" [sortablejsOptions]="{ animation: 150 }">
+      @for (item of items; track item) {
+        <div class="sortable-item">{{ item }}</div>
+      }
+    </div>
+  `
+})
+export class SortableListComponent {
+  items = ['Item 1', 'Item 2', 'Item 3'];
+}
+```
 
 ## Directive API
 
-- `sortablejs` - directive, accepts model to be auto-updated (see examples below)
-- `sortablejsContainer` - directive input, CSS selector for the sortable container, string. Mostly required for frameworks that wrap the content into the elements where it is impossible to access the real container element (e.g. @angular/material). Example: `sortablejsContainer=".mat-grid-list"`
-- `sortablejsOptions` - directive input, sortable options to pass in. Please note that in order to change the options later the whole object needs to be recreated, see below
-- `sortablejsInit` - directive output, returns the current Sortable instance. Example: `(sortablejsInit)="sortableInstance = $event"`
+### Inputs
 
-## Simple sortable list
+| Input                    | Type                     | Description                                                                                              |
+|--------------------------|--------------------------|----------------------------------------------------------------------------------------------------------|
+| `sortablejs`             | `any[]` or `FormArray`   | Model binding that stays in sync with drag-and-drop operations                                           |
+| `sortablejsContainer`    | `string`                 | Optional CSS selector for the real sortable container when the host is wrapped by another component      |
+| `sortablejsOptions`      | `Options`                | Native SortableJS options. Provide a new object reference to trigger option updates                      |
+| `sortablejsCloneFunction`| `(item: any) => any`     | Custom clone function for clone mode                                                                     |
+
+### Outputs
+
+| Output           | Type                        | Description                                        |
+|------------------|-----------------------------|----------------------------------------------------|
+| `sortablejsInit` | `EventEmitter<Sortable>`    | Emits the instantiated Sortable instance on init   |
+
+## SortableJS Options
+
+All SortableJS options can be passed via `sortablejsOptions`. They are proxied into Angular's zone to keep change detection predictable.
+
+### Common Options
 
 ```typescript
-import { Component } from '@angular/core';
-
-@Component({
-    selector: 'my-app',
-    template: `
-      <h2>Drag / drop the item</h2>
-      <div [sortablejs]="items">
-        <div *ngFor="let item of items">{{ item }}</div>
-      </div>
-    `
-})
-export class AppComponent {
-   items = [1, 2, 3, 4, 5];
+interface SortablejsOptions {
+  animation?: number;        // Animation speed in ms
+  handle?: string;           // CSS selector for drag handle
+  filter?: string;           // CSS selector for elements to ignore
+  draggable?: string;        // CSS selector for draggable items
+  ghostClass?: string;       // Class for the drop placeholder
+  chosenClass?: string;      // Class for the chosen item
+  dragClass?: string;        // Class for the dragging item
+  group?: string | object;   // Group name for multi-list drag
+  sort?: boolean;            // Enable sorting within list
+  disabled?: boolean;        // Disable the sortable
+  // ... and many more
 }
 ```
 
-### Passing the options
-
-Pass the options with `sortablejsOptions` property.
+### Event Callbacks
 
 ```typescript
-import { Component } from '@angular/core';
-
-@Component({
-    selector: 'my-app',
-    template: `
-      <h2>Drag / drop the item</h2>
-      <div [sortablejs]="items" [sortablejsOptions]="{ animation: 150 }">
-        <div *ngFor="let item of items">{{ item }}</div>
-      </div>
-    `
-})
-export class AppComponent {
-   items = [1, 2, 3, 4, 5];
+{
+  onStart: (event) => { /* Drag started */ },
+  onEnd: (event) => { /* Drag ended */ },
+  onAdd: (event) => { /* Item added from another list */ },
+  onRemove: (event) => { /* Item removed to another list */ },
+  onUpdate: (event) => { /* Item order changed within list */ },
+  onSort: (event) => { /* Any sorting change */ },
+  onChange: (event) => { /* Item moved within or between lists */ },
+  onChoose: (event) => { /* Item chosen */ },
+  onUnchoose: (event) => { /* Item unchosen */ },
+  onFilter: (event) => { /* Filtered element clicked */ },
+  onClone: (event) => { /* Clone created */ }
 }
 ```
 
-### Tracking lists update events
+## Examples
 
-You can use the options' `onUpdate` method to track the changes (see also *Passing the options* section):
+### Simple Sortable List
 
-```ts
-constructor() {
-  this.options = {
-    onUpdate: (event: any) => {
-      this.postChangesToServer();
-    }
+```html
+<ul [sortablejs]="items">
+  @for (item of items; track item) {
+    <li>{{ item }}</li>
+  }
+</ul>
+```
+
+### With Animation and Handle
+
+```html
+<div [sortablejs]="items" [sortablejsOptions]="{ animation: 150, handle: '.drag-handle' }">
+  @for (item of items; track item.id) {
+    <div class="item">
+      <span class="drag-handle">&#9776;</span>
+      {{ item.name }}
+    </div>
+  }
+</div>
+```
+
+### Multiple Connected Lists
+
+```typescript
+@Component({
+  selector: 'app-multi-list',
+  standalone: true,
+  imports: [SortablejsModule],
+  template: `
+    <div class="list" [sortablejs]="list1" [sortablejsOptions]="options">
+      @for (item of list1; track item) {
+        <div>{{ item }}</div>
+      }
+    </div>
+    <div class="list" [sortablejs]="list2" [sortablejsOptions]="options">
+      @for (item of list2; track item) {
+        <div>{{ item }}</div>
+      }
+    </div>
+  `
+})
+export class MultiListComponent {
+  list1 = ['Item 1', 'Item 2', 'Item 3'];
+  list2 = ['Item 4', 'Item 5', 'Item 6'];
+
+  options = {
+    group: 'shared',
+    animation: 150
   };
 }
 ```
 
-If you use FormArray you are able to choose a more elegant solution:
+### With FormArray
 
-```ts
-public items = new FormArray([
-  new FormControl(1),
-  new FormControl(2),
-  new FormControl(3),
-]);
-
-constructor() {
-  this.items.valueChanges.subscribe(() => {
-    this.postChangesToServer(this.items.value);
+```typescript
+@Component({
+  selector: 'app-form-array',
+  standalone: true,
+  imports: [ReactiveFormsModule, SortablejsModule],
+  template: `
+    <form [formGroup]="form">
+      <div [sortablejs]="formArray" [sortablejsOptions]="{ animation: 150 }">
+        @for (control of formArray.controls; track control; let i = $index) {
+          <div>
+            <input [formControlName]="i" />
+          </div>
+        }
+      </div>
+    </form>
+  `
+})
+export class FormArrayComponent {
+  form = new FormGroup({
+    items: new FormArray([
+      new FormControl('Item 1'),
+      new FormControl('Item 2'),
+      new FormControl('Item 3')
+    ])
   });
-}
-```
 
-but note, that here you will be able to take the whole changed array only (no oldIndex / newIndex).
-
-### Updating the options
-
-You can pass a new options object at anytime via the `[sortablejsOptions]` binding and the Angular's change detection will check for the changes from the previous options and will call the low level option setter from [Sortable.js](https://github.com/RubaXa/Sortable) to set the new option values.
-> Note: It will only detect changes when a brand new options object is passed, not deep changes.
-
-### Drag & drop between two lists
-
-The only thing which should be done is assigning the `group` option to the both list. Everything else is handled automatically.
-
-```typescript
-import { Component } from '@angular/core';
-import { SortablejsOptions } from 'ngx-sortablejs';
-
-@Component({
-    selector: 'my-app',
-    template: `
-    <h2>Drag / drop the item</h2>
-    <h3>list 1</h3>
-    <div class="items1" [sortablejs]="items1" [sortablejsOptions]="options">
-      <div *ngFor="let item of items1">{{ item }}</div>
-    </div>
-    <h3>list 2</h3>
-    <div class="items2" [sortablejs]="items2" [sortablejsOptions]="options">
-      <div *ngFor="let item of items2">{{ item }}</div>
-    </div>
-    `
-})
-export class AppComponent {
-   items1 = [1, 2, 3, 4, 5];
-   items2 = ['a', 'b', 'c', 'd', 'e'];
-
-   options: SortablejsOptions = {
-     group: 'test'
-   };
-}
-```
-
-### Drag & drop between two lists: clone mode
-
-The clone mode is similar to the one above (of course the proper Sortablejs settings should be used; see demo). The only important thing is that the `ngx-sortablejs` does clone the HTML element but **does not clone the variable** (or `FormControl` in case of `FormArray` input). By default the variable will be taken as is: a primitive will be copied, an object will be referenced.
-
-If you want to clone the item being sorted in a different manner, you can provide `sortablejsCloneFunction` as a parameter. This function receives an item and should return a clone of that item.
-
-```typescript
-import { Component } from '@angular/core';
-import { SortablejsOptions } from 'ngx-sortablejs';
-
-@Component({
-    selector: 'my-app',
-    template: `
-    <h2>Drag / drop the item</h2>
-    <h3>list 1</h3>
-    <div class="items1" [sortablejs]="items1" [sortablejsOptions]="options" [sortablejsCloneFunction]="myCloneImplementation">
-      <div *ngFor="let item of items1">{{ item }}</div>
-    </div>
-    <h3>list 2</h3>
-    <div class="items2" [sortablejs]="items2" [sortablejsOptions]="options" [sortablejsCloneFunction]="myCloneImplementation">
-      <div *ngFor="let item of items2">{{ item }}</div>
-    </div>
-    `
-})
-export class AppComponent {
-
-  myCloneImplementation = (item) => {
-    return item; // this is what happens if sortablejsCloneFunction is not provided. Add your stuff here
+  get formArray() {
+    return this.form.get('items') as FormArray;
   }
-
 }
 ```
 
-### Bind events inside Angular zone
-
-By default, the boolean parameter **runInsideAngular** is set to **false**.
-This means that the initial binding of all mouse events of the component will be set so that they **will not** trigger Angular's change detection.
-
-If this parameter is set to true, then for large components - with a lot of data bindings - the UI will function in a staggered and lagging way (mainly when dragging items), while every event will trigger the change detection (which might be needed in some special edge cases).
-
-### Configure the options globally
-
-If you want to use the same sortable options across different places of your application you might want to set up global configuration. Add the following to your main module to enable e.g. `animation: 150` everywhere:
+### Clone Mode
 
 ```typescript
-imports: [
-  // ...
-  // any properties and events available on original library work here as well
-  SortablejsModule.forRoot({
-    animation: 150
-  }),
-  // ...
-]
-```
+@Component({
+  selector: 'app-clone',
+  standalone: true,
+  imports: [SortablejsModule],
+  template: `
+    <div [sortablejs]="items"
+         [sortablejsOptions]="cloneOptions"
+         [sortablejsCloneFunction]="cloneItem">
+      @for (item of items; track item.name) {
+        <div>{{ item.name }}</div>
+      }
+    </div>
+  `
+})
+export class CloneComponent {
+  items = [{ name: 'Item 1' }, { name: 'Item 2' }];
 
-This value will be used as a default one, but it can be overwritten by a local `sortablejsOptions` property.
+  cloneOptions = {
+    group: {
+      name: 'clone-group',
+      pull: 'clone',
+      put: false
+    }
+  };
 
-## Angular Material specifics
-
-### Expansion panel
-
-There is a bug with expansion panel which appears because angular material does not really hide the content of panel, but uses `visibility: hidden`. What we need to do is to actually totally hide it from the DOM instead.
-
-Just add this to your **global** styles
-
-```css
-mat-expansion-panel.sortable-drag .mat-expansion-panel-content {
-  display: none;
+  cloneItem = (item: any) => ({ ...item, name: `${item.name} (copy)` });
 }
 ```
 
-and the issue should be resolved.
+### Custom Container
 
-### Ripple effect
+For cases where the directive host is wrapped by another component (e.g., Angular Material):
 
-The elements with ripple effect like `mat-list-item` are affected. The dragging is broken because there is a [div created right under the cursor](https://github.com/angular/material2/blob/master/src/lib/core/ripple/ripple-renderer.ts#L142) and the webkit has no idea what to do with it.
-
-There are two solutions:
-
-1. Disable the ripple effect
-
-```ts
-<a mat-list-item [disableRipple]="true">
+```html
+<mat-list [sortablejs]="items" sortablejsContainer=".mat-list-inner">
+  @for (item of items; track item) {
+    <mat-list-item>{{ item }}</mat-list-item>
+  }
+</mat-list>
 ```
 
-2. Use `handle` property and block propagation of `mousedown` and `touchstart` events on the handler to prevent ripple.
+## Real-world Use Cases
 
-```ts
-<div [sortablejs]="..." [sortablejsOptions]="{ handle: '.handle' }">
-  <a mat-list-item *ngFor="let a of b" [routerLink]="..." routerLinkActive="active">
-    <mat-icon matListIcon
-              class="handle"
-              (mousedown)="$event.stopPropagation()"
-              (touchstart)="$event.stopPropagation()">drag_handle</mat-icon> {{ a }}
-  </a>
-</div>
-```
+The `ng-hub-ui-sortable` component is versatile and can be used in various real-world applications:
 
-## How it works
+- **Task Lists** - Reorder tasks by priority with drag-and-drop
+- **Playlist Managers** - Arrange media items in custom order
+- **Form Builders** - Drag-and-drop form field ordering
+- **Dashboard Widgets** - User-customizable widget layouts
+- **Photo Galleries** - Rearrange images in albums
+- **Menu Editors** - CMS navigation menu ordering
+- **Kanban Boards** - (For advanced boards, see [ng-hub-ui-board](https://www.npmjs.com/package/ng-hub-ui-board))
 
-The model is automatically updated because you pass the `items` as `<div [sortablejs]="items">`. The `items` variable can be either an ordinary JavaScript array or a reactive forms `FormArray`.
+## Troubleshooting
 
-If you won't pass anything, e.g. `<div sortablejs>`, the items won't be automatically updated, thus you should take care of updating the array on your own using standard `Sortable.js` events.
+Here are some common issues and how to resolve them:
 
-Original events `onAdd`, `onRemove`, `onUpdate` are intercepted by the library in order to reflect the sortable changes into the data. If you will add your own event handlers (inside of the options object) they will be called right after the data binding is done. If you don't pass the data, e.g. `<div sortablejs>` the data binding is skipped and only your event handlers will be fired.
+### Drag and drop not working
+- **Check imports**: Ensure `SortablejsModule` is properly imported
+- **Verify binding**: Make sure `[sortablejs]` is bound to an array or FormArray
+- **Check container**: Items must be direct children of the sortable container
 
-Important: the original `onAdd` event happens before the `onRemove` event because the original library makes it like that. We change this behavior and call 'onAdd' after the 'onRemove'. If you want to work with original onAdd event you can use `onAddOriginal` which happens before `onRemove`.
+### Array not updating
+- **Reference check**: SortableJS modifies the array in place; ensure change detection picks it up
+- **Zone issues**: If using `OnPush`, you may need to trigger change detection manually
+
+### Events not firing
+- **Zone proxying**: Events are proxied through Angular's zone automatically
+- **Option reference**: Provide a new object reference to `sortablejsOptions` when updating options
+
+### Multi-list issues
+- **Group name**: Ensure all lists share the same `group` name in options
+- **Module import**: `SortablejsModule` must be imported in both components' modules
+
+### FormArray sync issues
+- **Direct binding**: Bind the FormArray directly, not the parent FormGroup
+- **Control access**: Access controls via `formArray.controls` in your template
+
+If problems persist, open an issue at: https://github.com/carlos-morcillo/ng-hub-ui-sortable/issues
+
+## Scripts
+
+| Command            | Description                                                    |
+|--------------------|----------------------------------------------------------------|
+| `npm run start`    | Run the demo app locally                                       |
+| `npm run build:app`| Production build for GitHub Pages (base href `/ng-hub-ui-sortable/`) |
+| `npm run build:lib`| Build the library package                                      |
+| `npm run test:app` | Run demo app tests                                             |
+| `npm run pub`      | Publish workflow (uses `wpm publish` then `npm publish`)       |
+
+## Contributing
+
+Contributions are welcome! Here's how you can help:
+
+1. Fork the repository
+2. Create your feature branch: `git checkout -b feature/my-new-feature`
+3. Commit your changes: `git commit -am 'Add some feature'`
+4. Push to the branch: `git push origin feature/my-new-feature`
+5. Submit a pull request
+
+## Support the Project
+
+If you find this project helpful and would like to support its development, you can buy me a coffee:
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/carlosmorcillo)
+
+Your support is greatly appreciated and helps maintain and improve this project!
 
 ## License
 
-MIT
+This project is licensed under the **Creative Commons Attribution 4.0 International License (CC BY 4.0)**.
+
+### What this means:
+
+**You can:**
+- Use commercially and non-commercially
+- Modify, adapt, and create derivatives
+- Distribute and redistribute in any format
+- Use in private and public projects
+
+**You must:**
+- Give appropriate credit to the original authors
+- Provide a link to the license
+- Indicate if changes were made
+
+### Example attribution:
+
+```
+Based on ng-hub-ui-sortable by Carlos Morcillo
+Original: https://github.com/carlos-morcillo/ng-hub-ui-sortable
+License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+```
+
+For full license details, see the [LICENSE](LICENSE) file.
+
+---
+
+Made with love by [Carlos Morcillo Fernandez](https://www.carlosmorcillo.com/)

@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { SortablejsModule } from 'ngx-sortablejs';
+import { SortablejsModule } from 'ng-hub-ui-sortable';
 import { AppComponent } from './app.component';
 import { ExamplesModule } from './examples/examples.module';
 import { MultipleListsComponent } from './examples/multiple-lists/multiple-lists.component';

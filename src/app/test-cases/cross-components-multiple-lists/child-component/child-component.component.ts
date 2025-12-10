@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import {Options} from 'sortablejs';
 import { NgFor } from '@angular/common';
-import { SortablejsDirective } from '../../../../../projects/ngx-sortablejs/src/lib/sortablejs.directive';
+import { SortablejsDirective } from 'ng-hub-ui-sortable';
 
 @Component({
     selector: 'app-child-component',

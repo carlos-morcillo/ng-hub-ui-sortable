@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {Options} from 'sortablejs';
 import { NgFor, JsonPipe } from '@angular/common';
-import { SortablejsDirective } from '../../../../projects/ngx-sortablejs/src/lib/sortablejs.directive';
+import { SortablejsDirective } from 'ng-hub-ui-sortable';
 
 @Component({
     selector: 'app-multiple-lists',

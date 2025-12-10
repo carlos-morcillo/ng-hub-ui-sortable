@@ -1,22 +1,39 @@
 {
-  "name": "@worktile/ngx-sortablejs",
+  "name": "ng-hub-ui-sortable",
   "version": "20.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build:app": "ng build --configuration production --base-href /ngx-sortablejs/",
-    "build:lib": "ng build ngx-sortablejs",
-    "test:app": "ng test ngx-sortablejs-app",
+    "build:app": "ng build --configuration production --base-href /ng-hub-ui-sortable/",
+    "build:lib": "ng build ng-hub-ui-sortable",
+    "test:app": "ng test ng-hub-ui-sortable-app",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "gh-pages": "git reset && cpr dist/ngx-sortablejs-app docs -d  && cpr docs/index.html docs/404.html && git add docs",
+    "gh-pages": "git reset && cpr dist/ng-hub-ui-sortable-app docs -d  && cpr docs/index.html docs/404.html && git add docs",
     "gh-pages:apply": "yarn run gh-pages && git commit -m 'docs: update github pages' && git push",
     "release": "wpm release --release-branch-format release-v{{version}}",
-    "pub-only": "cd dist/ngx-sortablejs && npm publish --access=public",
+    "pub-only": "cd dist/ng-hub-ui-sortable && npm publish --access=public",
     "pub": "wpm publish && npm run pub-only"
   },
   "private": false,
+  "description": "Angular bindings for Sortable.js (ng-hub-ui fork of @worktile/ngx-sortablejs)",
+  "author": "Carlos Morcillo Fernández <https://www.carlosmorcillo.com/>",
+  "keywords": [
+    "ng-hub-ui",
+    "sortable",
+    "drag-and-drop",
+    "angular",
+    "sortablejs"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/carlos-morcillo/ng-hub-ui-sortable"
+  },
+  "bugs": {
+    "url": "https://github.com/carlos-morcillo/ng-hub-ui-sortable/issues"
+  },
+  "homepage": "https://github.com/carlos-morcillo/ng-hub-ui-sortable#readme",
   "dependencies": {
     "@angular/animations": "20.2.4",
     "@angular/common": "20.2.4",
