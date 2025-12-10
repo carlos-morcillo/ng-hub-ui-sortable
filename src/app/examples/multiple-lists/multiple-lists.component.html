@@ -3,7 +3,7 @@
 <p class="lead">
   <strong>
     <a href="https://github.com/carlos-morcillo/ng-hub-ui-sortable/tree/master/src/app/examples/multiple-lists"
-      target="_blank">The source code</a>
+    target="_blank">The source code</a>
   </strong>
 </p>
 
@@ -19,13 +19,17 @@ This shows how the <em>sortable</em> lists can be connected together. Pay attent
 <div class="row">
   <div class="col-sm-3">
     <ul class="list-group sortable" [sortablejs]="normalList1" [sortablejsOptions]="normalOptions">
-      <li class="list-group-item" *ngFor="let item of normalList1">Element {{ item }}</li>
+      @for (item of normalList1; track item) {
+        <li class="list-group-item">Element {{ item }}</li>
+      }
     </ul>
   </div>
 
   <div class="col-sm-3">
     <ul class="list-group sortable" [sortablejs]="normalList2" [sortablejsOptions]="normalOptions">
-      <li class="list-group-item" *ngFor="let item of normalList2">Element {{ item }}</li>
+      @for (item of normalList2; track item) {
+        <li class="list-group-item">Element {{ item }}</li>
+      }
     </ul>
   </div>
 </div>
@@ -48,13 +52,17 @@ This shows how the <em>sortable</em> lists can be connected together. Pay attent
 <div class="row">
   <div class="col-sm-3">
     <ul class="list-group sortable" [sortablejs]="cloneList1" [sortablejsOptions]="clone1Options">
-      <li class="list-group-item" *ngFor="let item of cloneList1">Element {{ item }}</li>
+      @for (item of cloneList1; track item) {
+        <li class="list-group-item">Element {{ item }}</li>
+      }
     </ul>
   </div>
 
   <div class="col-sm-3">
     <ul class="list-group sortable" [sortablejs]="cloneList2" [sortablejsOptions]="clone2Options">
-      <li class="list-group-item" *ngFor="let item of cloneList2">Element {{ item }}</li>
+      @for (item of cloneList2; track item) {
+        <li class="list-group-item">Element {{ item }}</li>
+      }
     </ul>
   </div>
 </div>
@@ -83,28 +91,36 @@ This shows how the <em>sortable</em> lists can be connected together. Pay attent
   <div class="col-sm-3">
     <strong>1. This list cannot accept items</strong>
     <ul class="mt-2 list-group sortable" [sortablejs]="list1" [sortablejsOptions]="list1Options">
-      <li class="list-group-item" *ngFor="let item of list1">Element {{ item }}</li>
+      @for (item of list1; track item) {
+        <li class="list-group-item">Element {{ item }}</li>
+      }
     </ul>
   </div>
 
   <div class="col-sm-3">
     <strong>2. This is a <em>normal</em> list</strong>
     <ul class="mt-2 list-group sortable" [sortablejs]="list2" [sortablejsOptions]="list2Options">
-      <li class="list-group-item" *ngFor="let item of list2">Element {{ item }}</li>
+      @for (item of list2; track item) {
+        <li class="list-group-item">Element {{ item }}</li>
+      }
     </ul>
   </div>
 
   <div class="col-sm-3">
     <strong>3. This list clones its children</strong>
     <ul class="mt-2 list-group sortable" [sortablejs]="list3" [sortablejsOptions]="list3Options">
-      <li class="list-group-item" *ngFor="let item of list3">Element {{ item }}</li>
+      @for (item of list3; track item) {
+        <li class="list-group-item">Element {{ item }}</li>
+      }
     </ul>
   </div>
 
   <div class="col-sm-3">
     <strong>4. Only #1 can put here</strong>
     <ul class="mt-2 list-group sortable" [sortablejs]="list4" [sortablejsOptions]="list4Options">
-      <li class="list-group-item" *ngFor="let item of list4">Element {{ item }}</li>
+      @for (item of list4; track item) {
+        <li class="list-group-item">Element {{ item }}</li>
+      }
     </ul>
   </div>
 </div>

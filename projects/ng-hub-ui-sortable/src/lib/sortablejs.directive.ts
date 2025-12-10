@@ -1,198 +1,428 @@
 import {
   Directive,
   ElementRef,
-  EventEmitter,
   Inject,
-  Input,
   NgZone,
   OnChanges,
   OnDestroy,
   OnInit,
   Optional,
-  Output,
   Renderer2,
   SimpleChange,
+  input,
+  output
 } from '@angular/core';
-import Sortable, {Options} from 'sortablejs';
-import {GLOBALS} from './globals';
-import {SortablejsBindings} from './sortablejs-bindings';
-import {SortablejsService} from './sortablejs.service';
+import Sortable, { MoveEvent, Options, SortableEvent } from 'sortablejs';
+import { GLOBALS } from './globals';
+import { SortablejsBindings } from './sortablejs-bindings';
+import { SortablejsService } from './sortablejs.service';
 
 export type SortableData = any | any[];
 
 const getIndexesFromEvent = (event: SortableEvent) => {
-  if (event.hasOwnProperty('newDraggableIndex') && event.hasOwnProperty('oldDraggableIndex')) {
-    return {
-      new: event.newDraggableIndex,
-      old: event.oldDraggableIndex,
-    };
-  } else {
-    return {
-      new: event.newIndex,
-      old: event.oldIndex,
-    };
-  }
+	if (
+		event.hasOwnProperty('newDraggableIndex') &&
+		event.hasOwnProperty('oldDraggableIndex')
+	) {
+		return {
+			new: event.newDraggableIndex,
+			old: event.oldDraggableIndex
+		};
+	} else {
+		return {
+			new: event.newIndex,
+			old: event.oldIndex
+		};
+	}
 };
 
 @Directive({
-    selector: '[sortablejs]',
-    standalone: true,
+	selector: '[sortablejs]',
+	standalone: true
 })
 export class SortablejsDirective implements OnInit, OnChanges, OnDestroy {
+	readonly sortablejs = input<SortableData>(undefined); // array or a FormArray
 
-  @Input()
-  sortablejs: SortableData; // array or a FormArray
+	readonly sortablejsContainer = input<string>(undefined);
 
-  @Input()
-  sortablejsContainer: string;
+	readonly sortablejsOptions = input<Options>(undefined);
 
-  @Input()
-  sortablejsOptions: Options;
+	readonly group = input<Options['group']>(undefined);
+	readonly sort = input<Options['sort']>(undefined);
+	readonly delay = input<Options['delay']>(undefined);
+	readonly disabled = input<Options['disabled']>(undefined);
+	readonly draggable = input<Options['draggable']>(undefined);
+	readonly handle = input<Options['handle']>(undefined);
+	readonly animation = input<Options['animation']>(undefined);
+	readonly ghostClass = input<Options['ghostClass']>(undefined);
+	readonly chosenClass = input<Options['chosenClass']>(undefined);
+	readonly dragClass = input<Options['dragClass']>(undefined);
+	readonly fallbackOnBody = input<Options['fallbackOnBody']>(undefined);
+	readonly fallbackTolerance = input<Options['fallbackTolerance']>(undefined);
+	readonly fallbackClass = input<Options['fallbackClass']>(undefined);
+	readonly fallbackOffset = input<Options['fallbackOffset']>(undefined);
+	readonly forceFallback = input<Options['forceFallback']>(undefined);
+	readonly filter = input<Options['filter']>(undefined);
+	readonly preventOnFilter = input<Options['preventOnFilter']>(undefined);
+	readonly direction = input<Options['direction']>(undefined);
+	readonly swapThreshold = input<Options['swapThreshold']>(undefined);
+	readonly invertSwap = input<Options['invertSwap']>(undefined);
+	readonly invertedSwapThreshold =
+		input<Options['invertedSwapThreshold']>(undefined);
+	readonly removeCloneOnHide = input<Options['removeCloneOnHide']>(undefined);
+	readonly ignore = input<Options['ignore']>(undefined);
+	readonly touchStartThreshold = input<Options['touchStartThreshold']>(undefined);
+	readonly emptyInsertThreshold = input<Options['emptyInsertThreshold']>(undefined);
+	readonly dropBubble = input<Options['dropBubble']>(undefined);
+	readonly dragoverBubble = input<Options['dragoverBubble']>(undefined);
+	readonly dataIdAttr = input<Options['dataIdAttr']>(undefined);
+	readonly delayOnTouchOnly = input<Options['delayOnTouchOnly']>(undefined);
+	readonly easing = input<Options['easing']>(undefined);
+	readonly setData = input<Options['setData']>(undefined);
+	readonly store = input<Options['store']>(undefined);
 
-  @Input()
-  sortablejsCloneFunction: (item: any) => any;
+	readonly cloneFunction = input<(item: any) => any>(undefined);
 
-  private sortableInstance: any;
+	private readonly individualOptionInputs: ReadonlyArray<keyof Options> = [
+		'group',
+		'sort',
+		'delay',
+		'disabled',
+		'draggable',
+		'handle',
+		'animation',
+		'ghostClass',
+		'chosenClass',
+		'dragClass',
+		'fallbackOnBody',
+		'fallbackTolerance',
+		'fallbackClass',
+		'fallbackOffset',
+		'forceFallback',
+		'filter',
+		'preventOnFilter',
+		'direction',
+		'swapThreshold',
+		'invertSwap',
+		'invertedSwapThreshold',
+		'removeCloneOnHide',
+		'ignore',
+		'touchStartThreshold',
+		'emptyInsertThreshold',
+		'dropBubble',
+		'dragoverBubble',
+		'dataIdAttr',
+		'delayOnTouchOnly',
+		'easing',
+		'setData',
+		'store'
+	];
 
-  @Output() sortablejsInit = new EventEmitter();
+	private sortableInstance: any;
 
-  constructor(
-    @Optional() @Inject(GLOBALS) private globalConfig: Options,
-    private service: SortablejsService,
-    private element: ElementRef,
-    private zone: NgZone,
-    private renderer: Renderer2,
-  ) {
-  }
+	readonly sortablejsInit = output();
+	readonly sortablejsStart = output<SortableEvent>();
+	readonly sortablejsEnd = output<SortableEvent>();
+	readonly sortablejsAdd = output<SortableEvent>();
+	readonly sortablejsUpdate = output<SortableEvent>();
+	readonly sortablejsSortEvent = output<SortableEvent>();
+	readonly sortablejsRemove = output<SortableEvent>();
+	readonly sortablejsFilterEvent = output<SortableEvent>();
+	readonly sortablejsChange = output<SortableEvent>();
+	readonly sortablejsChoose = output<SortableEvent>();
+	readonly sortablejsUnchoose = output<SortableEvent>();
+	readonly sortablejsClone = output<SortableEvent>();
+	readonly sortablejsMove = output<{
+    event: MoveEvent;
+    originalEvent: Event;
+}>();
 
-  ngOnInit() {
-    if (Sortable && Sortable.create) { // Sortable does not exist in angular universal (SSR)
-      this.create();
-    }
-  }
+	constructor(
+		@Optional() @Inject(GLOBALS) private globalConfig: Options,
+		private service: SortablejsService,
+		private element: ElementRef,
+		private zone: NgZone,
+		private renderer: Renderer2
+	) {}
 
-  ngOnChanges(changes: { [prop in keyof SortablejsDirective]: SimpleChange }) {
-    const optionsChange: SimpleChange = changes.sortablejsOptions;
+	ngOnInit() {
+		if (Sortable && Sortable.create) {
+			// Sortable does not exist in angular universal (SSR)
+			this.create();
+		}
+	}
 
-    if (optionsChange && !optionsChange.isFirstChange()) {
-      const previousOptions: Options = optionsChange.previousValue;
-      const currentOptions: Options = optionsChange.currentValue;
+	ngOnChanges(changes: { [prop in keyof SortablejsDirective]: SimpleChange }) {
+		const optionsChange: SimpleChange = changes.sortablejsOptions;
 
-      Object.keys(currentOptions).forEach(optionName => {
-        if (currentOptions[optionName] !== previousOptions[optionName]) {
-          // use low-level option setter
-          this.sortableInstance.option(optionName, this.options[optionName]);
-        }
-      });
-    }
-  }
+		if (optionsChange && !optionsChange.isFirstChange()) {
+			const previousOptions: Options = optionsChange.previousValue || {};
+			const currentOptions: Options = optionsChange.currentValue || {};
 
-  ngOnDestroy() {
-    if (this.sortableInstance) {
-      this.sortableInstance.destroy();
-    }
-  }
+			Object.keys(currentOptions).forEach((optionName) => {
+				if (currentOptions[optionName] !== previousOptions[optionName]) {
+					// use low-level option setter
+					this.sortableInstance?.option(
+						optionName,
+						this.options[optionName]
+					);
+				}
+			});
+		}
 
-  private create() {
-    const container = this.sortablejsContainer ? this.element.nativeElement.querySelector(this.sortablejsContainer) : this.element.nativeElement;
+		this.applyIndividualOptionChanges(changes);
+	}
 
-    setTimeout(() => {
-      this.sortableInstance = Sortable.create(container, this.options);
-      this.sortablejsInit.emit(this.sortableInstance);
-    }, 0);
-  }
+	ngOnDestroy() {
+		if (this.sortableInstance) {
+			this.sortableInstance.destroy();
+		}
+	}
 
-  private getBindings(): SortablejsBindings {
-    if (!this.sortablejs) {
-      return new SortablejsBindings([]);
-    } else if (this.sortablejs instanceof SortablejsBindings) {
-      return this.sortablejs;
-    } else {
-      return new SortablejsBindings([this.sortablejs]);
-    }
-  }
+	private create() {
+		const sortablejsContainer = this.sortablejsContainer();
+		const container = sortablejsContainer
+			? this.element.nativeElement.querySelector(sortablejsContainer)
+			: this.element.nativeElement;
 
-  private get options() {
-    return {...this.optionsWithoutEvents, ...this.overridenOptions};
-  }
+		setTimeout(() => {
+			this.sortableInstance = Sortable.create(container, this.options);
+			this.sortablejsInit.emit(this.sortableInstance);
+		}, 0);
+	}
 
-  private get optionsWithoutEvents() {
-    return {...(this.globalConfig || {}), ...(this.sortablejsOptions || {})};
-  }
+	private getBindings(): SortablejsBindings {
+		const sortablejs = this.sortablejs();
+		if (!sortablejs) {
+			return new SortablejsBindings([]);
+		} else if (sortablejs instanceof SortablejsBindings) {
+			return sortablejs;
+		} else {
+			return new SortablejsBindings([sortablejs]);
+		}
+	}
 
-  private proxyEvent(eventName: string, ...params: any[]) {
-    this.zone.run(() => { // re-entering zone, see https://github.com/SortableJS/angular-sortablejs/issues/110#issuecomment-408874600
-      if (this.optionsWithoutEvents && this.optionsWithoutEvents[eventName]) {
-        this.optionsWithoutEvents[eventName](...params);
-      }
-    });
-  }
+	private get options() {
+		return { ...this.optionsWithoutEvents, ...this.overridenOptions };
+	}
 
-  private get isCloning() {
-    return this.sortableInstance.options.group.checkPull(this.sortableInstance, this.sortableInstance) === 'clone';
-  }
+	private get optionsWithoutEvents() {
+		return {
+			...(this.globalConfig || {}),
+			...(this.sortablejsOptions() || {}),
+			...this.getIndividualOptions()
+		};
+	}
 
-  private clone<T>(item: T): T {
-    // by default pass the item through, no cloning performed
-    return (this.sortablejsCloneFunction || (subitem => subitem))(item);
-  }
+	private proxyEvent(
+		eventName:
+			| 'onAdd'
+			| 'onAddOriginal'
+			| 'onRemove'
+			| 'onUpdate'
+			| 'onStart'
+			| 'onEnd'
+			| 'onSort'
+			| 'onFilter'
+			| 'onChange'
+			| 'onChoose'
+			| 'onUnchoose'
+			| 'onClone'
+			| 'onMove',
+		...params: any[]
+	) {
+		// re-entering zone, see https://github.com/SortableJS/angular-sortablejs/issues/110#issuecomment-408874600
+		return this.zone.run(() => {
+			const options = this.optionsWithoutEvents || {};
+			const handler = options[eventName] as (...args: any[]) => any;
+			const handlerResult = handler ? handler(...params) : undefined;
 
-  private get overridenOptions(): Options {
-    // always intercept standard events but act only in case items are set (bindingEnabled)
-    // allows to forget about tracking this.items changes
-    return {
-      onAdd: (event: SortableEvent) => {
-        this.service.transfer = (items: any[]) => {
-          this.getBindings().injectIntoEvery(event.newIndex, items);
-          this.proxyEvent('onAdd', event);
-        };
+			this.emitOutputs(eventName, params);
 
-        this.proxyEvent('onAddOriginal', event);
-      },
-      onRemove: (event: SortableEvent) => {
-        const bindings = this.getBindings();
+			return handlerResult;
+		});
+	}
 
-        if (bindings.provided) {
-          if (this.isCloning) {
-            this.service.transfer(bindings.getFromEvery(event.oldIndex).map(item => this.clone(item)));
+	private emitOutputs(
+		eventName:
+			| 'onAdd'
+			| 'onAddOriginal'
+			| 'onRemove'
+			| 'onUpdate'
+			| 'onStart'
+			| 'onEnd'
+			| 'onSort'
+			| 'onFilter'
+			| 'onChange'
+			| 'onChoose'
+			| 'onUnchoose'
+			| 'onClone'
+			| 'onMove',
+		params: any[]
+	) {
+		switch (eventName) {
+			case 'onStart':
+				this.sortablejsStart.emit(params[0]);
+				break;
+			case 'onEnd':
+				this.sortablejsEnd.emit(params[0]);
+				break;
+			case 'onAdd':
+				this.sortablejsAdd.emit(params[0]);
+				break;
+			case 'onRemove':
+				this.sortablejsRemove.emit(params[0]);
+				break;
+			case 'onUpdate':
+				this.sortablejsUpdate.emit(params[0]);
+				break;
+			case 'onSort':
+				this.sortablejsSortEvent.emit(params[0]);
+				break;
+			case 'onFilter':
+				this.sortablejsFilterEvent.emit(params[0]);
+				break;
+			case 'onChange':
+				this.sortablejsChange.emit(params[0]);
+				break;
+			case 'onChoose':
+				this.sortablejsChoose.emit(params[0]);
+				break;
+			case 'onUnchoose':
+				this.sortablejsUnchoose.emit(params[0]);
+				break;
+			case 'onClone':
+				this.sortablejsClone.emit(params[0]);
+				break;
+			case 'onMove':
+				this.sortablejsMove.emit({
+					event: params[0],
+					originalEvent: params[1]
+				});
+				break;
+		}
+	}
 
-            // great thanks to https://github.com/tauu
-            // event.item is the original item from the source list which is moved to the target list
-            // event.clone is a clone of the original item and will be added to source list
-            // If bindings are provided, adding the item dom element to the target list causes artifacts
-            // as it interferes with the rendering performed by the angular template.
-            // Therefore we remove it immediately and also move the original item back to the source list.
-            // (event handler may be attached to the original item and not its clone, therefore keeping
-            // the original dom node, circumvents side effects )
-            this.renderer.removeChild(event.item.parentNode, event.item);
-            this.renderer.insertBefore(event.clone.parentNode, event.item, event.clone);
-            this.renderer.removeChild(event.clone.parentNode, event.clone);
-          } else {
-            this.service.transfer(bindings.extractFromEvery(event.oldIndex));
-          }
+	private get isCloning() {
+		return (
+			this.sortableInstance.options.group.checkPull(
+				this.sortableInstance,
+				this.sortableInstance
+			) === 'clone'
+		);
+	}
 
-          this.service.transfer = null;
-        }
+	private clone<T>(item: T): T {
+		// by default pass the item through, no cloning performed
+		return (this.cloneFunction() || ((subitem) => subitem))(item);
+	}
 
-        this.proxyEvent('onRemove', event);
-      },
-      onUpdate: (event: SortableEvent) => {
-        const bindings = this.getBindings();
-        const indexes = getIndexesFromEvent(event);
+	private getIndividualOptions(): Options {
+		return this.individualOptionInputs.reduce((options, optionName) => {
+			const optionValue = (this as any)[optionName]();
 
-        bindings.injectIntoEvery(indexes.new, bindings.extractFromEvery(indexes.old));
-        this.proxyEvent('onUpdate', event);
-      },
-    };
-  }
+			if (optionValue !== undefined) {
+				(options as any)[optionName] = optionValue;
+			}
 
-}
+			return options;
+		}, {} as Options);
+	}
 
-interface SortableEvent {
-  oldIndex: number;
-  newIndex: number;
-  oldDraggableIndex?: number;
-  newDraggableIndex?: number;
-  item: HTMLElement;
-  clone: HTMLElement;
+	private applyIndividualOptionChanges(
+		changes: { [prop in keyof SortablejsDirective]: SimpleChange }
+	) {
+		if (!this.sortableInstance) {
+			return;
+		}
+
+		this.individualOptionInputs.forEach((optionName) => {
+			const change = changes[optionName as keyof SortablejsDirective];
+			if (change && !change.isFirstChange()) {
+				this.sortableInstance.option(
+					optionName,
+					(this as any)[optionName]()
+				);
+			}
+		});
+	}
+
+	private get overridenOptions(): Options {
+		// always intercept standard events but act only in case items are set (bindingEnabled)
+		// allows to forget about tracking this.items changes
+		return {
+			onAdd: (event: SortableEvent) => {
+				this.service.transfer = (items: any[]) => {
+					this.getBindings().injectIntoEvery(event.newIndex, items);
+					this.proxyEvent('onAdd', event);
+				};
+
+				this.proxyEvent('onAddOriginal', event);
+			},
+			onRemove: (event: SortableEvent) => {
+				const bindings = this.getBindings();
+
+				if (bindings.provided) {
+					if (this.isCloning) {
+						this.service.transfer(
+							bindings
+								.getFromEvery(event.oldIndex)
+								.map((item) => this.clone(item))
+						);
+
+						// great thanks to https://github.com/tauu
+						// event.item is the original item from the source list which is moved to the target list
+						// event.clone is a clone of the original item and will be added to source list
+						// If bindings are provided, adding the item dom element to the target list causes artifacts
+						// as it interferes with the rendering performed by the angular template.
+						// Therefore we remove it immediately and also move the original item back to the source list.
+						// (event handler may be attached to the original item and not its clone, therefore keeping
+						// the original dom node, circumvents side effects )
+						this.renderer.removeChild(event.item.parentNode, event.item);
+						this.renderer.insertBefore(
+							event.clone.parentNode,
+							event.item,
+							event.clone
+						);
+						this.renderer.removeChild(
+							event.clone.parentNode,
+							event.clone
+						);
+					} else {
+						this.service.transfer(
+							bindings.extractFromEvery(event.oldIndex)
+						);
+					}
+
+					this.service.transfer = null;
+				}
+
+				this.proxyEvent('onRemove', event);
+			},
+			onUpdate: (event: SortableEvent) => {
+				const bindings = this.getBindings();
+				const indexes = getIndexesFromEvent(event);
+
+				bindings.injectIntoEvery(
+					indexes.new,
+					bindings.extractFromEvery(indexes.old)
+				);
+				this.proxyEvent('onUpdate', event);
+			},
+			onStart: (event: SortableEvent) => this.proxyEvent('onStart', event),
+			onEnd: (event: SortableEvent) => this.proxyEvent('onEnd', event),
+			onSort: (event: SortableEvent) => this.proxyEvent('onSort', event),
+			onFilter: (event: SortableEvent) =>
+				this.proxyEvent('onFilter', event),
+			onChange: (event: SortableEvent) =>
+				this.proxyEvent('onChange', event),
+			onChoose: (event: SortableEvent) =>
+				this.proxyEvent('onChoose', event),
+			onUnchoose: (event: SortableEvent) =>
+				this.proxyEvent('onUnchoose', event),
+			onClone: (event: SortableEvent) => this.proxyEvent('onClone', event),
+			onMove: (event: MoveEvent, originalEvent: Event) =>
+				this.proxyEvent('onMove', event, originalEvent)
+		};
+	}
 }

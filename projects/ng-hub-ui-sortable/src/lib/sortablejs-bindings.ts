@@ -1,12 +1,13 @@
-import { SortablejsBinding } from './sortablejs-binding';
-import {SortableData} from './sortablejs.directive';
+import { SortablejsBinding } from "./sortablejs-binding";
+import { SortableData } from "./sortablejs.directive";
 
 export class SortablejsBindings {
-
   bindings: SortablejsBinding[];
 
   constructor(bindingTargets: SortableData[]) {
-    this.bindings = bindingTargets.map(target => new SortablejsBinding(target));
+    this.bindings = bindingTargets.map(
+      (target) => new SortablejsBinding(target)
+    );
   }
 
   injectIntoEvery(index: number, items: any[]) {
@@ -14,15 +15,14 @@ export class SortablejsBindings {
   }
 
   getFromEvery(index: number) {
-    return this.bindings.map(b => b.get(index));
+    return this.bindings.map((b) => b.get(index));
   }
 
   extractFromEvery(index: number) {
-    return this.bindings.map(b => b.remove(index));
+    return this.bindings.map((b) => b.remove(index));
   }
 
   get provided() {
     return !!this.bindings.length;
   }
-
 }

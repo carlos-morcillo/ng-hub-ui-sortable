@@ -3,7 +3,7 @@
 <p class="lead">
   <strong>
     <a href="https://github.com/carlos-morcillo/ng-hub-ui-sortable/tree/master/src/app/examples/sortable-form-array"
-      target="_blank">The source code</a>
+    target="_blank">The source code</a>
   </strong>
 </p>
 
@@ -15,9 +15,11 @@
 <p>Try to change the text and reorder the inputs</p>
 
 <ul class="list-group" [sortablejs]="citiesControls">
-  <li class="list-group-item" *ngFor="let city of citiesControls.controls">
-    <input class="form-control" [formControl]="city">
-  </li>
+  @for (city of citiesControls.controls; track city) {
+    <li class="list-group-item">
+      <input class="form-control" [formControl]="city">
+    </li>
+  }
 </ul>
 
 <p class="my-3">The actual value of the array</p>

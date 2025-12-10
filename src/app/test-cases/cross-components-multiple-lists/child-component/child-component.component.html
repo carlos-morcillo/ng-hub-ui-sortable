@@ -1,3 +1,5 @@
 <ul class="list-group sortable" [sortablejs]="list" [sortablejsOptions]="options">
-  <li class="list-group-item" *ngFor="let item of list">Element {{ item }}</li>
+  @for (item of list; track item) {
+    <li class="list-group-item">Element {{ item }}</li>
+  }
 </ul>

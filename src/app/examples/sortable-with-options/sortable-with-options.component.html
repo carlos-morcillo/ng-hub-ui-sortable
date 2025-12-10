@@ -3,7 +3,7 @@
 <p class="lead">
   <strong>
     <a href="https://github.com/carlos-morcillo/ng-hub-ui-sortable/tree/master/src/app/examples/sortable-with-options"
-      target="_blank">The source code</a>
+    target="_blank">The source code</a>
   </strong>
 </p>
 
@@ -12,10 +12,12 @@ This example shows how the various options could be used in order to configure <
 <h2 class="mt-4 mb-3">Disabled options</h2>
 
 <ul class="list-group" [sortablejs]="draggableItems" [sortablejsOptions]="draggableOptions">
-  <li class="list-group-item" *ngFor="let item of draggableItems" [class.draggable]="item.draggable"
-    [class.disabled]="!item.draggable">
-    Element {{ item.text }}
-  </li>
+  @for (item of draggableItems; track item) {
+    <li class="list-group-item" [class.draggable]="item.draggable"
+      [class.disabled]="!item.draggable">
+      Element {{ item.text }}
+    </li>
+  }
 </ul>
 
 <p class="my-3">and the actual model is</p>
@@ -36,9 +38,11 @@ This example shows how the various options could be used in order to configure <
 </div>
 
 <ul class="list-group" [sortablejs]="eventItems" [sortablejsOptions]="eventOptions">
-  <li class="list-group-item" *ngFor="let item of eventItems">
-    Element {{ item }}
-  </li>
+  @for (item of eventItems; track item) {
+    <li class="list-group-item">
+      Element {{ item }}
+    </li>
+  }
 </ul>
 
 <div class="alert alert-info my-3">
@@ -58,7 +62,9 @@ This example shows how the various options could be used in order to configure <
 </p>
 
 <ul class="list-group" [sortablejs]="scrollableItems" [sortablejsOptions]="scrollableOptions">
-  <li class="list-group-item" *ngFor="let item of scrollableItems">
-    Element {{ item }}
-  </li>
+  @for (item of scrollableItems; track item) {
+    <li class="list-group-item">
+      Element {{ item }}
+    </li>
+  }
 </ul>

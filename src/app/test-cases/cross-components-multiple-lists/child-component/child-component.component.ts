@@ -1,13 +1,13 @@
 import { Component, Input } from '@angular/core';
 import {Options} from 'sortablejs';
-import { NgFor } from '@angular/common';
+
 import { SortablejsDirective } from 'ng-hub-ui-sortable';
 
 @Component({
     selector: 'app-child-component',
     templateUrl: './child-component.component.html',
     styleUrls: ['./child-component.component.css'],
-    imports: [SortablejsDirective, NgFor]
+    imports: [SortablejsDirective]
 })
 export class ChildComponentComponent {
 

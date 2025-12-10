@@ -6,9 +6,11 @@ describe('SortablejsDirective', () => {
   @Component({
     template: `
       <div [sortablejs]="items">
-        <div *ngFor="let item of items">{{item}}</div>
+        @for (item of items; track item) {
+          <div>{{item}}</div>
+        }
       </div>
-    `,
+      `,
     imports: [SortablejsModule]
 })
   class TestComponent1 {
