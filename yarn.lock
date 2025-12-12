@@ -379,7 +379,7 @@
     yargs "18.0.0"
     zod "3.25.76"
 
-"@angular/common@^20.0.2", "@angular/common@20.2.4":
+"@angular/common@^20.0.0", "@angular/common@^20.0.2", "@angular/common@20.2.4":
   version "20.2.4"
   resolved "https://registry.npmjs.org/@angular/common/-/common-20.2.4.tgz"
   integrity sha512-mc6Sq1cYjaPJYThnvG6x0f/E27pWksqwaNJxT1RtwhAGc1i2jsc0su6b7e5NnXEgVbdPqu1MZHAEFdXZ5+/MwQ==
@@ -450,10 +450,25 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/router@20.2.4":
+"@angular/platform-server@^20.0.0", "@angular/platform-server@^20.2.4":
+  version "20.2.4"
+  resolved "https://registry.npmjs.org/@angular/platform-server/-/platform-server-20.2.4.tgz"
+  integrity sha512-7DK2DPZTYKUAPCYK7cbR+RXQq9DWeWDnSVtXqCsiVPfPXgURnzzffvzWhtvZm39jjI+L4WHmdVUGsEItv5IjFA==
+  dependencies:
+    tslib "^2.3.0"
+    xhr2 "^0.2.0"
+
+"@angular/router@^20.0.0", "@angular/router@20.2.4":
   version "20.2.4"
   resolved "https://registry.npmjs.org/@angular/router/-/router-20.2.4.tgz"
   integrity sha512-KoduI1o+iBfCBGtXMvmy/qncDIwGxd2hNt2hDkkiYZTftmSg/XUJDxJqN84ckm2WLkdJpR9EirrwfHapJBIZOQ==
+  dependencies:
+    tslib "^2.3.0"
+
+"@angular/ssr@^20.2.2", "@angular/ssr@^20.3.13":
+  version "20.3.13"
+  resolved "https://registry.npmjs.org/@angular/ssr/-/ssr-20.3.13.tgz"
+  integrity sha512-ef3yQG9wVIYzHXKNqAXAgI9YBJ5r4F8KbDtNMA6TDDxuAtTdoXYT1kmlgj5OcTVDDXGNFb12ZALRjB7yKu+zSw==
   dependencies:
     tslib "^2.3.0"
 
@@ -3702,7 +3717,7 @@ chardet@^2.1.0:
   resolved "https://registry.npmjs.org/chardet/-/chardet-2.1.0.tgz"
   integrity sha512-bNFETTG/pM5ryzQ9Ad0lJOTa6HWD/YsScAR3EnCPZRPlQh77JocYktSHOUHelyhm8IARL+o4c4F1bP5KVOjiRA==
 
-chokidar@^3.3.1, chokidar@^3.5.1, chokidar@^3.6.0, chokidar@^4.0.0:
+chokidar@^3.3.1, chokidar@^3.5.1, chokidar@^3.6.0:
   version "3.6.0"
   resolved "https://registry.npmjs.org/chokidar/-/chokidar-3.6.0.tgz"
   integrity sha512-7VT13fmjotKpGipCW9JEQAusEPE+Ei8nl6/g4FBAmIm0GOOLMua9NDDo/DWp0ZAxCr3cPq5ZpBqmPAQgDda2Pw==
@@ -3716,6 +3731,13 @@ chokidar@^3.3.1, chokidar@^3.5.1, chokidar@^3.6.0, chokidar@^4.0.0:
     readdirp "~3.6.0"
   optionalDependencies:
     fsevents "~2.3.2"
+
+chokidar@^4.0.0:
+  version "4.0.3"
+  resolved "https://registry.npmjs.org/chokidar/-/chokidar-4.0.3.tgz"
+  integrity sha512-Qgzu8kfBvo+cA4962jnP1KkS6Dop5NS6g7R5LFYJr4b8Ub94PPQXUksCw9PvXoeXPRRddRNC5C1JQUR2SMGtnA==
+  dependencies:
+    readdirp "^4.0.1"
 
 chokidar@^4.0.1:
   version "4.0.3"
@@ -12438,6 +12460,11 @@ wsl-utils@^0.1.0:
 xdg-basedir@^3.0.0:
   version "3.0.0"
 
+xhr2@^0.2.0:
+  version "0.2.1"
+  resolved "https://registry.npmjs.org/xhr2/-/xhr2-0.2.1.tgz"
+  integrity sha512-sID0rrVCqkVNUn8t6xuv9+6FViXjUVXq8H5rWOH2rz9fDNQEd4g0EA2XlcEdJXRz5BMEn4O1pJFdT+z4YHhoWw==
+
 xml2js@^0.4.17:
   version "0.4.23"
   resolved "https://registry.npmjs.org/xml2js/-/xml2js-0.4.23.tgz"
@@ -12487,10 +12514,15 @@ yallist@^5.0.0:
   resolved "https://registry.npmjs.org/yallist/-/yallist-5.0.0.tgz"
   integrity sha512-YgvUTfwqyc7UXVMrB+SImsVYSmTS8X/tSrtdNZMImM+n7+QTriRXyXim0mBrTXNeqzVF0KWGgHPeiyViFFrNDw==
 
-yaml@^1.10.0, yaml@^1.7.2, yaml@^2.4.2:
+yaml@^1.10.0, yaml@^1.7.2:
   version "1.10.0"
   resolved "https://registry.npmjs.org/yaml/-/yaml-1.10.0.tgz"
   integrity sha512-yr2icI4glYaNG+KWONODapy2/jDdMSDnrONSjblABjD9B4Z5LgiircSt8m8sRZFNi08kG9Sm0uSHtEmP3zaEGg==
+
+yaml@^2.4.2:
+  version "2.8.2"
+  resolved "https://registry.npmjs.org/yaml/-/yaml-2.8.2.tgz"
+  integrity sha512-mplynKqc1C2hTVYxd0PU2xQAc22TI1vShAYGksCCfxbn/dFwnHTNi1bvYsBTkhdUNtGIf5xNOg938rrSSYvS9A==
 
 yargs-parser@^15.0.1:
   version "15.0.1"

@@ -6,7 +6,8 @@ import { SortableDirective } from 'ng-hub-ui-sortable';
     selector: 'app-simple-sortable',
     templateUrl: './simple-sortable.component.html',
     styleUrls: ['./simple-sortable.component.css'],
-    imports: [SortableDirective, JsonPipe],
+    standalone: true,
+    imports: [SortableDirective, JsonPipe]
 })
 export class SimpleSortableComponent {
 

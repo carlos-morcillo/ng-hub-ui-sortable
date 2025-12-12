@@ -1,7 +1,7 @@
 <div
   class="container-fluid d-flex align-items-center justify-content-between mb-3"
 >
-  <h1 class="h3 mb-0">Sortable FormArray</h1>
+  <h1 class="h3 mb-0">Angular FormArray Drag and Drop with Reactive Forms</h1>
   <a
     class="btn btn-outline-secondary btn-sm"
     href="https://github.com/carlos-morcillo/ng-hub-ui-sortable/tree/master/src/app/examples/sortable-form-array"
@@ -14,11 +14,11 @@
 
 <div class="container-fluid">
   <p class="lead mb-3">
-    Often you need to sort more than plain data. Complex forms with
-    <em>FormArray</em> controls are supported too.
+    Integrate <strong>drag and drop</strong> functionality with Angular Reactive Forms.
+    Complex forms with <em>FormArray</em> controls are fully supported with automatic synchronization.
   </p>
 
-  <p class="mb-4">Try editing the text and reordering the inputs.</p>
+  <p class="mb-4">Try editing the text values and reordering the form inputs by dragging them.</p>
 
   <ul class="list-group" [hubSortable]="citiesControls">
     @for (city of citiesControls.controls; track city) {

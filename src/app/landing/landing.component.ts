@@ -1,5 +1,5 @@
-import { CommonModule } from "@angular/common";
-import { AfterViewInit, Component, ElementRef } from "@angular/core";
+import { CommonModule, isPlatformBrowser } from "@angular/common";
+import { AfterViewInit, Component, ElementRef, Inject, PLATFORM_ID } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import hljs from "highlight.js/lib/core";
 import typescript from "highlight.js/lib/languages/typescript";
@@ -19,11 +19,16 @@ hljs.registerLanguage("bash", bash);
   styleUrls: ["./landing.component.scss"],
 })
 export class LandingComponent implements AfterViewInit {
-  constructor(private elementRef: ElementRef) {}
+  constructor(
+    private elementRef: ElementRef,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
 
   ngAfterViewInit(): void {
-    // Highlight all code blocks
-    this.highlightCode();
+    // Only highlight code on the browser, not during SSR
+    if (isPlatformBrowser(this.platformId)) {
+      this.highlightCode();
+    }
   }
 
   private highlightCode(): void {

@@ -7,7 +7,8 @@ import { SortableDirective } from 'ng-hub-ui-sortable';
     selector: 'app-sortable-form-array',
     templateUrl: './sortable-form-array.component.html',
     styleUrls: ['./sortable-form-array.component.css'],
-    imports: [SortableDirective, ReactiveFormsModule, JsonPipe],
+    standalone: true,
+    imports: [SortableDirective, ReactiveFormsModule, JsonPipe]
 })
 export class SortableFormArrayComponent {
 

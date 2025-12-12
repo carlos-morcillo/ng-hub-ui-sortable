@@ -7,7 +7,8 @@ import { Options } from "sortablejs";
   selector: "app-sortable-with-options",
   templateUrl: "./sortable-with-options.component.html",
   styleUrls: ["./sortable-with-options.component.css"],
-  imports: [SortableDirective, JsonPipe],
+  standalone: true,
+  imports: [SortableDirective, JsonPipe]
 })
 export class SortableWithOptionsComponent {
   draggableItems = [
