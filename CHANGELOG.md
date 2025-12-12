@@ -2,11 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-# [20.0.0](https://github.com/worktile/ngx-sortablejs/compare/20.0.0-next.0...20.0.0) (2025-11-26)
+# [21.0.0](https://github.com/worktile/ngx-sortablejs/compare/20.0.0...21.0.0) (2025-12-12)
+
+### Features
+- Added writable signal support to sortable bindings alongside arrays/FormArrays.
+- Hardened signal/FormArray detection to avoid TypeScript errors in bindings.
 
 
+# [20.0.0](https://github.com/worktile/ngx-sortablejs/compare/20.0.0-next.0...20.0.0) (2025-12-10)
 
-# [20.0.0-next.0](https://github.com/worktile/ngx-sortablejs/compare/19.0.0...20.0.0-next.0) (2025-11-17)
+### Features
+- Preview groundwork for Angular 20 compatibility.
 
 
 
