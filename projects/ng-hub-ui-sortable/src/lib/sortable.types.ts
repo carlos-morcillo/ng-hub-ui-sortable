@@ -1,9 +1,10 @@
+import { WritableSignal } from '@angular/core';
 import { MoveEvent } from 'sortablejs';
 
 /**
- * Data accepted by the sortable directive. Can be an array or an Angular `FormArray`.
+ * Data accepted by the sortable directive. Can be an array, Angular `FormArray`, or an Angular writable signal of an array.
  */
-export type SortableData = any | any[];
+export type SortableData = any | any[] | WritableSignal<any[]>;
 
 /**
  * SortableJS event names intercepted by the directive.

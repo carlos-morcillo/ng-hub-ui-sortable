@@ -39,6 +39,13 @@ import { LandingComponent } from "./landing/landing.component";
           path: "layout-builder",
           component: LayoutBuilderComponent,
         },
+        {
+          path: "sortable-signal",
+          loadComponent: () =>
+            import("./examples/sortable-signal/sortable-signal.component").then(
+              (component) => component.SortableSignalComponent
+            ),
+        },
       ],
       {
         anchorScrolling: "enabled",

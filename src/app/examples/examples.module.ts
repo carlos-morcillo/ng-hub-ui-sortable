@@ -7,6 +7,7 @@ import { LayoutBuilderComponent } from './layout-builder/layout-builder.componen
 import { SimpleSortableComponent } from './simple-sortable/simple-sortable.component';
 import { SortableFormArrayComponent } from './sortable-form-array/sortable-form-array.component';
 import { SortableWithOptionsComponent } from './sortable-with-options/sortable-with-options.component';
+import { SortableSignalComponent } from './sortable-signal/sortable-signal.component';
 
 @NgModule({
     imports: [
@@ -18,6 +19,7 @@ import { SortableWithOptionsComponent } from './sortable-with-options/sortable-w
         SortableFormArrayComponent,
         MultipleListsComponent,
         LayoutBuilderComponent,
+        SortableSignalComponent,
     ],
 })
 export class ExamplesModule { }

@@ -15,7 +15,7 @@
       The library covers simple scenarios like reordering items in a list, as
       well as advanced cases such as <strong>nested lists</strong>, item
       transfer between multiple lists, item cloning, integration with Angular
-      Reactive Forms (<code>FormArray</code>), and full customization via
+      Reactive Forms (<code>FormArray</code>) and <strong>Angular Signals</strong> (<code>WritableSignal</code>), and full customization via
       options and events. Every drag-and-drop action syncs automatically with
       your data model, keeping your app reactive and predictable.
     </p>
@@ -44,7 +44,8 @@
       <h2 class="h5">Features</h2>
       <ul>
         <li>Simple directive to make any container sortable</li>
-        <li>Syncs drag-and-drop with arrays and <code>FormArray</code></li>
+        <li>Syncs drag-and-drop with arrays, <code>FormArray</code>, and writable signals</li>
+        <li>Native support for Angular signals for reactive state management</li>
         <li>Access to the full SortableJS API and events within Angular zone</li>
         <li>Multi-list support, cloning, and custom clone functions</li>
         <li>Individual inputs for all SortableJS options</li>
@@ -108,8 +109,8 @@ export class AppModule &#123;&#125;</code></pre>
           <tbody>
             <tr>
               <td><code>[hubSortable]</code></td>
-              <td><code>any[] | FormArray</code></td>
-              <td>Array or FormArray synchronized with drag-and-drop</td>
+              <td><code>any[] | FormArray | WritableSignal&lt;any[]&gt;</code></td>
+              <td>Array, FormArray, or writable signal synchronized with drag-and-drop</td>
             </tr>
             <tr>
               <td><code>[container]</code></td>
@@ -335,6 +336,12 @@ export class MyComponent &#123;
         <a routerLink="/layout-builder" class="text-decoration-none">
           <i class="bi bi-arrow-right-circle me-2"></i>
           <strong>Layout builder</strong> - Layout constructor with nested lists
+        </a>
+      </li>
+      <li class="mb-2">
+        <a routerLink="/sortable-signal" class="text-decoration-none">
+          <i class="bi bi-arrow-right-circle me-2"></i>
+          <strong>Signal model</strong> - Sortable bound to Angular writable signals
         </a>
       </li>
     </ul>

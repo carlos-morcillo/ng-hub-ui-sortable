@@ -19,7 +19,7 @@ This component is part of the ng-hub-ui ecosystem, which includes:
 
 **ng-hub-ui-sortable** proporciona una integración completa y moderna de [SortableJS](https://github.com/SortableJS/Sortable) para Angular, permitiéndote crear interfaces interactivas con funcionalidad de arrastrar y soltar de forma sencilla y declarativa. Con una API basada en directivas, puedes transformar cualquier lista en una experiencia sortable con solo agregar un atributo a tu HTML.
 
-La biblioteca soporta escenarios simples como reordenar items en una lista, hasta casos avanzados como **listas anidadas**, transferencia de elementos entre múltiples listas, clonación de items, integración con Angular Reactive Forms (`FormArray`), y personalización completa mediante opciones y eventos. Cada operación de drag-and-drop se sincroniza automáticamente con tu modelo de datos, manteniendo tu aplicación reactiva y predecible.
+La biblioteca soporta escenarios simples como reordenar items en una lista, hasta casos avanzados como **listas anidadas**, transferencia de elementos entre múltiples listas, clonación de items, integración con Angular Reactive Forms (`FormArray`) y **Angular Signals** (`WritableSignal`), y personalización completa mediante opciones y eventos. Cada operación de drag-and-drop se sincroniza automáticamente con tu modelo de datos, manteniendo tu aplicación reactiva y predecible.
 
 Este paquete es un fork de `@worktile/ngx-sortablejs`, manteniendo la misma API robusta mientras actualiza el branding y metadatos para alinearse con la familia ng-hub-ui.
 
@@ -27,6 +27,7 @@ Este paquete es un fork de `@worktile/ngx-sortablejs`, manteniendo la misma API 
 
 - **Directive-based** - Simple directive API for adding sortable functionality to any container
 - **Array binding** - Automatically syncs drag-and-drop operations with your data array
+- **Signal support** - Native integration with Angular writable signals for reactive state management
 - **FormArray support** - Native integration with Angular Reactive Forms FormArray
 - **Full SortableJS API** - Access to all SortableJS options and events
 - **Zone integration** - Events are properly proxied into Angular's zone for predictable change detection
@@ -142,12 +143,12 @@ export class SortableListComponent {
 
 ### Primary Inputs
 
-| Input            | Type                   | Description                                                                                              |
-|------------------|------------------------|----------------------------------------------------------------------------------------------------------|
-| `items`          | `any[]` or `FormArray` | Model binding that stays in sync with drag-and-drop operations (used with alias `[hubSortable]`)         |
-| `container`      | `string`               | Optional CSS selector for the real sortable container when the host is wrapped by another component      |
-| `options`        | `Options`              | Native SortableJS options object. Provide a new object reference to trigger option updates               |
-| `cloneFunction`  | `(item: any) => any`   | Custom clone function for clone mode. Allows you to customize how items are cloned                       |
+| Input            | Type                                      | Description                                                                                              |
+|------------------|-------------------------------------------|----------------------------------------------------------------------------------------------------------|
+| `items`          | `any[]`, `FormArray`, or `WritableSignal<any[]>` | Model binding that stays in sync with drag-and-drop operations (used with alias `[hubSortable]`)         |
+| `container`      | `string`                                  | Optional CSS selector for the real sortable container when the host is wrapped by another component      |
+| `options`        | `Options`                                 | Native SortableJS options object. Provide a new object reference to trigger option updates               |
+| `cloneFunction`  | `(item: any) => any`                      | Custom clone function for clone mode. Allows you to customize how items are cloned                       |
 
 ### SortableJS Option Inputs
 
@@ -337,6 +338,37 @@ export class FormArrayComponent {
   get formArray() {
     return this.form.get('items') as FormArray;
   }
+}
+```
+
+### With Angular Signals
+
+```typescript
+import { Component, signal, computed } from '@angular/core';
+import { SortableModule } from 'ng-hub-ui-sortable';
+
+@Component({
+  selector: 'app-signal-sortable',
+  standalone: true,
+  imports: [SortableModule],
+  template: `
+    <div [hubUISortable]="items" [options]="{ animation: 150 }">
+      @for (item of items(); track item.id) {
+        <div class="item">{{ item.name }}</div>
+      }
+    </div>
+    <p>Current items: {{ itemNames() }}</p>
+  `
+})
+export class SignalSortableComponent {
+  items = signal([
+    { id: 1, name: 'Item 1' },
+    { id: 2, name: 'Item 2' },
+    { id: 3, name: 'Item 3' }
+  ]);
+
+  // Computed signal that derives from sortable signal
+  itemNames = computed(() => this.items().map(item => item.name).join(', '));
 }
 ```
 
