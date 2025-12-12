@@ -1,2 +1,2 @@
-export * from './lib/sortablejs.directive';
-export * from './lib/sortablejs.module';
+export * from './lib/sortable.directive';
+export * from './lib/sortable.module';

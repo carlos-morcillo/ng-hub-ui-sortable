@@ -1,0 +1,511 @@
+<div class="container py-4">
+  <div class="mb-5">
+    <h1 class="h2 mb-3">ng-hub-ui-sortable</h1>
+    <p class="lead mb-3">
+      <strong>ng-hub-ui-sortable</strong> provides a complete, modern
+      integration of
+      <a href="https://github.com/SortableJS/Sortable" target="_blank"
+        >SortableJS</a
+      >
+      for Angular, letting you build interactive UIs with drag-and-drop
+      functionality in a simple, declarative way.
+    </p>
+    <p class="mb-4">
+      The library covers simple scenarios like reordering items in a list, as
+      well as advanced cases such as <strong>nested lists</strong>, item
+      transfer between multiple lists, item cloning, integration with Angular
+      Reactive Forms (<code>FormArray</code>), and full customization via
+      options and events. Every drag-and-drop action syncs automatically with
+      your data model, keeping your app reactive and predictable.
+    </p>
+    <div class="d-flex gap-2 flex-wrap">
+      <a
+        class="btn btn-primary"
+        href="https://www.npmjs.com/package/ng-hub-ui-sortable"
+        target="_blank"
+      >
+        <i class="bi bi-box"></i> npm
+      </a>
+      <a
+        class="btn btn-outline-secondary"
+        href="https://github.com/carlos-morcillo/ng-hub-ui-sortable"
+        target="_blank"
+      >
+        <i class="bi bi-github"></i> GitHub
+      </a>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-6">
+      <h2 class="h5">Features</h2>
+      <ul>
+        <li>Simple directive to make any container sortable</li>
+        <li>Syncs drag-and-drop with arrays and <code>FormArray</code></li>
+        <li>Access to the full SortableJS API and events within Angular zone</li>
+        <li>Multi-list support, cloning, and custom clone functions</li>
+        <li>Individual inputs for all SortableJS options</li>
+        <li>Full TypeScript with strong typing</li>
+      </ul>
+    </div>
+    <div class="col-lg-6">
+      <h2 class="h5">Installation</h2>
+      <pre
+        class="mb-2"
+      ><code class="language-bash">npm install ng-hub-ui-sortable sortablejs
+npm install -D &#64;types/sortablejs</code></pre>
+      <p class="mb-2">
+        Peer dependencies: Angular &gt;= 18 and SortableJS &gt;= 1.7.0.
+      </p>
+      <p class="mb-0">
+        You can also use <code>yarn add ng-hub-ui-sortable sortablejs</code>.
+      </p>
+    </div>
+  </div>
+
+  <section class="my-4">
+    <h2 class="h5">Quick start</h2>
+    <p class="mb-2">Import the module with global options:</p>
+    <pre
+      class="mb-3"
+    ><code class="language-typescript">import &#123; SortableModule &#125; from 'ng-hub-ui-sortable';
+
+&#64;NgModule(&#123;
+  imports: [SortableModule.forRoot(&#123; animation: 150 &#125;)]
+&#125;)
+export class AppModule &#123;&#125;</code></pre>
+    <p class="mb-2">Create a component with your array:</p>
+    <pre
+      class="mb-3"
+    ><code class="language-typescript">items = ['Item 1', 'Item 2', 'Item 3'];</code></pre>
+    <p class="mb-2">And use it in the template:</p>
+    <pre
+      class="mb-0"
+    ><code class="language-xml">&lt;div [hubSortable]="items" [animation]="150"&gt;
+  &#64;for (item of items; track item) &#123;
+    &lt;div class="p-2 border"&gt;&amp;#123;&amp;#123; item &amp;#125;&amp;#125;&lt;/div&gt;
+  &#125;
+&lt;/div&gt;</code></pre>
+  </section>
+
+  <section class="my-4">
+    <h2 class="h5">Full directive API</h2>
+
+    <div class="mb-4">
+      <h3 class="h6">Main inputs</h3>
+      <div class="table-responsive">
+        <table class="table table-sm table-striped">
+          <thead>
+            <tr>
+              <th>Input</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>[hubSortable]</code></td>
+              <td><code>any[] | FormArray</code></td>
+              <td>Array or FormArray synchronized with drag-and-drop</td>
+            </tr>
+            <tr>
+              <td><code>[container]</code></td>
+              <td><code>string</code></td>
+              <td>CSS selector of the actual container (optional)</td>
+            </tr>
+            <tr>
+              <td><code>[options]</code></td>
+              <td><code>Options</code></td>
+              <td>SortableJS options object</td>
+            </tr>
+            <tr>
+              <td><code>[cloneFunction]</code></td>
+              <td><code>(item: any) =&gt; any</code></td>
+              <td>Custom function to clone items</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <h3 class="h6">Individual option inputs</h3>
+      <p class="small text-muted">
+        All SortableJS options can be provided as individual inputs:
+      </p>
+      <div class="row">
+        <div class="col-md-6">
+          <ul class="small">
+            <li><code>[group]</code> - Group name for multi-list</li>
+            <li><code>[sort]</code> - Enable/disable sorting</li>
+            <li><code>[delay]</code> - Delay before starting drag (ms)</li>
+            <li><code>[disabled]</code> - Disable the sortable</li>
+            <li><code>[draggable]</code> - CSS selector for draggable items</li>
+            <li><code>[handle]</code> - CSS selector for the drag handle</li>
+            <li><code>[animation]</code> - Animation speed (ms)</li>
+            <li><code>[ghostClass]</code> - CSS class for the ghost element</li>
+            <li><code>[chosenClass]</code> - CSS class for the chosen element</li>
+            <li><code>[dragClass]</code> - CSS class for the dragging element</li>
+            <li><code>[filter]</code> - Filter for non-draggable elements</li>
+            <li><code>[preventOnFilter]</code> - preventDefault on filter</li>
+            <li><code>[direction]</code> - Direction ('vertical' | 'horizontal')</li>
+          </ul>
+        </div>
+        <div class="col-md-6">
+          <ul class="small">
+            <li><code>[swapThreshold]</code> - Swap zone threshold</li>
+            <li><code>[invertSwap]</code> - Invert swap threshold</li>
+            <li><code>[fallbackOnBody]</code> - Add ghost to body</li>
+            <li><code>[fallbackTolerance]</code> - Fallback tolerance (px)</li>
+            <li><code>[fallbackClass]</code> - CSS class for fallback</li>
+            <li><code>[forceFallback]</code> - Force fallback activation</li>
+            <li><code>[touchStartThreshold]</code> - Touch start threshold</li>
+            <li><code>[emptyInsertThreshold]</code> - Empty insert threshold</li>
+            <li><code>[delayOnTouchOnly]</code> - Delay on touch only</li>
+            <li><code>[easing]</code> - Easing function for animation</li>
+            <li><code>[dataIdAttr]</code> - HTML attribute for data id</li>
+            <li><code>[removeCloneOnHide]</code> - Remove clone on hide</li>
+            <li>And more advanced options...</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <h3 class="h6">Outputs (events)</h3>
+      <p class="small text-muted">
+        All events run within the Angular zone:
+      </p>
+      <div class="table-responsive">
+        <table class="table table-sm table-striped">
+          <thead>
+            <tr>
+              <th>Output</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>(init)</code></td>
+              <td><code>Sortable</code></td>
+              <td>Emits the Sortable instance on init</td>
+            </tr>
+            <tr>
+              <td><code>(start)</code></td>
+              <td><code>SortableEvent</code></td>
+              <td>Fires when dragging starts</td>
+            </tr>
+            <tr>
+              <td><code>(end)</code></td>
+              <td><code>SortableEvent</code></td>
+              <td>Fires when dragging ends</td>
+            </tr>
+            <tr>
+              <td><code>(add)</code></td>
+              <td><code>SortableEvent</code></td>
+              <td>Item added from another list</td>
+            </tr>
+            <tr>
+              <td><code>(remove)</code></td>
+              <td><code>SortableEvent</code></td>
+              <td>Item removed to another list</td>
+            </tr>
+            <tr>
+              <td><code>(update)</code></td>
+              <td><code>SortableEvent</code></td>
+              <td>Position updated within the same list</td>
+            </tr>
+            <tr>
+              <td><code>(sortEvent)</code></td>
+              <td><code>SortableEvent</code></td>
+              <td>List sorted (any change)</td>
+            </tr>
+            <tr>
+              <td><code>(change)</code></td>
+              <td><code>SortableEvent</code></td>
+              <td>List changed after adding or removing item</td>
+            </tr>
+            <tr>
+              <td><code>(choose)</code></td>
+              <td><code>SortableEvent</code></td>
+              <td>Item chosen (mouse down)</td>
+            </tr>
+            <tr>
+              <td><code>(unchoose)</code></td>
+              <td><code>SortableEvent</code></td>
+              <td>Item unchosen (mouse up without drag)</td>
+            </tr>
+            <tr>
+              <td><code>(clone)</code></td>
+              <td><code>SortableEvent</code></td>
+              <td>Item cloned in clone mode</td>
+            </tr>
+            <tr>
+              <td><code>(filterEvent)</code></td>
+              <td><code>SortableEvent</code></td>
+              <td>Attempt to drag filtered element</td>
+            </tr>
+            <tr>
+              <td><code>(move)</code></td>
+              <td>
+                <code
+                  >&#123; event: MoveEvent; originalEvent: Event &#125;</code
+                >
+              </td>
+              <td>Fires during drag movement</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="my-4">
+    <h2 class="h5">Example with events</h2>
+    <pre><code class="language-typescript">// Component
+export class MyComponent &#123;
+  items = ['Item 1', 'Item 2', 'Item 3'];
+
+  onDragStart(event: SortableEvent) &#123;
+    console.log('Drag started:', event);
+  &#125;
+
+  onDragEnd(event: SortableEvent) &#123;
+    console.log('Drag ended:', event);
+  &#125;
+
+  onUpdate(event: SortableEvent) &#123;
+    console.log('List updated:', this.items);
+  &#125;
+&#125;</code></pre>
+
+    <pre><code class="language-xml">&lt;!-- Template --&gt;
+&lt;div [hubSortable]="items"
+     [animation]="200"
+     [handle]="'.drag-handle'"
+     (start)="onDragStart($event)"
+     (end)="onDragEnd($event)"
+     (update)="onUpdate($event)"&gt;
+  &#64;for (item of items; track item) &#123;
+    &lt;div class="sortable-item"&gt;
+      &lt;span class="drag-handle"&gt;☰&lt;/span&gt;
+      &amp;#123;&amp;#123; item &amp;#125;&amp;#125;
+    &lt;/div&gt;
+  &#125;
+&lt;/div&gt;</code></pre>
+  </section>
+
+  <section class="my-4" id="examples">
+    <h2 class="h5">Interactive demos</h2>
+    <p class="mb-3">
+      Explore these live demos to see ng-hub-ui-sortable in action. Each example
+      shows different capabilities and common usage patterns:
+    </p>
+    <ul class="list-unstyled">
+      <li class="mb-2">
+        <a routerLink="/sortable-array" class="text-decoration-none">
+          <i class="bi bi-arrow-right-circle me-2"></i>
+          <strong>Simple sortable</strong> - Basic lists with various Bootstrap
+          elements
+        </a>
+      </li>
+      <li class="mb-2">
+        <a routerLink="/sortable-form-array" class="text-decoration-none">
+          <i class="bi bi-arrow-right-circle me-2"></i>
+          <strong>FormArray</strong> - Integration with Angular Reactive Forms
+        </a>
+      </li>
+      <li class="mb-2">
+        <a routerLink="/custom-options" class="text-decoration-none">
+          <i class="bi bi-arrow-right-circle me-2"></i>
+          <strong>Custom options</strong> - Advanced configuration and events
+        </a>
+      </li>
+      <li class="mb-2">
+        <a routerLink="/multiple-lists" class="text-decoration-none">
+          <i class="bi bi-arrow-right-circle me-2"></i>
+          <strong>Multiple lists</strong> - Transfer items between lists
+        </a>
+      </li>
+      <li class="mb-2">
+        <a routerLink="/layout-builder" class="text-decoration-none">
+          <i class="bi bi-arrow-right-circle me-2"></i>
+          <strong>Layout builder</strong> - Layout constructor with nested lists
+        </a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="my-4">
+    <h2 class="h5">ng-hub-ui family</h2>
+    <p class="mb-3">Other related components:</p>
+    <ul>
+      <li>
+        <a
+          href="https://www.npmjs.com/package/ng-hub-ui-paginable"
+          target="_blank"
+          >ng-hub-ui-paginable</a
+        >
+      </li>
+      <li>
+        <a href="https://www.npmjs.com/package/ng-hub-ui-modal" target="_blank"
+          >ng-hub-ui-modal</a
+        >
+      </li>
+      <li>
+        <a
+          href="https://www.npmjs.com/package/ng-hub-ui-stepper"
+          target="_blank"
+          >ng-hub-ui-stepper</a
+        >
+      </li>
+      <li>
+        <a
+          href="https://www.npmjs.com/package/ng-hub-ui-breadcrumbs"
+          target="_blank"
+          >ng-hub-ui-breadcrumbs</a
+        >
+      </li>
+      <li>
+        <a href="https://www.npmjs.com/package/ng-hub-ui-portal" target="_blank"
+          >ng-hub-ui-portal</a
+        >
+      </li>
+      <li>
+        <a href="https://www.npmjs.com/package/ng-hub-ui-avatar" target="_blank"
+          >ng-hub-ui-avatar</a
+        >
+      </li>
+      <li>
+        <a
+          href="https://www.npmjs.com/package/ng-hub-ui-accordion"
+          target="_blank"
+          >ng-hub-ui-accordion</a
+        >
+      </li>
+      <li>
+        <a href="https://www.npmjs.com/package/ng-hub-ui-board" target="_blank"
+          >ng-hub-ui-board</a
+        >
+      </li>
+    </ul>
+  </section>
+
+  <section class="my-4">
+    <h2 class="h5">Inspiration and credits</h2>
+    <p>
+      This package is a fork of <code>&#64;worktile/ngx-sortablejs</code>,
+      keeping the same API while updating branding and metadata to align with
+      the ng-hub-ui family.
+    </p>
+    <p class="mb-0">
+      Special thanks to the Worktile team for their great initial work
+      integrating SortableJS with Angular.
+    </p>
+  </section>
+
+  <section class="my-4">
+    <h2 class="h5">Contributions</h2>
+    <p class="mb-3">Contributions are welcome! Here's how you can help:</p>
+    <ol>
+      <li>Fork the repository</li>
+      <li>
+        Create your feature branch:
+        <code>git checkout -b feature/my-new-feature</code>
+      </li>
+      <li>
+        Commit your changes:
+        <code>git commit -am 'Add some feature'</code>
+      </li>
+      <li>
+        Push the branch:
+        <code>git push origin feature/my-new-feature</code>
+      </li>
+      <li>Open a pull request</li>
+    </ol>
+    <p class="mb-0">
+      If you find any issues, please report them on:
+      <a
+        href="https://github.com/carlos-morcillo/ng-hub-ui-sortable/issues"
+        target="_blank"
+        >GitHub Issues</a
+      >
+    </p>
+  </section>
+
+  <section class="my-4">
+    <h2 class="h5">Support the project</h2>
+    <p class="mb-3">
+      If you find this project useful and want to support its development, you
+      can buy me a coffee:
+    </p>
+    <a href="https://www.buymeacoffee.com/carlosmorcillo" target="_blank">
+      <img
+        src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png"
+        alt="Buy Me A Coffee"
+        style="height: 41px; width: 174px"
+      />
+    </a>
+    <p class="mt-3 mb-0">
+      Your support is greatly appreciated and helps maintain and improve this
+      project!
+    </p>
+  </section>
+
+  <section class="my-4">
+    <h2 class="h5">License</h2>
+    <p>
+      This project is licensed under the
+      <strong>Creative Commons Attribution 4.0 International (CC BY 4.0)</strong
+      >.
+    </p>
+
+    <div class="row g-4 mb-3">
+      <div class="col-md-6">
+        <h3 class="h6">You may:</h3>
+        <ul>
+          <li>Use commercially and non-commercially</li>
+          <li>Modify, adapt, and create derivatives</li>
+          <li>Distribute and redistribute in any format</li>
+          <li>Use in private and public projects</li>
+        </ul>
+      </div>
+      <div class="col-md-6">
+        <h3 class="h6">You must:</h3>
+        <ul>
+          <li>Give appropriate credit to the original authors</li>
+          <li>Provide a link to the license</li>
+          <li>Indicate if changes were made</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="alert alert-secondary">
+      <strong>Attribution example:</strong>
+      <pre
+        class="mb-0 mt-2"
+      ><code class="language-text">Based on ng-hub-ui-sortable by Carlos Morcillo
+Original: https://github.com/carlos-morcillo/ng-hub-ui-sortable
+License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)</code></pre>
+    </div>
+
+    <p class="mb-0">
+      For more details about the license, see the
+      <a
+        href="https://github.com/carlos-morcillo/ng-hub-ui-sortable/blob/master/LICENSE"
+        target="_blank"
+        >LICENSE file</a
+      >.
+    </p>
+  </section>
+
+  <footer class="my-5 py-4 border-top text-center">
+    <p class="mb-0">
+      Made with ❤️ by
+      <a href="https://www.carlosmorcillo.com/" target="_blank"
+        >Carlos Morcillo Fernandez</a
+      >
+    </p>
+  </footer>
+</div>

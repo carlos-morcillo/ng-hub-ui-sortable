@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { SortablejsModule } from 'ng-hub-ui-sortable';
+import { SortableModule } from 'ng-hub-ui-sortable';
 import { MultipleListsComponent } from './multiple-lists.component';
 
 describe('MultipleListsComponent', () => {
@@ -9,7 +9,7 @@ describe('MultipleListsComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
     imports: [
-        SortablejsModule,
+        SortableModule,
         MultipleListsComponent,
     ],
 })

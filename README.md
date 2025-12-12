@@ -17,7 +17,11 @@ This component is part of the ng-hub-ui ecosystem, which includes:
 
 ## Description
 
-Angular bindings for [SortableJS](https://github.com/SortableJS/Sortable), providing a powerful and flexible directive for creating drag-and-drop sortable lists. This package is a fork of `@worktile/ngx-sortablejs`, keeping the same API while refreshing the branding and metadata to align with the ng-hub-ui family.
+**ng-hub-ui-sortable** proporciona una integración completa y moderna de [SortableJS](https://github.com/SortableJS/Sortable) para Angular, permitiéndote crear interfaces interactivas con funcionalidad de arrastrar y soltar de forma sencilla y declarativa. Con una API basada en directivas, puedes transformar cualquier lista en una experiencia sortable con solo agregar un atributo a tu HTML.
+
+La biblioteca soporta escenarios simples como reordenar items en una lista, hasta casos avanzados como **listas anidadas**, transferencia de elementos entre múltiples listas, clonación de items, integración con Angular Reactive Forms (`FormArray`), y personalización completa mediante opciones y eventos. Cada operación de drag-and-drop se sincroniza automáticamente con tu modelo de datos, manteniendo tu aplicación reactiva y predecible.
+
+Este paquete es un fork de `@worktile/ngx-sortablejs`, manteniendo la misma API robusta mientras actualiza el branding y metadatos para alinearse con la familia ng-hub-ui.
 
 ## Features
 
@@ -59,11 +63,11 @@ Here's a quick example to get you started with `ng-hub-ui-sortable`.
 ### 1. Import the module
 
 ```typescript
-import { SortablejsModule } from 'ng-hub-ui-sortable';
+import { SortableModule } from 'ng-hub-ui-sortable';
 
 @NgModule({
   imports: [
-    SortablejsModule.forRoot({ animation: 150 })
+    SortableModule.forRoot({ animation: 150 })
   ]
 })
 export class AppModule {}
@@ -86,7 +90,7 @@ export class SortableDemoComponent {
 ### 3. Use in your template
 
 ```html
-<div [sortablejs]="items" [sortablejsOptions]="{ animation: 150 }">
+<div [hubUISortable]="items" [options]="{ animation: 150 }">
   @for (item of items; track item) {
     <div class="sortable-item">{{ item }}</div>
   }
@@ -101,11 +105,11 @@ The component can be used in two ways:
 
 ```typescript
 import { NgModule } from '@angular/core';
-import { SortablejsModule } from 'ng-hub-ui-sortable';
+import { SortableModule } from 'ng-hub-ui-sortable';
 
 @NgModule({
   imports: [
-    SortablejsModule.forRoot({ animation: 150 })
+    SortableModule.forRoot({ animation: 150 })
   ]
 })
 export class AppModule {}
@@ -115,14 +119,14 @@ export class AppModule {}
 
 ```typescript
 import { Component } from '@angular/core';
-import { SortablejsModule } from 'ng-hub-ui-sortable';
+import { SortableModule } from 'ng-hub-ui-sortable';
 
 @Component({
   selector: 'app-sortable-list',
   standalone: true,
-  imports: [SortablejsModule],
+  imports: [SortableModule],
   template: `
-    <div [sortablejs]="items" [sortablejsOptions]="{ animation: 150 }">
+    <div [hubUISortable]="items" [options]="{ animation: 150 }">
       @for (item of items; track item) {
         <div class="sortable-item">{{ item }}</div>
       }
@@ -136,29 +140,84 @@ export class SortableListComponent {
 
 ## Directive API
 
-### Inputs
+### Primary Inputs
 
-| Input                    | Type                     | Description                                                                                              |
-|--------------------------|--------------------------|----------------------------------------------------------------------------------------------------------|
-| `sortablejs`             | `any[]` or `FormArray`   | Model binding that stays in sync with drag-and-drop operations                                           |
-| `sortablejsContainer`    | `string`                 | Optional CSS selector for the real sortable container when the host is wrapped by another component      |
-| `sortablejsOptions`      | `Options`                | Native SortableJS options. Provide a new object reference to trigger option updates                      |
-| `sortablejsCloneFunction`| `(item: any) => any`     | Custom clone function for clone mode                                                                     |
+| Input            | Type                   | Description                                                                                              |
+|------------------|------------------------|----------------------------------------------------------------------------------------------------------|
+| `items`          | `any[]` or `FormArray` | Model binding that stays in sync with drag-and-drop operations (used with alias `[hubSortable]`)         |
+| `container`      | `string`               | Optional CSS selector for the real sortable container when the host is wrapped by another component      |
+| `options`        | `Options`              | Native SortableJS options object. Provide a new object reference to trigger option updates               |
+| `cloneFunction`  | `(item: any) => any`   | Custom clone function for clone mode. Allows you to customize how items are cloned                       |
+
+### SortableJS Option Inputs
+
+All SortableJS options can be passed either through the `[options]` input or as individual inputs:
+
+| Input                  | Type                  | Description                                                                                   |
+|------------------------|-----------------------|-----------------------------------------------------------------------------------------------|
+| `group`                | `string \| object`    | Group name or options for dragging between lists                                              |
+| `sort`                 | `boolean`             | Enable/disable sorting within the list                                                        |
+| `delay`                | `number`              | Time in milliseconds to define when sorting should start                                      |
+| `disabled`             | `boolean`             | Disable the sortable if set to true                                                           |
+| `draggable`            | `string`              | CSS selector for draggable items within the container                                         |
+| `handle`               | `string`              | CSS selector for drag handle within list items                                                |
+| `animation`            | `number`              | Animation speed in milliseconds when sorting                                                  |
+| `ghostClass`           | `string`              | CSS class applied to the ghost element during drag                                            |
+| `chosenClass`          | `string`              | CSS class applied to the chosen element                                                       |
+| `dragClass`            | `string`              | CSS class applied to the dragging element                                                     |
+| `fallbackOnBody`       | `boolean`             | Append ghost element to document body                                                         |
+| `fallbackTolerance`    | `number`              | Number of pixels a point should move before triggering drag                                   |
+| `fallbackClass`        | `string`              | CSS class applied when using forceFallback                                                    |
+| `fallbackOffset`       | `object`              | Fallback offset configuration                                                                 |
+| `forceFallback`        | `boolean`             | Force the fallback to activate                                                                |
+| `filter`               | `string \| function`  | CSS selector or function to filter items that should not be draggable                         |
+| `preventOnFilter`      | `boolean`             | Call preventDefault on filter event                                                           |
+| `direction`            | `string`              | Direction of Sortable ('vertical' or 'horizontal', auto-detected if not provided)            |
+| `swapThreshold`        | `number`              | Threshold of swap zone (0-1)                                                                  |
+| `invertSwap`           | `boolean`             | Inverts swap threshold direction                                                              |
+| `invertedSwapThreshold`| `number`              | Threshold when swapping direction is inverted                                                 |
+| `removeCloneOnHide`    | `boolean`             | Remove clone element when not showing                                                         |
+| `ignore`               | `string`              | CSS selector for elements to ignore                                                           |
+| `touchStartThreshold`  | `number`              | Number of pixels a point should move before cancelling a delayed drag event                   |
+| `emptyInsertThreshold` | `number`              | Distance mouse must be from empty sortable to insert drag element into it                     |
+| `dropBubble`           | `boolean`             | Enable drop bubble                                                                            |
+| `dragoverBubble`       | `boolean`             | Enable dragover bubble                                                                        |
+| `dataIdAttr`           | `string`              | HTML attribute that defines the data id                                                       |
+| `delayOnTouchOnly`     | `boolean`             | Only delay on touch devices                                                                   |
+| `easing`               | `string`              | Easing for animation (e.g., 'cubic-bezier(1, 0, 0, 1)')                                       |
+| `setData`              | `function`            | Function to set data for dragover/drop events                                                 |
+| `store`                | `object`              | Store module for saving and restoring the sort order                                          |
 
 ### Outputs
 
-| Output           | Type                        | Description                                        |
-|------------------|-----------------------------|----------------------------------------------------|
-| `sortablejsInit` | `EventEmitter<Sortable>`    | Emits the instantiated Sortable instance on init   |
+All outputs emit events that are proxied through Angular's zone for proper change detection:
+
+| Output       | Type                                                      | Description                                                        |
+|--------------|-----------------------------------------------------------|--------------------------------------------------------------------|
+| `init`       | `EventEmitter<Sortable>`                                  | Emits the instantiated Sortable instance on initialization         |
+| `start`      | `EventEmitter<SortableEvent>`                             | Fired when dragging starts                                         |
+| `end`        | `EventEmitter<SortableEvent>`                             | Fired when dragging ends                                           |
+| `add`        | `EventEmitter<SortableEvent>`                             | Element is added from another list                                 |
+| `remove`     | `EventEmitter<SortableEvent>`                             | Element is removed to another list                                 |
+| `update`     | `EventEmitter<SortableEvent>`                             | Element position is updated within the same list                   |
+| `sortEvent`  | `EventEmitter<SortableEvent>`                             | Called when the list is sorted (any change in order)               |
+| `filterEvent`| `EventEmitter<SortableEvent>`                             | Called when an attempt is made to drag a filtered element          |
+| `change`     | `EventEmitter<SortableEvent>`                             | Called when list changes by adding or removing an item             |
+| `choose`     | `EventEmitter<SortableEvent>`                             | Element is chosen (mouse down on draggable element)                |
+| `unchoose`   | `EventEmitter<SortableEvent>`                             | Element is unchosen (mouse up without drag)                        |
+| `clone`      | `EventEmitter<SortableEvent>`                             | Element is cloned when dragging between lists with clone mode      |
+| `move`       | `EventEmitter<{ event: MoveEvent; originalEvent: Event }>` | Called during drag move with move event details                   |
 
 ## SortableJS Options
 
-All SortableJS options can be passed via `sortablejsOptions`. They are proxied into Angular's zone to keep change detection predictable.
+All SortableJS options can be passed via `options`. They are proxied into Angular's zone to keep change detection predictable.
 
 ### Common Options
 
 ```typescript
-interface SortablejsOptions {
+import { Options } from 'sortablejs';
+
+interface SortableOptions extends Options {
   animation?: number;        // Animation speed in ms
   handle?: string;           // CSS selector for drag handle
   filter?: string;           // CSS selector for elements to ignore
@@ -196,7 +255,7 @@ interface SortablejsOptions {
 ### Simple Sortable List
 
 ```html
-<ul [sortablejs]="items">
+<ul [hubUISortable]="items">
   @for (item of items; track item) {
     <li>{{ item }}</li>
   }
@@ -206,7 +265,7 @@ interface SortablejsOptions {
 ### With Animation and Handle
 
 ```html
-<div [sortablejs]="items" [sortablejsOptions]="{ animation: 150, handle: '.drag-handle' }">
+<div [hubUISortable]="items" [options]="{ animation: 150, handle: '.drag-handle' }">
   @for (item of items; track item.id) {
     <div class="item">
       <span class="drag-handle">&#9776;</span>
@@ -222,14 +281,14 @@ interface SortablejsOptions {
 @Component({
   selector: 'app-multi-list',
   standalone: true,
-  imports: [SortablejsModule],
+  imports: [SortableModule],
   template: `
-    <div class="list" [sortablejs]="list1" [sortablejsOptions]="options">
+    <div class="list" [hubUISortable]="list1" [options]="options">
       @for (item of list1; track item) {
         <div>{{ item }}</div>
       }
     </div>
-    <div class="list" [sortablejs]="list2" [sortablejsOptions]="options">
+    <div class="list" [hubUISortable]="list2" [options]="options">
       @for (item of list2; track item) {
         <div>{{ item }}</div>
       }
@@ -253,10 +312,10 @@ export class MultiListComponent {
 @Component({
   selector: 'app-form-array',
   standalone: true,
-  imports: [ReactiveFormsModule, SortablejsModule],
+  imports: [ReactiveFormsModule, SortableModule],
   template: `
     <form [formGroup]="form">
-      <div [sortablejs]="formArray" [sortablejsOptions]="{ animation: 150 }">
+      <div [hubUISortable]="formArray" [options]="{ animation: 150 }">
         @for (control of formArray.controls; track control; let i = $index) {
           <div>
             <input [formControlName]="i" />
@@ -287,11 +346,11 @@ export class FormArrayComponent {
 @Component({
   selector: 'app-clone',
   standalone: true,
-  imports: [SortablejsModule],
+  imports: [SortableModule],
   template: `
-    <div [sortablejs]="items"
-         [sortablejsOptions]="cloneOptions"
-         [sortablejsCloneFunction]="cloneItem">
+    <div [hubUISortable]="items"
+         [options]="cloneOptions"
+         [cloneFunction]="cloneItem">
       @for (item of items; track item.name) {
         <div>{{ item.name }}</div>
       }
@@ -318,7 +377,7 @@ export class CloneComponent {
 For cases where the directive host is wrapped by another component (e.g., Angular Material):
 
 ```html
-<mat-list [sortablejs]="items" sortablejsContainer=".mat-list-inner">
+<mat-list [hubUISortable]="items" container=".mat-list-inner">
   @for (item of items; track item) {
     <mat-list-item>{{ item }}</mat-list-item>
   }
@@ -342,8 +401,8 @@ The `ng-hub-ui-sortable` component is versatile and can be used in various real-
 Here are some common issues and how to resolve them:
 
 ### Drag and drop not working
-- **Check imports**: Ensure `SortablejsModule` is properly imported
-- **Verify binding**: Make sure `[sortablejs]` is bound to an array or FormArray
+- **Check imports**: Ensure `SortableModule` is properly imported
+- **Verify binding**: Make sure `[hubUISortable]` is bound to an array or FormArray
 - **Check container**: Items must be direct children of the sortable container
 
 ### Array not updating
@@ -352,11 +411,11 @@ Here are some common issues and how to resolve them:
 
 ### Events not firing
 - **Zone proxying**: Events are proxied through Angular's zone automatically
-- **Option reference**: Provide a new object reference to `sortablejsOptions` when updating options
+- **Option reference**: Provide a new object reference to `options` when updating options
 
 ### Multi-list issues
 - **Group name**: Ensure all lists share the same `group` name in options
-- **Module import**: `SortablejsModule` must be imported in both components' modules
+- **Module import**: `SortableModule` must be imported in both components' modules
 
 ### FormArray sync issues
 - **Direct binding**: Bind the FormArray directly, not the parent FormGroup

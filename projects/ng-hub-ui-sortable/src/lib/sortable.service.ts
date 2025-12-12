@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
-export class SortablejsService {
+export class SortableService {
 
   // original library calls the events in unnatural order
   // first the item is added, then removed from the previous array

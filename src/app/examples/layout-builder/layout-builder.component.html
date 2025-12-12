@@ -1,0 +1,192 @@
+<div class="container-fluid d-flex align-items-center justify-content-between mb-3">
+  <h1 class="h3 mb-0">Layout Builder - Nested Lists</h1>
+  <a
+    class="btn btn-outline-secondary btn-sm"
+    href="https://github.com/carlos-morcillo/ng-hub-ui-sortable/tree/master/src/app/examples/layout-builder"
+    target="_blank"
+  >
+    <i class="bi bi-github me-1"></i>View code
+  </a>
+</div>
+
+<div class="container-fluid">
+  <p class="lead mb-3">
+    A powerful example showing <strong>nested sortable lists</strong> with drag handles and component slots.
+  </p>
+  <p class="mb-4">
+    It demonstrates building hierarchical structures with drag-and-drop—ideal for layout builders and visual organizers.
+  </p>
+
+<!-- ============================================
+     TEMPLATE: WIDGETS (only inside generics)
+     ============================================ -->
+<ng-template #renderWidgets let-widgetsList>
+  @for (widget of widgetsList; track widget.id) {
+  <div
+    class="layout-builder__widget"
+    tabindex="0"
+    [attr.data-data]="widget.data"
+  >
+    <button class="layout-builder__drag-handle">⋮⋮</button>
+    <div class="layout-builder__item-content">{{ widget.label }}</div>
+  </div>
+  }
+</ng-template>
+
+<!-- ============================================
+     TEMPLATE: GENERIC (root or inside tabs)
+     ============================================ -->
+<ng-template #renderGeneric let-generic>
+  <div
+		class="layout-builder__generic layout-builder__root-item"
+		tabindex="0"
+		[attr.data-data]="generic.data"
+		[style.width]="slotWidth(generic.width)"
+	>
+    <button class="layout-builder__drag-handle">⋮⋮</button>
+    <div class="layout-builder__item-header">{{ generic.label }}</div>
+    <div
+			class="layout-builder__widget-container layout-builder__sortable"
+			[hubSortable]="generic.children"
+			[options]="widgetOptions"
+			(start)="onDragStart($event)"
+			(end)="onWidgetMoveEnd($event)"
+			(add)="onWidgetAdded($event)"
+			(update)="onWidgetReordered($event)"
+			(remove)="onWidgetRemoved($event)"
+			(change)="onDragChange($event)"
+    >
+      <ng-container
+        *ngTemplateOutlet="
+          renderWidgets;
+          context: { $implicit: generic.children }
+        "
+      ></ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<!-- ============================================
+     TEMPLATE: TABS (root level)
+     ============================================ -->
+<ng-template #renderTabs let-tabsItem>
+  <div
+		class="layout-builder__tabs layout-builder__root-item"
+		tabindex="0"
+		[attr.data-data]="tabsItem.data"
+		[style.width]="slotWidth(tabsItem.width)"
+	>
+    <button class="layout-builder__drag-handle">⋮⋮</button>
+    <div class="layout-builder__item-header">{{ tabsItem.label }}</div>
+
+    <div
+			class="layout-builder__tab-headers nav nav-tabs"
+			[hubSortable]="tabsItem.children"
+			[options]="tabHeaderOptions"
+			(start)="onDragStart($event)"
+			(end)="onDragEnd()"
+			(update)="onTabHeadersReordered($event)"
+		>
+      @for (tab of tabsItem.children; track tab.id; let i = $index) {
+      <div
+        class="layout-builder__tab-header nav-link d-flex align-items-center gap-2"
+        [class.layout-builder__tab-header--active]="
+          tabsItem.activeTabIndex === i
+        "
+        [class.active]="tabsItem.activeTabIndex === i"
+        [attr.data-data]="tab.data"
+        (click)="setActiveTab(tabsItem, i)"
+      >
+        <span>{{ tab.label }}</span>
+        <button
+          class="layout-builder__tab-close"
+          (click)="removeTab(tabsItem, i); $event.stopPropagation()"
+          title="Remove tab"
+        >
+          ×
+        </button>
+      </div>
+      }
+      <button
+        class="layout-builder__tab-add btn btn-sm btn-outline-primary ms-2"
+        (click)="addTab(tabsItem)"
+        title="Add tab"
+      >
+        +
+      </button>
+    </div>
+
+    <div class="layout-builder__tab-contents tab-content">
+      @for (tab of tabsItem.children; track tab.id; let i = $index) {
+      <div
+				class="layout-builder__tab-content layout-builder__sortable tab-pane fade p-3"
+				[class.layout-builder__tab-content--active]="
+					tabsItem.activeTabIndex === i
+				"
+				[hubSortable]="tab.children"
+				[options]="genericContainerOptions"
+				(start)="onDragStart($event)"
+				(end)="onGenericMoveEnd($event)"
+				(add)="onSlotAdded($event)"
+				(update)="onSlotMoved($event)"
+				(remove)="onSlotRemoved($event)"
+				(change)="onDragChange($event)"
+      >
+        @for (generic of tab.children; track generic.id) {
+        <ng-container
+          *ngTemplateOutlet="renderGeneric; context: { $implicit: generic }"
+        ></ng-container>
+        }
+      </div>
+      }
+    </div>
+  </div>
+</ng-template>
+
+<!-- ============================================
+     ROOT CONTAINER
+     Accepts: generic and tabs
+     ============================================ -->
+<div class="layout-builder">
+	<h2 class="layout-builder__title">Demo: Generic, Tabs & Widgets</h2>
+	<div
+		id="root_container"
+		class="layout-builder__root layout-builder__sortable"
+		[hubSortable]="items"
+		[options]="rootOptions"
+		(start)="onDragStart($event)"
+		(end)="onDragEnd()"
+		(add)="onSlotAdded($event)"
+		(update)="onSlotMoved($event)"
+		(remove)="onSlotRemoved($event)"
+		(change)="onDragChange($event)"
+  >
+    @for (item of items; track item.id) { @switch (item.type) { @case
+    ('generic') {
+    <ng-container
+      *ngTemplateOutlet="renderGeneric; context: { $implicit: item }"
+    ></ng-container>
+		} @case ('tabs') {
+		<ng-container
+			*ngTemplateOutlet="renderTabs; context: { $implicit: item }"
+		></ng-container>
+		} } }
+	</div>
+
+	<div class="layout-builder__log card mt-3">
+		<div class="card-header">Move log</div>
+		<div class="card-body">
+			@if (logs.length === 0) {
+			<p class="text-muted mb-0">No events yet.</p>
+			} @else {
+			<ul class="layout-builder__log-list">
+				@for (entry of logs; track entry) {
+				<li>{{ entry }}</li>
+				}
+			</ul>
+			}
+		</div>
+	</div>
+</div>
+
+</div>

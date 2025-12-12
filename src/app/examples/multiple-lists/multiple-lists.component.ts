@@ -1,124 +1,79 @@
-import { Component } from '@angular/core';
-import {Options} from 'sortablejs';
-import { JsonPipe } from '@angular/common';
-import { SortablejsDirective } from 'ng-hub-ui-sortable';
+import { JsonPipe } from "@angular/common";
+import { Component } from "@angular/core";
+import { SortableDirective } from "ng-hub-ui-sortable";
+import { Options } from "sortablejs";
 
 @Component({
-    selector: 'app-multiple-lists',
-    templateUrl: './multiple-lists.component.html',
-    styleUrls: ['./multiple-lists.component.css'],
-    imports: [
-    SortablejsDirective,
-    JsonPipe
-]
+  selector: "app-multiple-lists",
+  templateUrl: "./multiple-lists.component.html",
+  styleUrls: ["./multiple-lists.component.css"],
+  standalone: true,
+  imports: [SortableDirective, JsonPipe],
 })
 export class MultipleListsComponent {
-
   // normal groups
-  normalList1 = [
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-  ];
+  normalList1 = ["1", "2", "3", "4", "5"];
 
-  normalList2 = [
-    '6',
-    '7',
-    '8',
-    '9',
-    '10',
-  ];
+  normalList2 = ["6", "7", "8", "9", "10"];
 
   normalOptions: Options = {
-    group: 'normal-group',
+    group: "normal-group",
   };
 
   // clone groups
   // normal groups
-  cloneList1 = [
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-  ];
+  cloneList1 = ["1", "2", "3", "4", "5"];
 
-  cloneList2 = [
-    '6',
-    '7',
-    '8',
-    '9',
-    '10',
-  ];
+  cloneList2 = ["6", "7", "8", "9", "10"];
 
   clone1Options: Options = {
     group: {
-      name: 'clone-group',
-      pull: 'clone',
+      name: "clone-group",
+      pull: "clone",
       put: false,
     },
   };
 
   clone2Options: Options = {
-    group: 'clone-group',
+    group: "clone-group",
   };
 
   // super example
-  list1 = [
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-  ];
+  list1 = ["1", "2", "3", "4", "5"];
 
-  list2 = [
-    '6',
-    '7',
-    '8',
-    '9',
-    '10',
-  ];
+  list2 = ["6", "7", "8", "9", "10"];
 
-  list3 = [
-    '11',
-    '12',
-  ];
+  list3 = ["11", "12"];
 
-  list4 = [
-    '13',
-  ];
+  list4 = ["13"];
 
   list1Options: Options = {
     group: {
-      name: 'group1',
+      name: "group1",
       put: false,
     },
   };
 
   list2Options: Options = {
     group: {
-      name: 'group2',
-      put: ['group1', 'group2'],
+      name: "group2",
+      put: ["group1", "group2"],
     },
   };
 
   list3Options: Options = {
     group: {
-      name: 'group2',
-      pull: 'clone',
-      put: ['group1', 'group2'],
+      name: "group2",
+      pull: "clone",
+      put: ["group1", "group2"],
       revertClone: true,
     },
   };
 
   list4Options: Options = {
     group: {
-      name: 'group2',
-      put: ['group1'],
+      name: "group2",
+      put: ["group1"],
     },
   };
-
 }

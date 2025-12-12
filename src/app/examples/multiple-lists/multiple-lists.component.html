@@ -1,143 +1,184 @@
-<h1>Connecting multiple sortable lists</h1>
-
-<p class="lead">
-  <strong>
-    <a href="https://github.com/carlos-morcillo/ng-hub-ui-sortable/tree/master/src/app/examples/multiple-lists"
-    target="_blank">The source code</a>
-  </strong>
-</p>
-
-This shows how the <em>sortable</em> lists can be connected together. Pay attention to the <em>sortable</em> CSS class
-(gives a <em>min-height</em>) that does not allow lists to become invisible when all items are gone
-
-<h2 class="mt-4 mb-3">Transfer between lists</h2>
-
-<p>
-  These lists are connected together. You can drag / drop elements across the lists.
-</p>
-
-<div class="row">
-  <div class="col-sm-3">
-    <ul class="list-group sortable" [sortablejs]="normalList1" [sortablejsOptions]="normalOptions">
-      @for (item of normalList1; track item) {
-        <li class="list-group-item">Element {{ item }}</li>
-      }
-    </ul>
-  </div>
-
-  <div class="col-sm-3">
-    <ul class="list-group sortable" [sortablejs]="normalList2" [sortablejsOptions]="normalOptions">
-      @for (item of normalList2; track item) {
-        <li class="list-group-item">Element {{ item }}</li>
-      }
-    </ul>
-  </div>
+<div class="container-fluid d-flex align-items-center justify-content-between mb-3">
+  <h1 class="h3 mb-0">Multiple connected lists</h1>
+  <a
+    class="btn btn-outline-secondary btn-sm"
+    href="https://github.com/carlos-morcillo/ng-hub-ui-sortable/tree/master/src/app/examples/multiple-lists"
+    target="_blank"
+  >
+    <i class="bi bi-github me-1"></i>View code
+  </a>
 </div>
 
-<p class="my-3">and the actual state is</p>
+<div class="container-fluid">
+  <p class="lead mb-3">
+    This shows how <em>sortable</em> lists can be connected to each other.
+  </p>
+  <p class="mb-4">
+    Note the <em>sortable</em> CSS class (gives a <em>min-height</em>) so the lists never collapse when empty.
+  </p>
 
-<div class="row">
-  <div class="col-sm-3">
-    <div class="alert alert-dark">> {{ normalList1 | json }}</div>
-  </div>
-  <div class="col-sm-3">
-    <div class="alert alert-dark">> {{ normalList2 | json }}</div>
-  </div>
-</div>
+  <h2 class="mt-4 mb-3">Transfer between lists</h2>
 
-<h2 class="mt-4 mb-3">Clone items</h2>
+  <p>
+    These lists are connected together. You can drag / drop elements across the
+    lists.
+  </p>
 
-<p>The list 1 is a clone factory and list 2 can be its target.</p>
-
-<div class="row">
-  <div class="col-sm-3">
-    <ul class="list-group sortable" [sortablejs]="cloneList1" [sortablejsOptions]="clone1Options">
-      @for (item of cloneList1; track item) {
+  <div class="row">
+    <div class="col-sm-3">
+      <ul
+        class="list-group sortable"
+        [hubSortable]="normalList1"
+        [options]="normalOptions"
+      >
+        @for (item of normalList1; track item) {
         <li class="list-group-item">Element {{ item }}</li>
-      }
-    </ul>
-  </div>
+        }
+      </ul>
+    </div>
 
-  <div class="col-sm-3">
-    <ul class="list-group sortable" [sortablejs]="cloneList2" [sortablejsOptions]="clone2Options">
-      @for (item of cloneList2; track item) {
+    <div class="col-sm-3">
+      <ul
+        class="list-group sortable"
+        [hubSortable]="normalList2"
+        [options]="normalOptions"
+      >
+        @for (item of normalList2; track item) {
         <li class="list-group-item">Element {{ item }}</li>
-      }
-    </ul>
+        }
+      </ul>
+    </div>
   </div>
-</div>
 
-<p class="my-3">and the actual state is</p>
+  <p class="my-3">and the actual state is</p>
 
-<div class="row">
-  <div class="col-sm-3">
-    <div class="alert alert-dark">> {{ cloneList1 | json }}</div>
+  <div class="row">
+    <div class="col-sm-3">
+      <code> {{ normalList1 | json }}</code>
+    </div>
+    <div class="col-sm-3">
+      <code> {{ normalList2 | json }}</code>
+    </div>
   </div>
-  <div class="col-sm-3">
-    <div class="alert alert-dark">> {{ cloneList2 | json }}</div>
-  </div>
-</div>
 
+  <h2 class="mt-4 mb-3">Clone items</h2>
 
-<h2 class="mt-4 mb-3">Super complicated example</h2>
+  <p>The list 1 is a clone factory and list 2 can be its target.</p>
 
-<p>
-  These lists are connected together.
-  You can drag / drop elements across the lists. Pay attention to the <em>sortable</em> CSS class
-  (gives a <em>min-height</em>) that does not allow list to become invisible when all items are gone
-</p>
-
-<div class="row">
-  <div class="col-sm-3">
-    <strong>1. This list cannot accept items</strong>
-    <ul class="mt-2 list-group sortable" [sortablejs]="list1" [sortablejsOptions]="list1Options">
-      @for (item of list1; track item) {
+  <div class="row">
+    <div class="col-sm-3">
+      <ul
+        class="list-group sortable"
+        [hubSortable]="cloneList1"
+        [options]="clone1Options"
+      >
+        @for (item of cloneList1; track item) {
         <li class="list-group-item">Element {{ item }}</li>
-      }
-    </ul>
-  </div>
+        }
+      </ul>
+    </div>
 
-  <div class="col-sm-3">
-    <strong>2. This is a <em>normal</em> list</strong>
-    <ul class="mt-2 list-group sortable" [sortablejs]="list2" [sortablejsOptions]="list2Options">
-      @for (item of list2; track item) {
+    <div class="col-sm-3">
+      <ul
+        class="list-group sortable"
+        [hubSortable]="cloneList2"
+        [options]="clone2Options"
+      >
+        @for (item of cloneList2; track item) {
         <li class="list-group-item">Element {{ item }}</li>
-      }
-    </ul>
+        }
+      </ul>
+    </div>
   </div>
 
-  <div class="col-sm-3">
-    <strong>3. This list clones its children</strong>
-    <ul class="mt-2 list-group sortable" [sortablejs]="list3" [sortablejsOptions]="list3Options">
-      @for (item of list3; track item) {
+  <p class="my-3">and the actual state is</p>
+
+  <div class="row">
+    <div class="col-sm-3">
+      <code> {{ cloneList1 | json }}</code>
+    </div>
+    <div class="col-sm-3">
+      <code> {{ cloneList2 | json }}</code>
+    </div>
+  </div>
+
+  <h2 class="mt-4 mb-3">Super complicated example</h2>
+
+  <p>
+    These lists are connected together. You can drag / drop elements across the
+    lists. Pay attention to the <em>sortable</em> CSS class (gives a
+    <em>min-height</em>) that does not allow list to become invisible when all
+    items are gone
+  </p>
+
+  <div class="row">
+    <div class="col-sm-3">
+      <strong>1. This list cannot accept items</strong>
+      <ul
+        class="mt-2 list-group sortable"
+        [hubSortable]="list1"
+        [options]="list1Options"
+      >
+        @for (item of list1; track item) {
         <li class="list-group-item">Element {{ item }}</li>
-      }
-    </ul>
-  </div>
+        }
+      </ul>
+    </div>
 
-  <div class="col-sm-3">
-    <strong>4. Only #1 can put here</strong>
-    <ul class="mt-2 list-group sortable" [sortablejs]="list4" [sortablejsOptions]="list4Options">
-      @for (item of list4; track item) {
+    <div class="col-sm-3">
+      <strong>2. This is a <em>normal</em> list</strong>
+      <ul
+        class="mt-2 list-group sortable"
+        [hubSortable]="list2"
+        [options]="list2Options"
+      >
+        @for (item of list2; track item) {
         <li class="list-group-item">Element {{ item }}</li>
-      }
-    </ul>
-  </div>
-</div>
+        }
+      </ul>
+    </div>
 
-<p class="my-3">and the actual state is</p>
+    <div class="col-sm-3">
+      <strong>3. This list clones its children</strong>
+      <ul
+        class="mt-2 list-group sortable"
+        [hubSortable]="list3"
+        [options]="list3Options"
+      >
+        @for (item of list3; track item) {
+        <li class="list-group-item">Element {{ item }}</li>
+        }
+      </ul>
+    </div>
 
-<div class="row">
-  <div class="col-sm-3">
-    <div class="alert alert-dark">> {{ list1 | json }}</div>
+    <div class="col-sm-3">
+      <strong>4. Only #1 can put here</strong>
+      <ul
+        class="mt-2 list-group sortable"
+        [hubSortable]="list4"
+        [options]="list4Options"
+      >
+        @for (item of list4; track item) {
+        <li class="list-group-item">Element {{ item }}</li>
+        }
+      </ul>
+    </div>
   </div>
-  <div class="col-sm-3">
-    <div class="alert alert-dark">> {{ list2 | json }}</div>
-  </div>
-  <div class="col-sm-3">
-    <div class="alert alert-dark">> {{ list3 | json }}</div>
-  </div>
-  <div class="col-sm-3">
-    <div class="alert alert-dark">> {{ list4 | json }}</div>
+
+  <p class="my-3">and the actual state is</p>
+
+  <div class="row">
+    <div class="col-sm-3">
+      <code> {{ list1 | json }}</code>
+    </div>
+    <div class="col-sm-3">
+      <code> {{ list2 | json }}</code>
+    </div>
+    <div class="col-sm-3">
+      <code> {{ list3 | json }}</code>
+    </div>
+    <div class="col-sm-3">
+      <code> {{ list4 | json }}</code>
+    </div>
   </div>
 </div>

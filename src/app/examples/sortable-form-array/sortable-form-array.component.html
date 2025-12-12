@@ -1,29 +1,38 @@
-<h1>Sortable Array</h1>
+<div
+  class="container-fluid d-flex align-items-center justify-content-between mb-3"
+>
+  <h1 class="h3 mb-0">Sortable FormArray</h1>
+  <a
+    class="btn btn-outline-secondary btn-sm"
+    href="https://github.com/carlos-morcillo/ng-hub-ui-sortable/tree/master/src/app/examples/sortable-form-array"
+    target="_blank"
+  >
+    <i class="bi bi-github me-1"></i>View code
+  </a>
+</div>
 
-<p class="lead">
-  <strong>
-    <a href="https://github.com/carlos-morcillo/ng-hub-ui-sortable/tree/master/src/app/examples/sortable-form-array"
-    target="_blank">The source code</a>
-  </strong>
-</p>
+<div class="container-fluid">
+  <p class="lead mb-3">
+    Often you need to sort more than plain data. Complex forms with
+    <em>FormArray</em> controls are supported too.
+  </p>
 
-<p>
-  Most of the time one wants to sort something more than just data.
-  Complex forms with <em>FormArray</em> controls are also supported.
-</p>
+  <p class="mb-4">Try editing the text and reordering the inputs.</p>
 
-<p>Try to change the text and reorder the inputs</p>
-
-<ul class="list-group" [sortablejs]="citiesControls">
-  @for (city of citiesControls.controls; track city) {
+  <ul class="list-group" [hubSortable]="citiesControls">
+    @for (city of citiesControls.controls; track city) {
     <li class="list-group-item">
-      <input class="form-control" [formControl]="city">
+      <input class="form-control" [formControl]="city" />
     </li>
-  }
-</ul>
+    }
+  </ul>
 
-<p class="my-3">The actual value of the array</p>
+  <p class="my-3">The actual value of the array</p>
 
-<div class="alert alert-dark">
-  > {{ citiesControls.value | json }}
+  <div class="alert alert-dark">
+    <pre>
+	 {{ citiesControls.value | json }}
+ </pre
+    >
+  </div>
 </div>

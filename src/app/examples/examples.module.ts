@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SortablejsModule } from 'ng-hub-ui-sortable';
+import { SortableModule } from 'ng-hub-ui-sortable';
 import { MultipleListsComponent } from './multiple-lists/multiple-lists.component';
+import { LayoutBuilderComponent } from './layout-builder/layout-builder.component';
 import { SimpleSortableComponent } from './simple-sortable/simple-sortable.component';
 import { SortableFormArrayComponent } from './sortable-form-array/sortable-form-array.component';
 import { SortableWithOptionsComponent } from './sortable-with-options/sortable-with-options.component';
@@ -10,12 +11,13 @@ import { SortableWithOptionsComponent } from './sortable-with-options/sortable-w
 @NgModule({
     imports: [
         CommonModule,
-        SortablejsModule,
+        SortableModule,
         ReactiveFormsModule,
         SimpleSortableComponent,
         SortableWithOptionsComponent,
         SortableFormArrayComponent,
         MultipleListsComponent,
+        LayoutBuilderComponent,
     ],
 })
 export class ExamplesModule { }

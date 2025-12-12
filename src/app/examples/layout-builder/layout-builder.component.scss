@@ -1,0 +1,230 @@
+/* Variables CSS del componente */
+:host {
+	display: block;
+	--accent-color: #00d4ff;
+}
+
+/* ============================================
+   CONTENEDOR RAÍZ
+   ============================================ */
+.layout-builder__root {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+	padding: 1rem;
+	border: 1px dashed var(--bs-light);
+	border-radius: 8px;
+	min-height: 300px;
+	width: 100%;
+
+	> .layout-builder__root-item {
+		flex: 0 0 auto;
+	}
+}
+
+/* ============================================
+   ELEMENTOS COMUNES (generic, tabs)
+   ============================================ */
+.layout-builder__root-item {
+	position: relative;
+	border: 1px dashed var(--bs-dark);
+	border-radius: 8px;
+	padding: 1rem;
+	padding-top: 2.5rem;
+	transition: box-shadow 0.2s ease, border-color 0.2s ease;
+	min-width: 256px;
+
+	&:hover {
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+	}
+}
+
+.layout-builder__item-header {
+	font-weight: bold;
+	font-size: 1rem;
+
+	margin-bottom: 0.75rem;
+}
+
+.layout-builder__item-content {
+	font-size: 0.85rem;
+}
+
+/* ============================================
+   GENERIC
+   Contenedor de widgets
+   ============================================ */
+.layout-builder__generic {
+	.layout-builder__widget-container {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
+		min-height: 64px;
+		border: 1px dashed var(--bs-dark);
+		border-radius: 8px;
+		padding: 0.5rem;
+		&:empty {
+			&::after {
+				content: 'Drag widgets here';
+				font-size: 0.8rem;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 100%;
+			}
+		}
+	}
+
+	&.layout-builder__drag-over .layout-builder__widget-container {
+		border-color: var(--accent-color);
+		background: rgba(0, 212, 255, 0.1);
+	}
+}
+
+/* ============================================
+   WIDGETS
+   ============================================ */
+.layout-builder__widget {
+	position: relative;
+	border-radius: 0.5rem;
+	padding: 0.5rem 0.75rem;
+	padding-left: 2rem;
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+	width: 100%;
+	border: 1px dashed var(--bs-dark);
+
+	&:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+	}
+
+	&:active {
+		cursor: grabbing;
+	}
+}
+
+/* ============================================
+   BOTÓN DE ARRASTRE (drag handle)
+   ============================================ */
+.layout-builder__drag-handle {
+	position: absolute;
+	top: 0.5rem;
+	left: 0.5rem;
+	padding: 0.15rem 0.4rem;
+	font-size: 0.7rem;
+	border: 1px dashed var(--bs-light);
+	border-radius: 4px;
+	cursor: grab;
+	line-height: 1;
+
+	&:hover {
+		border-color: var(--accent-color);
+		background: var(--accent-color);
+		color: var(--bs-light);
+	}
+
+	&:active {
+		cursor: grabbing;
+	}
+}
+
+/* ============================================
+   PLACEHOLDER (elemento fantasma durante drag)
+   ============================================ */
+.sortable-placeholder {
+	background: rgba(0, 212, 255, 0.15) !important;
+	border: 2px dashed var(--accent-color) !important;
+	border-radius: 0.5rem;
+	min-height: 60px;
+}
+
+/* Placeholder for items in root */
+.layout-builder__root > .sortable-placeholder {
+	min-height: 80px;
+}
+
+/* Placeholder para widgets */
+.layout-builder__widget-container > .sortable-placeholder {
+	min-height: 40px;
+}
+
+/* Tab content: oculto por defecto */
+.layout-builder__tab-content {
+	display: none;
+}
+
+/* Active tab content: flex with gap and wrap to respect width */
+.layout-builder__tab-content--active {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem; /* equivalente a gap-3 de Bootstrap */
+	opacity: 1; /* emula .show de Bootstrap cuando se usa .fade */
+	border: 1px dashed var(--bs-dark);
+	border-top: none;
+}
+
+.layout-builder__tab-add {
+	align-self: center;
+	border-radius: 50%;
+	width: 24px;
+	aspect-ratio: 1;
+	padding: 0;
+}
+
+/* Tabs inactivas con fondo gris claro */
+.layout-builder__tab-header:not(.layout-builder__tab-header--active) {
+	background-color: #e9ecef;
+}
+
+/* Tab close button: borderless and visible on hover */
+.layout-builder__tab-header {
+	position: relative;
+
+	.layout-builder__tab-close {
+		border: none;
+		background: transparent;
+		color: var(--bs-dark);
+		opacity: 0;
+		transition: opacity 0.2s ease;
+		padding: 0 4px;
+		margin-right: -4px;
+		line-height: 1;
+	}
+
+	&:hover .layout-builder__tab-close {
+		opacity: 1;
+	}
+}
+
+/* ============================================
+   CLASE DRAG-OVER
+   ============================================ */
+.layout-builder__drag-over {
+	outline: 2px solid var(--accent-color) !important;
+	outline-offset: 2px;
+}
+
+/* ============================================
+   TÍTULO
+   ============================================ */
+.layout-builder__title {
+	margin-bottom: 1rem;
+	font-size: 1.25rem;
+}
+
+.layout-builder__log {
+	border: 1px dashed var(--bs-dark);
+
+	.card-header {
+		font-weight: 600;
+	}
+}
+
+.layout-builder__log-list {
+	margin: 0;
+	padding-left: 1.1rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	font-size: 0.875rem;
+}

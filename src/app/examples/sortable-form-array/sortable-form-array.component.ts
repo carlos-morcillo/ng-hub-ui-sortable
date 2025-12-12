@@ -1,17 +1,13 @@
 import { Component } from '@angular/core';
 import { UntypedFormArray, UntypedFormControl, ReactiveFormsModule } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
-import { SortablejsDirective } from 'ng-hub-ui-sortable';
+import { SortableDirective } from 'ng-hub-ui-sortable';
 
 @Component({
     selector: 'app-sortable-form-array',
     templateUrl: './sortable-form-array.component.html',
     styleUrls: ['./sortable-form-array.component.css'],
-    imports: [
-    SortablejsDirective,
-    ReactiveFormsModule,
-    JsonPipe
-]
+    imports: [SortableDirective, ReactiveFormsModule, JsonPipe],
 })
 export class SortableFormArrayComponent {
 

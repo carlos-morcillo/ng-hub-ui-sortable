@@ -1,28 +1,33 @@
-<h1>Sortable Array</h1>
+<div class="container-fluid d-flex align-items-center justify-content-between mb-3">
+  <h1 class="h3 mb-0">Sortable Array</h1>
+  <a
+    class="btn btn-outline-secondary btn-sm"
+    href="https://github.com/carlos-morcillo/ng-hub-ui-sortable/tree/master/src/app/examples/simple-sortable"
+    target="_blank"
+  >
+    <i class="bi bi-github me-1"></i>View code
+  </a>
+</div>
 
-<p class="lead">
-  <strong>
-    <a href="https://github.com/carlos-morcillo/ng-hub-ui-sortable/tree/master/src/app/examples/simple-sortable"
-    target="_blank">The source code</a>
-  </strong>
-</p>
-
-The examples below shows various bootstrap.css elements that can be <em>sortable</em>.
-
-They share the same model that's why every time you drag / drop the element all others get updated.
-
-Actually everything can be sortable.
+<div class="container-fluid">
+  <p class="lead mb-3">
+    The examples below show several Bootstrap elements that can be made <em>sortable</em>.
+  </p>
+  <p class="mb-4">
+    They share the same model, so any drag/drop updates all the blocks.
+    In practice, any element can be sortable.
+  </p>
 
 <h2 class="mt-4 mb-3">Button groups</h2>
 
 <div class="clearfix">
-  <div class="btn-group-vertical float-left" [sortablejs]="cities">
+  <div class="btn-group-vertical float-left" [hubSortable]="cities">
     @for (city of cities; track city) {
       <button type="button" class="btn btn-secondary">{{ city }}</button>
     }
   </div>
 
-  <div class="btn-group ml-3" [sortablejs]="cities">
+  <div class="btn-group ml-3" [hubSortable]="cities">
     @for (city of cities; track city) {
       <button type="button" class="btn btn-secondary">{{ city }}</button>
     }
@@ -31,7 +36,7 @@ Actually everything can be sortable.
 
 <h2 class="mt-4 mb-3">Cards</h2>
 
-<div class="row" [sortablejs]="cities">
+<div class="row" [hubSortable]="cities">
   @for (city of cities; track city) {
     <div class="col-sm-4 my-3">
       <div class="card">
@@ -44,7 +49,7 @@ Actually everything can be sortable.
 
 <h2 class="mt-4 mb-3">Navigation</h2>
 
-<ul class="nav nav-pills mb-3" [sortablejs]="cities">
+<ul class="nav nav-pills mb-3" [hubSortable]="cities">
   @for (city of cities; track city) {
     <li class="nav-item">
       <a class="nav-link active mr-1">{{ city }}</a>
@@ -53,7 +58,7 @@ Actually everything can be sortable.
 </ul>
 
 <nav aria-label="breadcrumb" role="navigation">
-  <ol class="breadcrumb" [sortablejs]="cities">
+  <ol class="breadcrumb" [hubSortable]="cities">
     @for (city of cities; track city) {
       <li class="breadcrumb-item active">{{ city }}</li>
     }
@@ -64,4 +69,6 @@ Actually everything can be sortable.
 
 <div class="alert alert-dark">
   > {{ cities | json }}
+</div>
+
 </div>
