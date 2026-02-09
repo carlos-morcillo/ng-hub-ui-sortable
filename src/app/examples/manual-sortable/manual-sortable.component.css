@@ -1,0 +1,72 @@
+/**
+ * Styles for the manual sortable example component.
+ * Ensures lists maintain minimum height and proper visual feedback during drag operations.
+ */
+
+/**
+ * Ensure sortable lists have a minimum height so they don't collapse when empty.
+ * This makes it easier to drop items into empty lists.
+ */
+.min-height-list {
+  min-height: 150px;
+}
+
+/**
+ * Base sortable list styling with minimum height.
+ */
+.sortable {
+  min-height: 50px;
+}
+
+/**
+ * Add visual feedback when hovering over sortable items.
+ */
+.list-group-item {
+  transition: all 0.2s ease;
+}
+
+.list-group-item:hover {
+  background-color: #f8f9fa;
+}
+
+/**
+ * Style for the grip handle icon to indicate draggable items.
+ */
+.bi-grip-vertical {
+  cursor: grab !important;
+}
+
+.bi-grip-vertical:active {
+  cursor: grabbing !important;
+}
+
+/**
+ * Smooth transitions for cards.
+ */
+.card {
+  transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+/**
+ * Code block styling.
+ */
+pre {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+pre code {
+  font-size: 0.875rem;
+}
+
+/**
+ * Operations log styling.
+ */
+.operations-log {
+  max-height: 200px;
+  overflow-y: auto;
+}

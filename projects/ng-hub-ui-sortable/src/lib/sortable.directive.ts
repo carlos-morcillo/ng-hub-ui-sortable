@@ -150,6 +150,45 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 	 */
 	readonly cloneFunction = input<(item: any) => any>(undefined);
 
+	/**
+	 * Controls whether the directive automatically updates the bound array on drag-and-drop operations.
+	 *
+	 * When `true` (default): The directive automatically modifies the array when items are dragged and dropped.
+	 * This is the traditional behavior and requires minimal code.
+	 *
+	 * When `false`: The directive does NOT modify the array. Instead, it only emits events with all the
+	 * necessary information, giving you full control over how to update your data model.
+	 * This approach is similar to Angular CDK's drag-and-drop and is useful when you need to:
+	 * - Perform validation before updating
+	 * - Make API calls to persist changes
+	 * - Use immutable data patterns
+	 * - Have fine-grained control over state management
+	 *
+	 * @default true
+	 *
+	 * @example
+	 * ```html
+	 * <!-- Automatic mode (default) -->
+	 * <div [hubSortable]="items"></div>
+	 *
+	 * <!-- Manual mode -->
+	 * <div [hubSortable]="items"
+	 *      [autoUpdateArray]="false"
+	 *      (update)="onUpdate($event)"></div>
+	 * ```
+	 *
+	 * @example
+	 * ```typescript
+	 * import { moveItemInArray } from 'ng-hub-ui-sortable';
+	 *
+	 * onUpdate(event: SortableEvent) {
+	 *   // Manually update the array with full control
+	 *   moveItemInArray(this.items, event.oldIndex, event.newIndex);
+	 * }
+	 * ```
+	 */
+	readonly autoUpdateArray = input<boolean>(true);
+
 	/** List of individual option input names */
 	private readonly individualOptionInputs = INDIVIDUAL_OPTION_INPUTS;
 
@@ -211,7 +250,9 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 			const currentOptions: Options = optionsChange.currentValue || {};
 
 			Object.keys(currentOptions).forEach((optionName) => {
-				if (currentOptions[optionName] !== previousOptions[optionName]) {
+				if (
+					currentOptions[optionName] !== previousOptions[optionName]
+				) {
 					// use low-level option setter
 					this.sortableInstance?.option(
 						optionName as keyof Options,
@@ -462,24 +503,80 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 	/**
 	 * Gets event handler overrides that integrate SortableJS events with Angular.
 	 * These handlers manage data binding updates and emit Angular outputs.
+	 *
+	 * Event firing order and conditions:
+	 *
+	 * **Drag within same list:**
+	 * 1. onChoose - when item is selected
+	 * 2. onStart - when drag begins
+	 * 3. onMove - continuously during drag (multiple times)
+	 * 4. onUpdate - when item position changes within same list
+	 * 5. onSort - fired after any sorting operation (also after onUpdate)
+	 * 6. onChange - fired when list order changes
+	 * 7. onEnd - when drag ends
+	 *
+	 * **Drag between different lists:**
+	 * 1. onChoose - when item is selected (source list)
+	 * 2. onStart - when drag begins (source list)
+	 * 3. onMove - continuously during drag (multiple times)
+	 * 4. onRemove - when item leaves source list
+	 * 5. onAdd - when item enters target list
+	 * 6. onSort - fired in both lists after the operation
+	 * 7. onChange - fired in both lists
+	 * 8. onEnd - when drag ends (on original source list)
+	 *
+	 * **Clone mode:**
+	 * - onClone - fired when item is cloned for dragging
+	 * - onRemove and onAdd still fire, but original stays in source
+	 *
+	 * **Filter:**
+	 * - onFilter - fired when trying to drag a filtered (non-draggable) element
+	 *
+	 * **Unchoose:**
+	 * - onUnchoose - fired when selection is cancelled without dragging
+	 *
+	 * Note: In manual mode (autoUpdateArray: false), arrays are NOT automatically updated.
+	 * Events still fire with all necessary information for manual handling.
+	 *
 	 * @returns Options object with overridden event handlers
 	 */
 	private get overridenOptions(): Partial<Options> {
 		// always intercept standard events but act only in case items are set (bindingEnabled)
 		// allows to forget about tracking this.items changes
 		return {
+			/**
+			 * Fired when an element is dropped into the list from another list.
+			 * This event fires on the TARGET list.
+			 * Automatic mode: Inserts item at newIndex. Manual mode: Only emits event.
+			 */
 			onAdd: (event: SortableEvent) => {
-				this.service.transfer = (items: any[]) => {
-					this.getBindings().injectIntoEvery(event.newIndex, items);
-					this.proxyEvent('onAdd', event);
-				};
+				// Only auto-update if enabled
+				if (this.autoUpdateArray()) {
+					this.service.transfer = (items: any[]) => {
+						this.getBindings().injectIntoEvery(
+							event.newIndex,
+							items
+						);
+						this.proxyEvent('onAdd', event);
+					};
 
-				this.proxyEvent('onAddOriginal', event);
+					this.proxyEvent('onAddOriginal', event);
+				} else {
+					// Manual mode: just emit the event without modifying arrays
+					this.proxyEvent('onAdd', event);
+				}
 			},
+			/**
+			 * Fired when an element is removed from the list to another list.
+			 * This event fires on the SOURCE list.
+			 * Automatic mode: Removes item from oldIndex. Manual mode: Only emits event.
+			 * Works in conjunction with onAdd on the target list.
+			 */
 			onRemove: (event: SortableEvent) => {
 				const bindings = this.getBindings();
 
-				if (bindings.provided) {
+				// Only auto-update if enabled
+				if (this.autoUpdateArray() && bindings.provided) {
 					if (this.isCloning) {
 						this.service.transfer(
 							bindings
@@ -495,15 +592,23 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 						// Therefore we remove it immediately and also move the original item back to the source list.
 						// (event handler may be attached to the original item and not its clone, therefore keeping
 						// the original dom node, circumvents side effects )
-						this.renderer.removeChild(event.item.parentNode, event.item);
+						this.renderer.removeChild(
+							event.item.parentNode,
+							event.item
+						);
 						this.renderer.insertBefore(
 							event.clone.parentNode,
 							event.item,
 							event.clone
 						);
-						this.renderer.removeChild(event.clone.parentNode, event.clone);
+						this.renderer.removeChild(
+							event.clone.parentNode,
+							event.clone
+						);
 					} else {
-						this.service.transfer(bindings.extractFromEvery(event.oldIndex));
+						this.service.transfer(
+							bindings.extractFromEvery(event.oldIndex)
+						);
 					}
 
 					this.service.transfer = null;
@@ -511,25 +616,48 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 
 				this.proxyEvent('onRemove', event);
 			},
+			/**
+			 * Fired when sorting changes within the SAME list.
+			 * This fires when an item position changes in the same list (not between lists).
+			 * Automatic mode: Reorders array by moving item. Manual mode: Only emits event.
+			 * Note: onSort also fires after this event.
+			 */
 			onUpdate: (event: SortableEvent) => {
-				const bindings = this.getBindings();
-				const indexes = getIndexesFromEvent(event);
+				// Only auto-update if enabled
+				if (this.autoUpdateArray()) {
+					const bindings = this.getBindings();
+					const indexes = getIndexesFromEvent(event);
 
-				bindings.injectIntoEvery(
-					indexes.new,
-					bindings.extractFromEvery(indexes.old)
-				);
+					bindings.injectIntoEvery(
+						indexes.new,
+						bindings.extractFromEvery(indexes.old)
+					);
+				}
 				this.proxyEvent('onUpdate', event);
 			},
-			onStart: (event: SortableEvent) => this.proxyEvent('onStart', event),
+			/** Fired when dragging starts (mousedown/touchstart + movement). */
+			onStart: (event: SortableEvent) =>
+				this.proxyEvent('onStart', event),
+			/** Fired when dragging ends (mouseup/touchend). Always fires regardless of success. */
 			onEnd: (event: SortableEvent) => this.proxyEvent('onEnd', event),
+			/** Fired for ANY sorting operation. Fires AFTER onUpdate/onAdd causing duplicate events. */
 			onSort: (event: SortableEvent) => this.proxyEvent('onSort', event),
-			onFilter: (event: SortableEvent) => this.proxyEvent('onFilter', event),
-			onChange: (event: SortableEvent) => this.proxyEvent('onChange', event),
-			onChoose: (event: SortableEvent) => this.proxyEvent('onChoose', event),
+			/** Fired when attempting to drag a filtered (non-draggable) element. */
+			onFilter: (event: SortableEvent) =>
+				this.proxyEvent('onFilter', event),
+			/** Fired when list changes by adding or removing items. Fires alongside onAdd/onRemove. */
+			onChange: (event: SortableEvent) =>
+				this.proxyEvent('onChange', event),
+			/** Fired when element is chosen (mousedown/touchstart). */
+			onChoose: (event: SortableEvent) =>
+				this.proxyEvent('onChoose', event),
+			/** Fired when element is unchosen (mouseup/touchend without drag). */
 			onUnchoose: (event: SortableEvent) =>
 				this.proxyEvent('onUnchoose', event),
-			onClone: (event: SortableEvent) => this.proxyEvent('onClone', event),
+			/** Fired when creating a clone of element (only in clone mode). */
+			onClone: (event: SortableEvent) =>
+				this.proxyEvent('onClone', event),
+			/** Fired continuously during drag movement. Return false to cancel. */
 			onMove: (event: MoveEvent, originalEvent: Event) =>
 				this.proxyEvent('onMove', event, originalEvent)
 		};

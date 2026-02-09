@@ -4,7 +4,9 @@
     <p class="lead mb-3">
       <strong>ng-hub-ui-sortable</strong> provides a complete, modern
       integration of
-      <a href="https://github.com/SortableJS/Sortable" target="_blank"
+      <a
+        href="https://github.com/SortableJS/Sortable"
+        target="_blank"
         rel="noopener noreferrer"
         >SortableJS</a
       >
@@ -15,9 +17,11 @@
       The library covers simple scenarios like reordering items in a list, as
       well as advanced cases such as <strong>nested lists</strong>, item
       transfer between multiple lists, item cloning, integration with Angular
-      Reactive Forms (<code>FormArray</code>) and <strong>Angular Signals</strong> (<code>WritableSignal</code>), and full customization via
-      options and events. Every drag-and-drop action syncs automatically with
-      your data model, keeping your app reactive and predictable.
+      Reactive Forms (<code>FormArray</code>) and
+      <strong>Angular Signals</strong> (<code>WritableSignal</code>), and full
+      customization via options and events. Every drag-and-drop action syncs
+      automatically with your data model, keeping your app reactive and
+      predictable.
     </p>
     <div class="d-flex gap-2 flex-wrap">
       <a
@@ -44,9 +48,16 @@
       <h2 class="h5">Features</h2>
       <ul>
         <li>Simple directive to make any container sortable</li>
-        <li>Syncs drag-and-drop with arrays, <code>FormArray</code>, and writable signals</li>
-        <li>Native support for Angular signals for reactive state management</li>
-        <li>Access to the full SortableJS API and events within Angular zone</li>
+        <li>
+          Syncs drag-and-drop with arrays, <code>FormArray</code>, and writable
+          signals
+        </li>
+        <li>
+          Native support for Angular signals for reactive state management
+        </li>
+        <li>
+          Access to the full SortableJS API and events within Angular zone
+        </li>
         <li>Multi-list support, cloning, and custom clone functions</li>
         <li>Individual inputs for all SortableJS options</li>
         <li>Full TypeScript with strong typing</li>
@@ -109,8 +120,13 @@ export class AppModule &#123;&#125;</code></pre>
           <tbody>
             <tr>
               <td><code>[hubSortable]</code></td>
-              <td><code>any[] | FormArray | WritableSignal&lt;any[]&gt;</code></td>
-              <td>Array, FormArray, or writable signal synchronized with drag-and-drop</td>
+              <td>
+                <code>any[] | FormArray | WritableSignal&lt;any[]&gt;</code>
+              </td>
+              <td>
+                Array, FormArray, or writable signal synchronized with
+                drag-and-drop
+              </td>
             </tr>
             <tr>
               <td><code>[container]</code></td>
@@ -148,11 +164,17 @@ export class AppModule &#123;&#125;</code></pre>
             <li><code>[handle]</code> - CSS selector for the drag handle</li>
             <li><code>[animation]</code> - Animation speed (ms)</li>
             <li><code>[ghostClass]</code> - CSS class for the ghost element</li>
-            <li><code>[chosenClass]</code> - CSS class for the chosen element</li>
-            <li><code>[dragClass]</code> - CSS class for the dragging element</li>
+            <li>
+              <code>[chosenClass]</code> - CSS class for the chosen element
+            </li>
+            <li>
+              <code>[dragClass]</code> - CSS class for the dragging element
+            </li>
             <li><code>[filter]</code> - Filter for non-draggable elements</li>
             <li><code>[preventOnFilter]</code> - preventDefault on filter</li>
-            <li><code>[direction]</code> - Direction ('vertical' | 'horizontal')</li>
+            <li>
+              <code>[direction]</code> - Direction ('vertical' | 'horizontal')
+            </li>
           </ul>
         </div>
         <div class="col-md-6">
@@ -164,7 +186,9 @@ export class AppModule &#123;&#125;</code></pre>
             <li><code>[fallbackClass]</code> - CSS class for fallback</li>
             <li><code>[forceFallback]</code> - Force fallback activation</li>
             <li><code>[touchStartThreshold]</code> - Touch start threshold</li>
-            <li><code>[emptyInsertThreshold]</code> - Empty insert threshold</li>
+            <li>
+              <code>[emptyInsertThreshold]</code> - Empty insert threshold
+            </li>
             <li><code>[delayOnTouchOnly]</code> - Delay on touch only</li>
             <li><code>[easing]</code> - Easing function for animation</li>
             <li><code>[dataIdAttr]</code> - HTML attribute for data id</li>
@@ -177,9 +201,7 @@ export class AppModule &#123;&#125;</code></pre>
 
     <div class="mb-4">
       <h3 class="h6">Outputs (events)</h3>
-      <p class="small text-muted">
-        All events run within the Angular zone:
-      </p>
+      <p class="small text-muted">All events run within the Angular zone:</p>
       <div class="table-responsive">
         <table class="table table-sm table-striped">
           <thead>
@@ -341,7 +363,15 @@ export class MyComponent &#123;
       <li class="mb-2">
         <a routerLink="/sortable-signal" class="text-decoration-none">
           <i class="bi bi-arrow-right-circle me-2"></i>
-          <strong>Signal model</strong> - Sortable bound to Angular writable signals
+          <strong>Signal model</strong> - Sortable bound to Angular writable
+          signals
+        </a>
+      </li>
+      <li class="mb-2">
+        <a routerLink="/manual-control" class="text-decoration-none">
+          <i class="bi bi-arrow-right-circle me-2"></i>
+          <strong>Manual control</strong> - Full control over array updates
+          (similar to Angular CDK)
         </a>
       </li>
     </ul>
@@ -360,7 +390,9 @@ export class MyComponent &#123;
         >
       </li>
       <li>
-        <a href="https://www.npmjs.com/package/ng-hub-ui-modal" target="_blank"
+        <a
+          href="https://www.npmjs.com/package/ng-hub-ui-modal"
+          target="_blank"
           rel="noopener noreferrer"
           >ng-hub-ui-modal</a
         >
@@ -382,13 +414,17 @@ export class MyComponent &#123;
         >
       </li>
       <li>
-        <a href="https://www.npmjs.com/package/ng-hub-ui-portal" target="_blank"
+        <a
+          href="https://www.npmjs.com/package/ng-hub-ui-portal"
+          target="_blank"
           rel="noopener noreferrer"
           >ng-hub-ui-portal</a
         >
       </li>
       <li>
-        <a href="https://www.npmjs.com/package/ng-hub-ui-avatar" target="_blank"
+        <a
+          href="https://www.npmjs.com/package/ng-hub-ui-avatar"
+          target="_blank"
           rel="noopener noreferrer"
           >ng-hub-ui-avatar</a
         >
@@ -402,7 +438,9 @@ export class MyComponent &#123;
         >
       </li>
       <li>
-        <a href="https://www.npmjs.com/package/ng-hub-ui-board" target="_blank"
+        <a
+          href="https://www.npmjs.com/package/ng-hub-ui-board"
+          target="_blank"
           rel="noopener noreferrer"
           >ng-hub-ui-board</a
         >
@@ -459,11 +497,11 @@ export class MyComponent &#123;
       If you find this project useful and want to support its development, you
       can buy me a coffee:
     </p>
-      <a
-        href="https://www.buymeacoffee.com/carlosmorcillo"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
+    <a
+      href="https://www.buymeacoffee.com/carlosmorcillo"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
       <img
         src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png"
         alt="Buy Me A Coffee"
@@ -527,7 +565,9 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)</code></pre>
   <footer class="my-5 py-4 border-top text-center">
     <p class="mb-0">
       Made with ❤️ by
-      <a href="https://www.carlosmorcillo.com/" target="_blank"
+      <a
+        href="https://www.carlosmorcillo.com/"
+        target="_blank"
         rel="noopener noreferrer"
         >Carlos Morcillo Fernandez</a
       >
