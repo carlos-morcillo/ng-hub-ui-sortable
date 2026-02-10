@@ -25,55 +25,37 @@ When working with drag-and-drop, especially in manual mode, it's important to un
 7. `change` - Fires in both lists
 8. `end` - Drag ends (original source list)
 
-## Why Multiple Events Fire
+## Automatic Duplicate Prevention
 
-You might notice that **both `update` and `sort` fire** when reordering items in the same list. This is expected SortableJS behavior:
+SortableJS naturally fires multiple events for consistent operations (e.g., `update` and `sort` both fire when reordering). Additionally, when frameworks like Angular re-render the DOM after an array update, SortableJS might detect this as another change and fire events again.
 
-- **`update`** - Specific event for changes within the same list
-- **`sort`** - Generic event that fires for ANY sorting operation
+**ng-hub-ui-sortable handles this automatically in manual mode.**
 
-This means if you listen to both events, your handler will be called twice for a single drag.
+- The directive includes internal guards to prevent `update` and `add` events from being emitted multiple times for a single drag operation.
+- It automatically reverts SortableJS's DOM changes before emitting events, ensuring that your manual array update dictates the final DOM structure without conflicts.
+
+This means you **do NOT need to implement debouncing** or timestamp checks in your component. You can trust that `(update)` will fire exactly once per valid drop operation.
 
 ## Best Practices for Event Handling
 
 ### In Manual Mode:
 
 ```typescript
-// ✅ Good: Listen to specific events
+import { SortableEvent, moveItemInArray } from 'ng-hub-ui-sortable';
+
+// ✅ Good: Simple and clean
 onTaskUpdate(event: SortableEvent): void {
-  // Prevent duplicate processing
+  // Always check indices
+  if (event.oldIndex === undefined || event.newIndex === undefined) return;
+
+  // Prevent unnecessary work
   if (event.oldIndex === event.newIndex) return;
 
   moveItemInArray(this.tasks, event.oldIndex, event.newIndex);
 }
-
-// ❌ Avoid: Listening to both update and sort
-(update)="onUpdate($event)"  // Will fire twice
-(sortEvent)="onSort($event)" // when used together
 ```
 
-### Preventing Duplicate Processing:
-
-If you need to listen to multiple events, implement debouncing:
-
-```typescript
-private lastEventTimestamp = 0;
-
-onUpdate(event: SortableEvent): void {
-  const now = Date.now();
-
-  // Skip if same event fired within 50ms
-  if (now - this.lastEventTimestamp < 50) {
-    return;
-  }
-  this.lastEventTimestamp = now;
-
-  // Process the update
-  moveItemInArray(this.array, event.oldIndex, event.newIndex);
-}
-```
-
-## Recommended Events for Manual Mode
+### Choosing the Right Event
 
 | Scenario               | Recommended Event | Why                               |
 | ---------------------- | ----------------- | --------------------------------- |
@@ -88,6 +70,8 @@ onUpdate(event: SortableEvent): void {
 Each `SortableEvent` contains useful information:
 
 ```typescript
+import { SortableEvent } from "ng-hub-ui-sortable";
+
 interface SortableEvent {
   oldIndex?: number; // Original position
   newIndex?: number; // New position
@@ -105,9 +89,9 @@ In manual mode, use these properties to determine exactly what changed and updat
 
 ### 1. Listening to Too Many Events
 
-**Problem:** Handler fires multiple times for one drag operation.
+**Problem:** Handling logic runs multiple times because you listen to `update`, `sort`, and `end`.
 
-**Solution:** Choose the most specific event for your use case. For reordering in the same list, use only `update`, not both `update` and `sort`.
+**Solution:** Choose the most specific event for your use case (usually `update` for reordering).
 
 ### 2. Not Checking for Same Index
 
@@ -135,6 +119,8 @@ const targetList = this.getListByElement(event.to);
 You can cancel a drag operation by returning `false` from the `move` event handler:
 
 ```typescript
+import { MoveEvent } from 'ng-hub-ui-sortable';
+
 onMove(event: MoveEvent): boolean {
   // Prevent dropping high-priority items into the "Done" list
   if (event.dragged.dataset.priority === 'high' &&
@@ -144,5 +130,3 @@ onMove(event: MoveEvent): boolean {
   return true; // Allows the drag
 }
 ```
-
-This is useful for implementing complex validation rules that prevent certain drag operations entirely.

@@ -5,9 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [21.1.1] - 2026-02-10
+## [21.2.0] - 2026-02-10
 
-### Fixed
+### Added
+
+- **Full SortableJS Wrapper**: Re-exported `SortableEvent`, `Options`, `MoveEvent`, `GroupOptions`, `PullResult`, `PutResult`, and `Sortable` class from the library root.
+    - Developers no longer need to import types from `sortablejs`.
+- **Automatic Dependency**: Moved `sortablejs` from `peerDependencies` to `dependencies`.
+    - SortableJS is now installed automatically when installing `ng-hub-ui-sortable`.
 
 - **Manual Mode Event Duplication**: Implemented internal guards to prevent `onUpdate` and `onAdd` events from firing multiple times for a single drag operation in manual control mode.
 - **Manual Mode DOM Sync**: Added `revertSortableDom` and `revertTransferDom` methods to restore DOM state after SortableJS manipulation, ensuring clean Angular re-rendering when arrays are updated manually.

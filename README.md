@@ -49,7 +49,7 @@ npm install -D @types/sortablejs
 Or using yarn:
 
 ```bash
-yarn add ng-hub-ui-sortable sortablejs
+yarn add ng-hub-ui-sortable
 yarn add -D @types/sortablejs
 ```
 
@@ -214,7 +214,7 @@ All SortableJS options can be passed via `options`. They are proxied into Angula
 ### Common Options
 
 ```typescript
-import { Options } from "sortablejs";
+import { Options } from "ng-hub-ui-sortable";
 
 interface SortableOptions extends Options {
   animation?: number; // Animation speed in ms
@@ -433,8 +433,7 @@ When `autoUpdateArray` is set to `false`, the directive only emits events withou
 
 ```typescript
 import { Component } from "@angular/core";
-import { SortableDirective, moveItemInArray, transferArrayItem } from "ng-hub-ui-sortable";
-import { SortableEvent } from "sortablejs";
+import { SortableDirective, moveItemInArray, transferArrayItem, SortableEvent } from "ng-hub-ui-sortable";
 
 @Component({
   selector: "app-tasks",
@@ -525,8 +524,7 @@ copyArrayItem(source, target, 1, 2);
 
 ```typescript
 import { Component } from "@angular/core";
-import { SortableDirective, transferArrayItem } from "ng-hub-ui-sortable";
-import { SortableEvent } from "sortablejs";
+import { SortableDirective, transferArrayItem, SortableEvent } from "ng-hub-ui-sortable";
 
 @Component({
   selector: "app-kanban",
@@ -617,8 +615,8 @@ export class KanbanComponent {
 | **Immutability**    | Mutates arrays in place    | Can create new arrays          |
 | **Best for**        | Simple lists, prototypes   | Production apps, complex logic |
 
+> **Note on Event Handling:** SortableJS internally fires multiple events for a single drag operation (e.g., both `update` and `sort`). **ng-hub-ui-sortable handles this automatically**, ensuring you only receive one event per operation in manual mode. For more details on the internal event flow, see the [Events Guide](docs/EVENTS.md).
 
-> **Note on Event Handling:** When using manual mode, be aware that SortableJS fires multiple events for a single drag operation (e.g., both `update` and `sort` fire when reordering in the same list). For detailed information about event firing order, best practices, and how to handle duplicate events, see the [Events Guide](docs/EVENTS.md).
 ## Real-world Use Cases
 
 The `ng-hub-ui-sortable` component is versatile and can be used in various real-world applications:

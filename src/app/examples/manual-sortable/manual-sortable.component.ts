@@ -2,10 +2,10 @@ import { JsonPipe } from "@angular/common";
 import { Component } from "@angular/core";
 import {
   SortableDirective,
+  SortableEvent,
   moveItemInArray,
   transferArrayItem,
 } from "ng-hub-ui-sortable";
-import { SortableEvent } from "sortablejs";
 
 /**
  * Example component demonstrating manual array control mode.

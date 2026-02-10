@@ -1,3 +1,15 @@
 export * from './lib/array-helpers';
 export * from './lib/sortable.directive';
 export * from './lib/sortable.module';
+// Re-export SortableJS types to provide a complete wrapper
+// This allows consumers to use the library without installing @types/sortablejs
+// or importing directly from sortablejs
+export {
+	GroupOptions,
+	MoveEvent,
+	Options,
+	PullResult,
+	PutResult,
+	default as Sortable,
+	SortableEvent
+} from 'sortablejs';
