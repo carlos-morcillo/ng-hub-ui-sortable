@@ -5,9 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [21.1.0] - 2026-02-09
+## [21.1.1] - 2026-02-10
 
-### Added
+### Fixed
+
+- **Manual Mode Event Duplication**: Implemented internal guards to prevent `onUpdate` and `onAdd` events from firing multiple times for a single drag operation in manual control mode.
+- **Manual Mode DOM Sync**: Added `revertSortableDom` and `revertTransferDom` methods to restore DOM state after SortableJS manipulation, ensuring clean Angular re-rendering when arrays are updated manually.
+- **Native Event Suppression**: Suppressed native SortableJS custom events on the container to avoid double-firing of Angular output bindings.
 
 - **Manual Control Mode**: New `autoUpdateArray` input (default: `true`) allows full control over array updates, similar to Angular CDK's drag-and-drop approach
     - When set to `false`, the directive only emits events without automatically updating arrays

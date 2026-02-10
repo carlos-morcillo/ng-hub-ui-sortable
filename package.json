@@ -4,8 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build:app": "ng build ng-hub-ui-sortable-app --configuration production --base-href /ng-hub-ui-sortable/ && node scripts/copy-index.js",
-    "build:ssr": "ng build ng-hub-ui-sortable-app --configuration production --base-href /ng-hub-ui-sortable/ && node scripts/copy-index.js",
+    "build:app": "ng build ng-hub-ui-sortable-app --configuration production --base-href / && node scripts/copy-index.js",
+    "build:ssr": "ng run ng-hub-ui-sortable-app:prerender && node scripts/copy-index.js && cd dist/ng-hub-ui-sortable-app/browser && zip -r ../../../ng-hub-ui-sortable-ssr.zip . && cd ../../.. && echo '\n✅ ZIP creado: ng-hub-ui-sortable-ssr.zip'",
     "build:lib": "ng build ng-hub-ui-sortable",
     "test:app": "ng test ng-hub-ui-sortable-app",
     "coveralls": "cat ./coverage/lcov.info | coveralls",

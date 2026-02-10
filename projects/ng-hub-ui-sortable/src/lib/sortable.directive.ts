@@ -197,6 +197,15 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 	 * Will be null until ngOnInit completes.
 	 */
 	private sortableInstance: Sortable | null = null;
+	private nativeEventCleanup: Array<() => void> = [];
+
+	/**
+	 * Guard flag to prevent duplicate event emissions during a single drag operation.
+	 * SortableJS can fire onUpdate/onAdd callbacks more than once for the same drop,
+	 * especially when the DOM is manipulated (reverted) inside the handler.
+	 * This flag is set when processing an event and cleared at the start of the next drag (onStart).
+	 */
+	private _dropEventProcessed = false;
 
 	/** Emitted when the Sortable instance is created */
 	readonly init = output<Sortable>();
@@ -269,6 +278,9 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 	 * Cleans up the Sortable instance when the directive is destroyed.
 	 */
 	ngOnDestroy(): void {
+		this.nativeEventCleanup.forEach((cleanup) => cleanup());
+		this.nativeEventCleanup = [];
+
 		if (this.sortableInstance) {
 			this.sortableInstance.destroy();
 		}
@@ -293,10 +305,17 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 
 		afterNextRender(
 			() => {
-				this.sortableInstance = Sortable.create(
-					container,
-					this.sortableOptions
-				);
+				this.suppressNativeSortableEvents(container);
+
+				// Create SortableJS instance outside Angular zone to prevent
+				// SortableJS's internal DOM observers from triggering Angular
+				// change detection. Events re-enter the zone via proxyEvent().
+				this.zone.runOutsideAngular(() => {
+					this.sortableInstance = Sortable.create(
+						container,
+						this.sortableOptions
+					);
+				});
 				this.init.emit(this.sortableInstance);
 			},
 			{ injector: this.injector }
@@ -325,7 +344,7 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 	 * @returns Complete options object for Sortable
 	 */
 	private get sortableOptions(): Options {
-		return { ...this.optionsWithoutEvents, ...this.overridenOptions };
+		return { ...this.optionsWithoutEvents, ...this.overriddenOptions };
 	}
 
 	/**
@@ -540,7 +559,7 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 	 *
 	 * @returns Options object with overridden event handlers
 	 */
-	private get overridenOptions(): Partial<Options> {
+	private get overriddenOptions(): Partial<Options> {
 		// always intercept standard events but act only in case items are set (bindingEnabled)
 		// allows to forget about tracking this.items changes
 		return {
@@ -562,7 +581,15 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 
 					this.proxyEvent('onAddOriginal', event);
 				} else {
-					// Manual mode: just emit the event without modifying arrays
+					// Guard against duplicate calls from SortableJS
+					if (this._dropEventProcessed) {
+						return;
+					}
+					this._dropEventProcessed = true;
+
+					// Revert SortableJS DOM changes so Angular handles rendering
+					// based on the user's manual array updates
+					this.revertTransferDom(event);
 					this.proxyEvent('onAdd', event);
 				}
 			},
@@ -623,7 +650,6 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 			 * Note: onSort also fires after this event.
 			 */
 			onUpdate: (event: SortableEvent) => {
-				// Only auto-update if enabled
 				if (this.autoUpdateArray()) {
 					const bindings = this.getBindings();
 					const indexes = getIndexesFromEvent(event);
@@ -632,14 +658,29 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 						indexes.new,
 						bindings.extractFromEvery(indexes.old)
 					);
+					this.proxyEvent('onUpdate', event);
+				} else {
+					// Guard against duplicate calls from SortableJS
+					if (this._dropEventProcessed) {
+						return;
+					}
+					this._dropEventProcessed = true;
+
+					// Revert SortableJS DOM changes so Angular handles rendering
+					// based on the user's manual array updates
+					this.revertSortableDom(event);
+					this.proxyEvent('onUpdate', event);
 				}
-				this.proxyEvent('onUpdate', event);
 			},
 			/** Fired when dragging starts (mousedown/touchstart + movement). */
-			onStart: (event: SortableEvent) =>
-				this.proxyEvent('onStart', event),
+			onStart: (event: SortableEvent) => {
+				// Reset the duplicate event guard at the start of each drag operation
+				this._dropEventProcessed = false;
+				this.proxyEvent('onStart', event);
+			},
 			/** Fired when dragging ends (mouseup/touchend). Always fires regardless of success. */
-			onEnd: (event: SortableEvent) => this.proxyEvent('onEnd', event),
+			onEnd: (event: SortableEvent) =>
+				this.proxyEvent('onEnd', event),
 			/** Fired for ANY sorting operation. Fires AFTER onUpdate/onAdd causing duplicate events. */
 			onSort: (event: SortableEvent) => this.proxyEvent('onSort', event),
 			/** Fired when attempting to drag a filtered (non-draggable) element. */
@@ -661,5 +702,96 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 			onMove: (event: MoveEvent, originalEvent: Event) =>
 				this.proxyEvent('onMove', event, originalEvent)
 		};
+	}
+
+	/**
+	 * Reverts SortableJS DOM manipulation for same-list reordering.
+	 * In manual mode, SortableJS moves the DOM element but the directive doesn't update the array.
+	 * When Angular's change detection runs, the mismatch between DOM and array state can cause
+	 * duplicate events. This method restores the DOM to its pre-drag state so Angular can
+	 * re-render cleanly based on the user's array updates.
+	 *
+	 * @param event - SortableJS event containing oldIndex, newIndex, item, and from
+	 */
+	private revertSortableDom(event: SortableEvent): void {
+		const { oldIndex, newIndex, item, from } = event;
+		if (
+			oldIndex === undefined ||
+			newIndex === undefined ||
+			oldIndex === newIndex
+		) {
+			return;
+		}
+
+		// After SortableJS moved the item, the children array has shifted.
+		// To restore the original position:
+		// - If item moved up (newIndex < oldIndex): reference is children[oldIndex + 1]
+		//   because the item's removal from its new position shifts children back
+		// - If item moved down (newIndex > oldIndex): reference is children[oldIndex]
+		//   because children before oldIndex are unaffected
+		const refChild =
+			newIndex < oldIndex
+				? from.children[oldIndex + 1] || null
+				: from.children[oldIndex];
+
+		this.renderer.insertBefore(from, item, refChild);
+	}
+
+	/**
+	 * Reverts SortableJS DOM manipulation for between-list transfers.
+	 * Moves the dragged item back from the target list to the source list at its original position.
+	 * This is called on the target list's onAdd handler in manual mode.
+	 *
+	 * @param event - SortableJS event containing oldIndex, item, and from (source container)
+	 */
+	private revertTransferDom(event: SortableEvent): void {
+		const { oldIndex, item, from } = event;
+		if (oldIndex === undefined) {
+			return;
+		}
+
+		// Move item back to source list at its original position.
+		// event.from is the source container, event.item is the dragged element.
+		// insertBefore automatically removes the item from its current parent (target).
+		this.renderer.insertBefore(
+			from,
+			item,
+			from.children[oldIndex] || null
+		);
+	}
+
+	/**
+	 * Suppresses native CustomEvent emissions from SortableJS to avoid collisions
+	 * with Angular output bindings like (update), (add), etc.
+	 * Without this, a template listener may run once for Sortable's native event
+	 * and once again for the directive output.
+	 *
+	 * @param container - Sortable container element
+	 */
+	private suppressNativeSortableEvents(container: HTMLElement): void {
+		const sortableNativeEvents = [
+			'start',
+			'end',
+			'add',
+			'update',
+			'sort',
+			'remove',
+			'filter',
+			'change',
+			'choose',
+			'unchoose',
+			'clone'
+		] as const;
+
+		sortableNativeEvents.forEach((eventName) => {
+			const handler = (event: Event) => {
+				event.stopImmediatePropagation();
+			};
+
+			container.addEventListener(eventName, handler, true);
+			this.nativeEventCleanup.push(() => {
+				container.removeEventListener(eventName, handler, true);
+			});
+		});
 	}
 }

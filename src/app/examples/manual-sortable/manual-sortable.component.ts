@@ -62,54 +62,29 @@ export class ManualSortableComponent {
   operationsLog: string[] = [];
 
   /**
-   * Timestamp of last update event to prevent duplicate calls
-   */
-  private lastUpdateTimestamp: number = 0;
-
-  /**
    * Handler for update events within the same list.
    * This is called when items are reordered within the tasks list.
    *
    * @param event - SortableJS event containing oldIndex and newIndex
    */
   onTasksUpdate(event: SortableEvent): void {
-    const now = Date.now();
-    console.log("[onTasksUpdate] Called with event:", {
-      oldIndex: event.oldIndex,
-      newIndex: event.newIndex,
-      timestamp: new Date().toISOString(),
-    });
-
-    // Prevent duplicate calls within 50ms (angular change detection might trigger this)
-    if (now - this.lastUpdateTimestamp < 50) {
-      console.log("[onTasksUpdate] Skipping - duplicate call within 50ms");
-      return;
-    }
-    this.lastUpdateTimestamp = now;
-
     if (event.oldIndex === undefined || event.newIndex === undefined) {
-      console.log("[onTasksUpdate] Skipping - undefined indices");
       return;
     }
 
     // If indices are the same, no operation needed
     if (event.oldIndex === event.newIndex) {
-      console.log("[onTasksUpdate] Skipping - same index");
       return;
     }
 
     // Capture task info BEFORE moving
     const task = this.tasks[event.oldIndex];
-    console.log("[onTasksUpdate] Moving task:", task.title);
-
     this.logOperation(
       `Reordered "${task.title}" from position ${event.oldIndex} to ${event.newIndex}`,
     );
 
     // Manually update the array using the helper function
     moveItemInArray(this.tasks, event.oldIndex, event.newIndex);
-
-    console.log("[onTasksUpdate] Array updated successfully");
   }
 
   /**

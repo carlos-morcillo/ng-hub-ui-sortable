@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # Si el archivo o directorio solicitado existe, úsalo directamente
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Si no existe, redirige todo al index.html
+  RewriteRule ^ index.html [L]
+</IfModule>
