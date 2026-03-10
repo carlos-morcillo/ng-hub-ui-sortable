@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://carlos-morcillo.github.io/ng-hub-ui-sortable/sitemap.xml

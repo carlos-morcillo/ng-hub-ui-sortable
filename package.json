@@ -1,96 +1,34 @@
 {
-  "name": "ng-hub-ui-sortable",
-  "version": "21.0.1",
-  "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build:app": "ng build ng-hub-ui-sortable-app --configuration production --base-href / && node scripts/copy-index.js",
-    "build:ssr": "ng run ng-hub-ui-sortable-app:prerender && node scripts/copy-index.js && cd dist/ng-hub-ui-sortable-app/browser && zip -r ../../../ng-hub-ui-sortable-ssr.zip . && cd ../../.. && echo '\n✅ ZIP creado: ng-hub-ui-sortable-ssr.zip'",
-    "build:lib": "ng build ng-hub-ui-sortable",
-    "test:app": "ng test ng-hub-ui-sortable-app",
-    "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "lint": "ng lint",
-    "e2e": "ng e2e",
-    "gh-pages": "git reset && cpr dist/ng-hub-ui-sortable-app docs -d  && cpr docs/index.html docs/404.html && git add docs",
-    "gh-pages:apply": "yarn run gh-pages && git commit -m 'docs: update github pages' && git push",
-    "release": "wpm release --release-branch-format release-v{{version}}",
-    "publish:npm": "npm run build:lib && cd dist/ng-hub-ui-sortable && npm publish --access=public",
-    "pub-only": "cd dist/ng-hub-ui-sortable && npm publish --access=public",
-    "pub": "wpm publish && npm run pub-only"
-  },
-  "private": false,
-  "description": "Angular bindings for Sortable.js (ng-hub-ui fork of @worktile/ngx-sortablejs)",
-  "author": "Carlos Morcillo Fernández <https://www.carlosmorcillo.com/>",
-  "keywords": [
-    "ng-hub-ui",
-    "sortable",
-    "drag-and-drop",
-    "angular",
-    "sortablejs"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/carlos-morcillo/ng-hub-ui-sortable"
-  },
-  "bugs": {
-    "url": "https://github.com/carlos-morcillo/ng-hub-ui-sortable/issues"
-  },
-  "homepage": "https://github.com/carlos-morcillo/ng-hub-ui-sortable#readme",
-  "dependencies": {
-    "@angular/animations": "20.3.15",
-    "@angular/common": "20.3.15",
-    "@angular/compiler": "20.3.15",
-    "@angular/core": "20.3.15",
-    "@angular/forms": "20.3.15",
-    "@angular/platform-browser": "20.3.15",
-    "@angular/platform-browser-dynamic": "20.3.15",
-    "@angular/platform-server": "20.3.15",
-    "@angular/router": "20.3.15",
-    "@angular/ssr": "20.3.15",
-    "bootstrap": "^5.3.3",
-    "bootstrap-icons": "^1.13.1",
-    "highlight.js": "^11.11.1",
-    "ngx-bootstrap": "^20.0.1",
-    "rxjs": "^7.4.0",
-    "sortablejs": "^1.15.6",
-    "tslib": "^2.3.0",
-    "zone.js": "~0.15.0"
-  },
-  "devDependencies": {
-    "@angular-devkit/build-angular": "20.3.0",
-    "@angular-eslint/builder": "20.3.0",
-    "@angular-eslint/eslint-plugin": "20.3.0",
-    "@angular-eslint/eslint-plugin-template": "20.3.0",
-    "@angular-eslint/schematics": "20.3.0",
-    "@angular-eslint/template-parser": "20.3.0",
-    "@angular/cli": "20.3.0",
-    "@angular/compiler-cli": "20.3.15",
-    "@angular/language-service": "20.3.15",
-    "@semantic-release/changelog": "^3.0.6",
-    "@semantic-release/git": "^7.0.18",
-    "@types/jasmine": "~3.6.0",
-    "@types/jasminewd2": "^2.0.8",
-    "@types/node": "^24.3.1",
-    "@types/sortablejs": "^1.15.9",
-    "@typescript-eslint/eslint-plugin": "^7.2.0",
-    "@typescript-eslint/parser": "^7.2.0",
-    "codelyzer": "^6.0.0",
-    "coveralls": "^3.0.9",
-    "cpr": "^3.0.1",
-    "eslint": "^8.57.0",
-    "jasmine-core": "~3.6.0",
-    "jasmine-spec-reporter": "~5.0.0",
-    "karma": "~6.4.1",
-    "karma-chrome-launcher": "~3.1.0",
-    "karma-coverage-istanbul-reporter": "^2.0.6",
-    "karma-jasmine": "~4.0.0",
-    "karma-jasmine-html-reporter": "^1.5.0",
-    "ng-packagr": "^20.2.0",
-    "ngx-spec": "^2.1.4",
-    "protractor": "~7.0.0",
-    "semantic-release": "^15.14.0",
-    "ts-node": "~7.0.0",
-    "tslint": "~6.1.3",
-    "typescript": "~5.9.2"
-  }
+	"name": "ng-hub-ui-sortable",
+	"version": "21.2.0",
+	"description": "Angular bindings for Sortable.js (ng-hub-ui fork of @worktile/ngx-sortablejs)",
+	"keywords": [
+		"ng-hub-ui",
+		"sortable",
+		"drag-and-drop",
+		"angular",
+		"sortablejs",
+		"draggable"
+	],
+	"author": "Carlos Morcillo Fernández <https://www.carlosmorcillo.com/>",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/carlos-morcillo/ng-hub-ui-sortable"
+	},
+	"bugs": {
+		"url": "https://github.com/carlos-morcillo/ng-hub-ui-sortable/issues"
+	},
+	"homepage": "https://github.com/carlos-morcillo/ng-hub-ui-sortable#readme",
+	"publishConfig": {
+		"access": "public"
+	},
+	"dependencies": {
+		"sortablejs": ">=1.7.0"
+	},
+	"peerDependencies": {
+		"@angular/common": ">=18.0.0",
+		"@angular/core": ">=18.0.0"
+	},
+	"main": "src/public-api.ts"
 }
