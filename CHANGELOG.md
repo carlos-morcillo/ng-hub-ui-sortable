@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [21.3.0] - 2026-03-31
+
+### Added
+- Enhanced sortable directive with improved binding support for signals and FormArrays.
+- Comprehensive test coverage for the sortable directive.
+
 # [21.0.0](https://github.com/worktile/ngx-sortablejs/compare/20.0.0...21.0.0) (2025-12-12)
 
 ### Features
