@@ -19,11 +19,7 @@ import { SortableBindings } from './sortable-bindings';
 import { INDIVIDUAL_OPTION_INPUTS } from './sortable-options';
 import { getIndexesFromEvent } from './sortable-utils';
 import { SortableService } from './sortable.service';
-import {
-	SortableData,
-	SortableEventName,
-	SortableMoveEventPayload
-} from './sortable.types';
+import { SortableData, SortableEventName, SortableMoveEventPayload } from './sortable.types';
 
 /**
  * Directive that integrates SortableJS with Angular.
@@ -62,93 +58,92 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 	 * Array of items or FormArray to be sorted.
 	 * This can be a simple array or an Angular FormArray for reactive forms.
 	 */
-	readonly items = input<SortableData>(undefined, { alias: 'hubSortable' });
+	readonly items = input<SortableData | undefined>(undefined, {
+		alias: 'hubSortable'
+	});
 
 	/**
 	 * CSS selector for the container element within the host element.
 	 * If not provided, the host element itself will be used.
 	 */
-	readonly container = input<string>(undefined);
+	readonly container = input<string | undefined>(undefined);
 
 	/**
 	 * SortableJS options object.
 	 * See https://github.com/SortableJS/Sortable#options for available options.
 	 */
-	readonly options = input<Options>(undefined);
+	readonly options = input<Options | undefined>(undefined);
 
 	/** Group name or group options for dragging between lists */
-	readonly group = input<Options['group']>(undefined);
+	readonly group = input<Options['group'] | undefined>(undefined);
 	/** Enable/disable sorting within the list */
-	readonly sort = input<Options['sort']>(undefined);
+	readonly sort = input<Options['sort'] | undefined>(undefined);
 	/** Time in milliseconds to define when the sorting should start */
-	readonly delay = input<Options['delay']>(undefined);
+	readonly delay = input<Options['delay'] | undefined>(undefined);
 	/** Disable the sortable if set to true */
-	readonly disabled = input<Options['disabled']>(undefined);
+	readonly disabled = input<Options['disabled'] | undefined>(undefined);
 	/** CSS selector for draggable items within the container */
-	readonly draggable = input<Options['draggable']>(undefined);
+	readonly draggable = input<Options['draggable'] | undefined>(undefined);
 	/** CSS selector for drag handle within list items */
-	readonly handle = input<Options['handle']>(undefined);
+	readonly handle = input<Options['handle'] | undefined>(undefined);
 	/** Animation speed in milliseconds when sorting */
-	readonly animation = input<Options['animation']>(undefined);
+	readonly animation = input<Options['animation'] | undefined>(undefined);
 	/** CSS class applied to the ghost element during drag */
-	readonly ghostClass = input<Options['ghostClass']>(undefined);
+	readonly ghostClass = input<Options['ghostClass'] | undefined>(undefined);
 	/** CSS class applied to the chosen element */
-	readonly chosenClass = input<Options['chosenClass']>(undefined);
+	readonly chosenClass = input<Options['chosenClass'] | undefined>(undefined);
 	/** CSS class applied to the dragging element */
-	readonly dragClass = input<Options['dragClass']>(undefined);
+	readonly dragClass = input<Options['dragClass'] | undefined>(undefined);
 	/** Append ghost element to document body */
-	readonly fallbackOnBody = input<Options['fallbackOnBody']>(undefined);
+	readonly fallbackOnBody = input<Options['fallbackOnBody'] | undefined>(undefined);
 	/** Number of pixels a point should move before triggering drag */
-	readonly fallbackTolerance = input<Options['fallbackTolerance']>(undefined);
+	readonly fallbackTolerance = input<Options['fallbackTolerance'] | undefined>(undefined);
 	/** CSS class applied when using forceFallback */
-	readonly fallbackClass = input<Options['fallbackClass']>(undefined);
+	readonly fallbackClass = input<Options['fallbackClass'] | undefined>(undefined);
 	/** Fallback offset */
-	readonly fallbackOffset = input<Options['fallbackOffset']>(undefined);
+	readonly fallbackOffset = input<Options['fallbackOffset'] | undefined>(undefined);
 	/** Force the fallback to activate */
-	readonly forceFallback = input<Options['forceFallback']>(undefined);
+	readonly forceFallback = input<Options['forceFallback'] | undefined>(undefined);
 	/** CSS selector or function to filter items that should not be draggable */
-	readonly filter = input<Options['filter']>(undefined);
+	readonly filter = input<Options['filter'] | undefined>(undefined);
 	/** Call preventDefault on filter event */
-	readonly preventOnFilter = input<Options['preventOnFilter']>(undefined);
+	readonly preventOnFilter = input<Options['preventOnFilter'] | undefined>(undefined);
 	/** Direction of Sortable (will be detected automatically if not given) */
-	readonly direction = input<Options['direction']>(undefined);
+	readonly direction = input<Options['direction'] | undefined>(undefined);
 	/** Threshold of swap zone */
-	readonly swapThreshold = input<Options['swapThreshold']>(undefined);
+	readonly swapThreshold = input<Options['swapThreshold'] | undefined>(undefined);
 	/** Inverts swap threshold direction */
-	readonly invertSwap = input<Options['invertSwap']>(undefined);
+	readonly invertSwap = input<Options['invertSwap'] | undefined>(undefined);
 	/** Threshold when swapping direction is inverted */
-	readonly invertedSwapThreshold =
-		input<Options['invertedSwapThreshold']>(undefined);
+	readonly invertedSwapThreshold = input<Options['invertedSwapThreshold'] | undefined>(undefined);
 	/** Remove clone element when not showing */
-	readonly removeCloneOnHide = input<Options['removeCloneOnHide']>(undefined);
+	readonly removeCloneOnHide = input<Options['removeCloneOnHide'] | undefined>(undefined);
 	/** CSS selector for elements to ignore */
-	readonly ignore = input<Options['ignore']>(undefined);
+	readonly ignore = input<Options['ignore'] | undefined>(undefined);
 	/** Number of pixels a point should move before cancelling a delayed drag event */
-	readonly touchStartThreshold =
-		input<Options['touchStartThreshold']>(undefined);
+	readonly touchStartThreshold = input<Options['touchStartThreshold'] | undefined>(undefined);
 	/** Distance mouse must be from empty sortable to insert drag element into it */
-	readonly emptyInsertThreshold =
-		input<Options['emptyInsertThreshold']>(undefined);
+	readonly emptyInsertThreshold = input<Options['emptyInsertThreshold'] | undefined>(undefined);
 	/** Enable drop bubble */
-	readonly dropBubble = input<Options['dropBubble']>(undefined);
+	readonly dropBubble = input<Options['dropBubble'] | undefined>(undefined);
 	/** Enable dragover bubble */
-	readonly dragoverBubble = input<Options['dragoverBubble']>(undefined);
+	readonly dragoverBubble = input<Options['dragoverBubble'] | undefined>(undefined);
 	/** HTML attribute that defines the data id */
-	readonly dataIdAttr = input<Options['dataIdAttr']>(undefined);
+	readonly dataIdAttr = input<Options['dataIdAttr'] | undefined>(undefined);
 	/** Only delay on touch devices */
-	readonly delayOnTouchOnly = input<Options['delayOnTouchOnly']>(undefined);
+	readonly delayOnTouchOnly = input<Options['delayOnTouchOnly'] | undefined>(undefined);
 	/** Easing for animation */
-	readonly easing = input<Options['easing']>(undefined);
+	readonly easing = input<Options['easing'] | undefined>(undefined);
 	/** Function to set data for dragover/drop events */
-	readonly setData = input<Options['setData']>(undefined);
+	readonly setData = input<Options['setData'] | undefined>(undefined);
 	/** Store module for saving and restoring of the sort */
-	readonly store = input<Options['store']>(undefined);
+	readonly store = input<Options['store'] | undefined>(undefined);
 
 	/**
 	 * Custom function to clone items when dragging between lists.
 	 * If not provided, items will be passed through without cloning.
 	 */
-	readonly cloneFunction = input<(item: any) => any>(undefined);
+	readonly cloneFunction = input<((item: any) => any) | undefined>(undefined);
 
 	/**
 	 * Controls whether the directive automatically updates the bound array on drag-and-drop operations.
@@ -205,8 +200,6 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 	 * especially when the DOM is manipulated (reverted) inside the handler.
 	 * This flag is set when processing an event and cleared at the start of the next drag (onStart).
 	 */
-	private _dropEventProcessed = false;
-
 	/** Emitted when the Sortable instance is created */
 	readonly init = output<Sortable>();
 	/** Emitted when dragging starts */
@@ -239,7 +232,7 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 	 * Checks for Sortable availability to handle SSR scenarios.
 	 */
 	ngOnInit(): void {
-		if (Sortable && Sortable.create) {
+		if (typeof window !== 'undefined') {
 			// Sortable does not exist in angular universal (SSR)
 			this.create();
 		}
@@ -257,11 +250,11 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 		if (optionsChange && !optionsChange.isFirstChange()) {
 			const previousOptions: Options = optionsChange.previousValue || {};
 			const currentOptions: Options = optionsChange.currentValue || {};
+			const previousOptionsMap = previousOptions as Record<string, unknown>;
+			const currentOptionsMap = currentOptions as Record<string, unknown>;
 
 			Object.keys(currentOptions).forEach((optionName) => {
-				if (
-					currentOptions[optionName] !== previousOptions[optionName]
-				) {
+				if (currentOptionsMap[optionName] !== previousOptionsMap[optionName]) {
 					// use low-level option setter
 					this.sortableInstance?.option(
 						optionName as keyof Options,
@@ -297,9 +290,7 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 			: this.element.nativeElement;
 
 		if (!container) {
-			console.error(
-				`[hubSortable] Container not found with selector: ${containerSelector}`
-			);
+			console.error(`[hubSortable] Container not found with selector: ${containerSelector}`);
 			return;
 		}
 
@@ -311,12 +302,11 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 				// SortableJS's internal DOM observers from triggering Angular
 				// change detection. Events re-enter the zone via proxyEvent().
 				this.zone.runOutsideAngular(() => {
-					this.sortableInstance = Sortable.create(
-						container,
-						this.sortableOptions
-					);
+					this.sortableInstance = Sortable.create(container, this.sortableOptions);
 				});
-				this.init.emit(this.sortableInstance);
+				if (this.sortableInstance) {
+					this.init.emit(this.sortableInstance);
+				}
 			},
 			{ injector: this.injector }
 		);
@@ -371,7 +361,7 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 		// re-entering zone, see https://github.com/SortableJS/angular-sortablejs/issues/110#issuecomment-408874600
 		return this.zone.run(() => {
 			const options = this.optionsWithoutEvents || {};
-			const handler = options[eventName] as (...args: any[]) => any;
+			const handler = (options as Record<string, unknown>)[eventName] as ((...args: any[]) => any) | undefined;
 			const handlerResult = handler ? handler(...params) : undefined;
 
 			this.emitOutputs(eventName, params);
@@ -441,17 +431,10 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 		const group = this.sortableInstance.options.group;
 
 		// Check if group has checkPull function
-		if (
-			typeof group === 'object' &&
-			'checkPull' in group &&
-			typeof group.checkPull === 'function'
-		) {
+		if (typeof group === 'object' && 'checkPull' in group && typeof group.checkPull === 'function') {
 			try {
 				// Cast to any to avoid strict type checking on checkPull signature
-				const result = (group.checkPull as any)(
-					this.sortableInstance,
-					this.sortableInstance
-				);
+				const result = (group.checkPull as any)(this.sortableInstance, this.sortableInstance);
 				return result === 'clone';
 			} catch {
 				return false;
@@ -569,27 +552,39 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 			 * Automatic mode: Inserts item at newIndex. Manual mode: Only emits event.
 			 */
 			onAdd: (event: SortableEvent) => {
+				if (event.newIndex === undefined) {
+					return;
+				}
+				const newIndex = event.newIndex;
+
 				// Only auto-update if enabled
 				if (this.autoUpdateArray()) {
 					this.service.transfer = (items: any[]) => {
-						this.getBindings().injectIntoEvery(
-							event.newIndex,
-							items
-						);
+						this.getBindings().injectIntoEvery(newIndex, items);
 						this.proxyEvent('onAdd', event);
 					};
 
 					this.proxyEvent('onAddOriginal', event);
 				} else {
 					// Guard against duplicate calls from SortableJS
-					if (this._dropEventProcessed) {
+					if (this.service.dropEventProcessed) {
 						return;
 					}
-					this._dropEventProcessed = true;
+					this.service.dropEventProcessed = true;
 
-					// Revert SortableJS DOM changes so Angular handles rendering
-					// based on the user's manual array updates
-					this.revertTransferDom(event);
+					if (event.clone) {
+						// Clone mode: the source already has a clone preserving the list.
+						// Remove the original from the target so it doesn't interfere
+						// with Angular's rendering. The source's onRemove handler will
+						// restore the original element and remove the clone.
+						if (event.item.parentNode) {
+							this.renderer.removeChild(event.item.parentNode, event.item);
+						}
+					} else {
+						// Normal (non-clone) mode: revert SortableJS DOM changes so
+						// Angular handles rendering based on the user's manual array updates
+						this.revertTransferDom(event);
+					}
 					this.proxyEvent('onAdd', event);
 				}
 			},
@@ -600,16 +595,16 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 			 * Works in conjunction with onAdd on the target list.
 			 */
 			onRemove: (event: SortableEvent) => {
+				if (event.oldIndex === undefined) {
+					return;
+				}
+
 				const bindings = this.getBindings();
 
 				// Only auto-update if enabled
 				if (this.autoUpdateArray() && bindings.provided) {
 					if (this.isCloning) {
-						this.service.transfer(
-							bindings
-								.getFromEvery(event.oldIndex)
-								.map((item) => this.cloneItem(item))
-						);
+						this.service.transfer?.(bindings.getFromEvery(event.oldIndex).map((item) => this.cloneItem(item)));
 
 						// great thanks to https://github.com/tauu
 						// event.item is the original item from the source list which is moved to the target list
@@ -619,26 +614,27 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 						// Therefore we remove it immediately and also move the original item back to the source list.
 						// (event handler may be attached to the original item and not its clone, therefore keeping
 						// the original dom node, circumvents side effects )
-						this.renderer.removeChild(
-							event.item.parentNode,
-							event.item
-						);
-						this.renderer.insertBefore(
-							event.clone.parentNode,
-							event.item,
-							event.clone
-						);
-						this.renderer.removeChild(
-							event.clone.parentNode,
-							event.clone
-						);
+						this.renderer.removeChild(event.item.parentNode, event.item);
+						this.renderer.insertBefore(event.clone.parentNode, event.item, event.clone);
+						this.renderer.removeChild(event.clone.parentNode, event.clone);
 					} else {
-						this.service.transfer(
-							bindings.extractFromEvery(event.oldIndex)
-						);
+						this.service.transfer?.(bindings.extractFromEvery(event.oldIndex));
 					}
 
 					this.service.transfer = null;
+				} else if (this.isCloning) {
+					// Manual mode (autoUpdateArray: false) + clone mode:
+					// SortableJS placed a clone in the source and moved the original to the target.
+					// The target's onAdd handler (which ran before this) already removed the original
+					// from the target DOM. We must now restore the original Angular-tracked element
+					// in the source and remove the SortableJS clone to keep Angular's view consistent.
+					if (event.item.parentNode) {
+						this.renderer.removeChild(event.item.parentNode, event.item);
+					}
+					if (event.clone?.parentNode) {
+						this.renderer.insertBefore(event.clone.parentNode, event.item, event.clone);
+						this.renderer.removeChild(event.clone.parentNode, event.clone);
+					}
 				}
 
 				this.proxyEvent('onRemove', event);
@@ -650,21 +646,22 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 			 * Note: onSort also fires after this event.
 			 */
 			onUpdate: (event: SortableEvent) => {
+				const indexes = getIndexesFromEvent(event);
+				if (indexes.old === undefined || indexes.new === undefined) {
+					return;
+				}
+
 				if (this.autoUpdateArray()) {
 					const bindings = this.getBindings();
-					const indexes = getIndexesFromEvent(event);
 
-					bindings.injectIntoEvery(
-						indexes.new,
-						bindings.extractFromEvery(indexes.old)
-					);
+					bindings.injectIntoEvery(indexes.new, bindings.extractFromEvery(indexes.old));
 					this.proxyEvent('onUpdate', event);
 				} else {
 					// Guard against duplicate calls from SortableJS
-					if (this._dropEventProcessed) {
+					if (this.service.dropEventProcessed) {
 						return;
 					}
-					this._dropEventProcessed = true;
+					this.service.dropEventProcessed = true;
 
 					// Revert SortableJS DOM changes so Angular handles rendering
 					// based on the user's manual array updates
@@ -675,32 +672,28 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 			/** Fired when dragging starts (mousedown/touchstart + movement). */
 			onStart: (event: SortableEvent) => {
 				// Reset the duplicate event guard at the start of each drag operation
-				this._dropEventProcessed = false;
+				this.service.dropEventProcessed = false;
 				this.proxyEvent('onStart', event);
 			},
 			/** Fired when dragging ends (mouseup/touchend). Always fires regardless of success. */
-			onEnd: (event: SortableEvent) =>
-				this.proxyEvent('onEnd', event),
+			onEnd: (event: SortableEvent) => {
+				this.service.dropEventProcessed = false;
+				return this.proxyEvent('onEnd', event);
+			},
 			/** Fired for ANY sorting operation. Fires AFTER onUpdate/onAdd causing duplicate events. */
 			onSort: (event: SortableEvent) => this.proxyEvent('onSort', event),
 			/** Fired when attempting to drag a filtered (non-draggable) element. */
-			onFilter: (event: SortableEvent) =>
-				this.proxyEvent('onFilter', event),
+			onFilter: (event: SortableEvent) => this.proxyEvent('onFilter', event),
 			/** Fired when list changes by adding or removing items. Fires alongside onAdd/onRemove. */
-			onChange: (event: SortableEvent) =>
-				this.proxyEvent('onChange', event),
+			onChange: (event: SortableEvent) => this.proxyEvent('onChange', event),
 			/** Fired when element is chosen (mousedown/touchstart). */
-			onChoose: (event: SortableEvent) =>
-				this.proxyEvent('onChoose', event),
+			onChoose: (event: SortableEvent) => this.proxyEvent('onChoose', event),
 			/** Fired when element is unchosen (mouseup/touchend without drag). */
-			onUnchoose: (event: SortableEvent) =>
-				this.proxyEvent('onUnchoose', event),
+			onUnchoose: (event: SortableEvent) => this.proxyEvent('onUnchoose', event),
 			/** Fired when creating a clone of element (only in clone mode). */
-			onClone: (event: SortableEvent) =>
-				this.proxyEvent('onClone', event),
+			onClone: (event: SortableEvent) => this.proxyEvent('onClone', event),
 			/** Fired continuously during drag movement. Return false to cancel. */
-			onMove: (event: MoveEvent, originalEvent: Event) =>
-				this.proxyEvent('onMove', event, originalEvent)
+			onMove: (event: MoveEvent, originalEvent: Event) => this.proxyEvent('onMove', event, originalEvent)
 		};
 	}
 
@@ -715,11 +708,7 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 	 */
 	private revertSortableDom(event: SortableEvent): void {
 		const { oldIndex, newIndex, item, from } = event;
-		if (
-			oldIndex === undefined ||
-			newIndex === undefined ||
-			oldIndex === newIndex
-		) {
+		if (oldIndex === undefined || newIndex === undefined || oldIndex === newIndex) {
 			return;
 		}
 
@@ -729,10 +718,7 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 		//   because the item's removal from its new position shifts children back
 		// - If item moved down (newIndex > oldIndex): reference is children[oldIndex]
 		//   because children before oldIndex are unaffected
-		const refChild =
-			newIndex < oldIndex
-				? from.children[oldIndex + 1] || null
-				: from.children[oldIndex];
+		const refChild = newIndex < oldIndex ? from.children[oldIndex + 1] || null : from.children[oldIndex];
 
 		this.renderer.insertBefore(from, item, refChild);
 	}
@@ -753,11 +739,7 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 		// Move item back to source list at its original position.
 		// event.from is the source container, event.item is the dragged element.
 		// insertBefore automatically removes the item from its current parent (target).
-		this.renderer.insertBefore(
-			from,
-			item,
-			from.children[oldIndex] || null
-		);
+		this.renderer.insertBefore(from, item, from.children[oldIndex] || null);
 	}
 
 	/**

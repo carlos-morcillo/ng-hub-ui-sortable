@@ -1,6 +1,6 @@
 {
 	"$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
-	"dest": "../../dist/ng-hub-ui-sortable",
+	"dest": "../../dist/sortable",
 	"lib": {
 		"entryFile": "src/public-api.ts"
 	},

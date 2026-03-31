@@ -1,15 +1,19 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root',
+	providedIn: 'root'
 })
 export class SortableService {
+	/**
+	 * Temporary cross-instance transfer callback used to reconcile SortableJS event order.
+	 * Sortable fires `onAdd` before `onRemove`, so the target stores a callback here and the
+	 * source invokes it once the dragged data has been extracted.
+	 */
+	transfer: ((items: any[]) => void) | null = null;
 
-  // original library calls the events in unnatural order
-  // first the item is added, then removed from the previous array
-  // this is a temporary event to work this around
-  // as long as only one sortable takes place at a certain time
-  // this is enough to have a single `global` event
-  transfer: (items: any[]) => void;
-
+	/**
+	 * Shared drag-session flag used to suppress duplicated `onAdd`/`onUpdate` callbacks
+	 * emitted by SortableJS during the same drop operation.
+	 */
+	dropEventProcessed = false;
 }
