@@ -1,27 +1,44 @@
 # ng-hub-ui-sortable
 
-[![npm version](https://badge.fury.io/js/ng-hub-ui-sortable.svg)](https://badge.fury.io/js/ng-hub-ui-sortable)
+[Español](./README.es.md) | **English**
 
-## Part of ng-hub-ui Family
+[![NPM Version](https://img.shields.io/npm/v/ng-hub-ui-sortable.svg)](https://www.npmjs.com/package/ng-hub-ui-sortable)
 
-This component is part of the ng-hub-ui ecosystem, which includes:
+## Documentation and Live Examples
 
-- [ng-hub-ui-paginable](https://www.npmjs.com/package/ng-hub-ui-paginable)
-- [ng-hub-ui-modal](https://www.npmjs.com/package/ng-hub-ui-modal)
-- [ng-hub-ui-stepper](https://www.npmjs.com/package/ng-hub-ui-stepper)
-- [ng-hub-ui-breadcrumbs](https://www.npmjs.com/package/ng-hub-ui-breadcrumbs)
-- [ng-hub-ui-portal](https://www.npmjs.com/package/ng-hub-ui-portal)
-- [ng-hub-ui-avatar](https://www.npmjs.com/package/ng-hub-ui-avatar)
+This package is part of [Hub UI](https://hubui.dev/), a collection of Angular component libraries for standalone apps.
+
+- Docs: https://hubui.dev/sortable/overview/
+- Live examples: https://hubui.dev/sortable/examples/
+- Hub UI: https://hubui.dev/
+
+## 🧩 Library Family `ng-hub-ui`
+
+This library is part of the **ng-hub-ui** ecosystem:
+
 - [ng-hub-ui-accordion](https://www.npmjs.com/package/ng-hub-ui-accordion)
+- [ng-hub-ui-action-sheet](https://www.npmjs.com/package/ng-hub-ui-action-sheet)
+- [ng-hub-ui-avatar](https://www.npmjs.com/package/ng-hub-ui-avatar)
 - [ng-hub-ui-board](https://www.npmjs.com/package/ng-hub-ui-board)
+- [ng-hub-ui-breadcrumbs](https://www.npmjs.com/package/ng-hub-ui-breadcrumbs)
+- [ng-hub-ui-calendar](https://www.npmjs.com/package/ng-hub-ui-calendar)
+- [ng-hub-ui-dropdown](https://www.npmjs.com/package/ng-hub-ui-dropdown)
+- [ng-hub-ui-history](https://www.npmjs.com/package/ng-hub-ui-history)
+- [ng-hub-ui-modal](https://www.npmjs.com/package/ng-hub-ui-modal)
+- [ng-hub-ui-nav](https://www.npmjs.com/package/ng-hub-ui-nav)
+- [ng-hub-ui-paginable](https://www.npmjs.com/package/ng-hub-ui-paginable)
+- [ng-hub-ui-portal](https://www.npmjs.com/package/ng-hub-ui-portal)
+- [ng-hub-ui-sortable](https://www.npmjs.com/package/ng-hub-ui-sortable) ← You are here
+- [ng-hub-ui-stepper](https://www.npmjs.com/package/ng-hub-ui-stepper)
+- [ng-hub-ui-utils](https://www.npmjs.com/package/ng-hub-ui-utils)
 
 ## Description
 
-**ng-hub-ui-sortable** proporciona una integración completa y moderna de [SortableJS](https://github.com/SortableJS/Sortable) para Angular, permitiéndote crear interfaces interactivas con funcionalidad de arrastrar y soltar de forma sencilla y declarativa. Con una API basada en directivas, puedes transformar cualquier lista en una experiencia sortable con solo agregar un atributo a tu HTML.
+**ng-hub-ui-sortable** provides a modern Angular integration for [SortableJS](https://github.com/SortableJS/Sortable), making it easy to build drag-and-drop interfaces with a directive-first API. You can turn any list into a sortable experience by adding a single attribute to your template.
 
-La biblioteca soporta escenarios simples como reordenar items en una lista, hasta casos avanzados como **listas anidadas**, transferencia de elementos entre múltiples listas, clonación de items, integración con Angular Reactive Forms (`FormArray`) y **Angular Signals** (`WritableSignal`), y personalización completa mediante opciones y eventos. Cada operación de drag-and-drop se sincroniza automáticamente con tu modelo de datos, manteniendo tu aplicación reactiva y predecible.
+The library supports simple list reordering as well as advanced scenarios such as **nested lists**, cross-list transfers, item cloning, Angular Reactive Forms (`FormArray`) integration, **Angular Signals** (`WritableSignal`) support, and deep customization through SortableJS options and events. Each drag-and-drop interaction stays synchronized with your data model so the UI remains reactive and predictable.
 
-Este paquete es un fork de `@worktile/ngx-sortablejs`, manteniendo la misma API robusta mientras actualiza el branding y metadatos para alinearse con la familia ng-hub-ui.
+This package is a fork of `@worktile/ngx-sortablejs`, keeping the proven API while updating the branding, metadata, and Angular integration to match the ng-hub-ui family.
 
 ## Features
 
