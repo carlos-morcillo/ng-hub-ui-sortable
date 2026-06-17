@@ -16,18 +16,23 @@ This package is part of [Hub UI](https://hubui.dev/), a collection of Angular co
 
 This library is part of the **ng-hub-ui** ecosystem:
 
-- [ng-hub-ui-accordion](https://www.npmjs.com/package/ng-hub-ui-accordion)
+- [ng-hub-ui-accordion](https://www.npmjs.com/package/ng-hub-ui-accordion) (deprecated — use ng-hub-ui-panels)
 - [ng-hub-ui-action-sheet](https://www.npmjs.com/package/ng-hub-ui-action-sheet)
 - [ng-hub-ui-avatar](https://www.npmjs.com/package/ng-hub-ui-avatar)
 - [ng-hub-ui-board](https://www.npmjs.com/package/ng-hub-ui-board)
 - [ng-hub-ui-breadcrumbs](https://www.npmjs.com/package/ng-hub-ui-breadcrumbs)
 - [ng-hub-ui-calendar](https://www.npmjs.com/package/ng-hub-ui-calendar)
 - [ng-hub-ui-dropdown](https://www.npmjs.com/package/ng-hub-ui-dropdown)
+- [ng-hub-ui-ds](https://www.npmjs.com/package/ng-hub-ui-ds)
+- [ng-hub-ui-forms](https://www.npmjs.com/package/ng-hub-ui-forms)
 - [ng-hub-ui-history](https://www.npmjs.com/package/ng-hub-ui-history)
+- [ng-hub-ui-milestones](https://www.npmjs.com/package/ng-hub-ui-milestones)
 - [ng-hub-ui-modal](https://www.npmjs.com/package/ng-hub-ui-modal)
 - [ng-hub-ui-nav](https://www.npmjs.com/package/ng-hub-ui-nav)
 - [ng-hub-ui-paginable](https://www.npmjs.com/package/ng-hub-ui-paginable)
+- [ng-hub-ui-panels](https://www.npmjs.com/package/ng-hub-ui-panels)
 - [ng-hub-ui-portal](https://www.npmjs.com/package/ng-hub-ui-portal)
+- [ng-hub-ui-skeleton](https://www.npmjs.com/package/ng-hub-ui-skeleton)
 - [ng-hub-ui-sortable](https://www.npmjs.com/package/ng-hub-ui-sortable) ← You are here
 - [ng-hub-ui-stepper](https://www.npmjs.com/package/ng-hub-ui-stepper)
 - [ng-hub-ui-utils](https://www.npmjs.com/package/ng-hub-ui-utils)
@@ -708,32 +713,9 @@ Your support is greatly appreciated and helps maintain and improve this project!
 
 ## License
 
-This project is licensed under the **Creative Commons Attribution 4.0 International License (CC BY 4.0)**.
+This project is licensed under the **MIT License**.
 
-### What this means:
-
-**You can:**
-
-- Use commercially and non-commercially
-- Modify, adapt, and create derivatives
-- Distribute and redistribute in any format
-- Use in private and public projects
-
-**You must:**
-
-- Give appropriate credit to the original authors
-- Provide a link to the license
-- Indicate if changes were made
-
-### Example attribution:
-
-```
-Based on ng-hub-ui-sortable by Carlos Morcillo
-Original: https://github.com/carlos-morcillo/ng-hub-ui-sortable
-License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
-```
-
-For full license details, see the [LICENSE](LICENSE) file.
+For full license details, see the [LICENSE](LICENSE.md) file.
 
 ---
 
