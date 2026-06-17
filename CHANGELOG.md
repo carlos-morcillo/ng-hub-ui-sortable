@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [22.0.0] - 2026-06-17
+
+### Changed
+
+- Aligned with Angular 22.
+- README documentation standardized.
+
+
 ## [21.3.0] - 2026-03-31
 
 ### Added
