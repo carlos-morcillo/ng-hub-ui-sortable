@@ -1,6 +1,6 @@
 {
   "name": "ng-hub-ui-sortable",
-  "version": "22.0.0",
+  "version": "22.1.0",
   "description": "Angular bindings for Sortable.js (ng-hub-ui fork of @worktile/ngx-sortablejs)",
   "keywords": [
     "ng-hub-ui",
@@ -8,27 +8,26 @@
     "drag-and-drop",
     "angular",
     "sortablejs",
-    "draggable"
+    "draggable",
+    "signals"
   ],
   "author": "Carlos Morcillo <carlos.morcillo@me.com> (https://www.carlosmorcillo.com)",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/carlos-morcillo/ng-hub-ui-sortable"
+    "url": "git+https://github.com/carlos-morcillo/ng-hub-ui-sortable.git"
   },
   "bugs": {
     "url": "https://github.com/carlos-morcillo/ng-hub-ui-sortable/issues"
   },
   "homepage": "https://hubui.dev/",
-  "publishConfig": {
-    "access": "public"
-  },
-  "dependencies": {
-    "sortablejs": ">=1.7.0"
-  },
   "peerDependencies": {
     "@angular/common": ">=18.0.0",
     "@angular/core": ">=18.0.0"
   },
-  "main": "src/public-api.ts"
+  "dependencies": {
+    "sortablejs": ">=1.7.0",
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
 }

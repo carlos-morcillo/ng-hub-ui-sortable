@@ -71,7 +71,7 @@ npm install -D @types/sortablejs
 Or using yarn:
 
 ```bash
-yarn add ng-hub-ui-sortable
+yarn add ng-hub-ui-sortable sortablejs
 yarn add -D @types/sortablejs
 ```
 
@@ -82,71 +82,60 @@ yarn add -D @types/sortablejs
 
 ## Quick Start
 
-Here's a quick example to get you started with `ng-hub-ui-sortable`.
+Here's a quick example to get you started with `ng-hub-ui-sortable`. The directive is
+**standalone**, so you import it directly — no module required.
 
-### 1. Import the module
-
-```typescript
-import { SortableModule } from "ng-hub-ui-sortable";
-
-@NgModule({
-  imports: [SortableModule.forRoot({ animation: 150 })],
-})
-export class AppModule {}
-```
-
-### 2. Create your component
+### 1. Import the standalone directive
 
 ```typescript
 import { Component } from "@angular/core";
+import { SortableDirective } from "ng-hub-ui-sortable";
 
 @Component({
   selector: "app-sortable-demo",
-  templateUrl: "./sortable-demo.component.html",
+  standalone: true,
+  imports: [SortableDirective],
+  template: `
+    <div [hubSortable]="items" [options]="{ animation: 150 }">
+      @for (item of items; track item) {
+        <div class="sortable-item">{{ item }}</div>
+      }
+    </div>
+  `,
 })
 export class SortableDemoComponent {
   items = ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5"];
 }
 ```
 
-### 3. Use in your template
+### 2. (Optional) Share global options
 
-```html
-<div [hubUISortable]="items" [options]="{ animation: 150 }">
-  @for (item of items; track item) {
-  <div class="sortable-item">{{ item }}</div>
-  }
-</div>
+To apply the same SortableJS options to every directive in the app, register them once with
+the standalone `provideSortable()` provider:
+
+```typescript
+import { bootstrapApplication } from "@angular/platform-browser";
+import { provideSortable } from "ng-hub-ui-sortable";
+
+bootstrapApplication(AppComponent, {
+  providers: [provideSortable({ animation: 150, ghostClass: "sortable-ghost" })],
+});
 ```
 
 ## Usage
 
-The component can be used in two ways:
-
-### 1. Module Import with Global Options (Recommended)
-
-```typescript
-import { NgModule } from "@angular/core";
-import { SortableModule } from "ng-hub-ui-sortable";
-
-@NgModule({
-  imports: [SortableModule.forRoot({ animation: 150 })],
-})
-export class AppModule {}
-```
-
-### 2. Standalone Component Import
+### Standalone directive (recommended)
 
 ```typescript
 import { Component } from "@angular/core";
-import { SortableModule } from "ng-hub-ui-sortable";
+import { SortableDirective } from "ng-hub-ui-sortable";
 
 @Component({
   selector: "app-sortable-list",
   standalone: true,
-  imports: [SortableModule],
+  imports: [SortableDirective],
   template: `
-    <div [hubUISortable]="items" [options]="{ animation: 150 }">
+    <div [hubSortable]="items" [options]="{ animation: 150 }">
       @for (item of items; track item) {
         <div class="sortable-item">{{ item }}</div>
       }
@@ -156,6 +145,31 @@ import { SortableModule } from "ng-hub-ui-sortable";
 export class SortableListComponent {
   items = ["Item 1", "Item 2", "Item 3"];
 }
+```
+
+### Global options with `provideSortable()` (recommended)
+
+```typescript
+import { provideSortable } from "ng-hub-ui-sortable";
+
+bootstrapApplication(AppComponent, {
+  providers: [provideSortable({ animation: 150 })],
+});
+```
+
+### NgModule (deprecated, backwards compatibility only)
+
+> **Deprecated.** `SortableModule` and `SortableModule.forRoot()` are kept only for legacy
+> NgModule applications. Prefer the standalone `SortableDirective` and `provideSortable()`.
+
+```typescript
+import { NgModule } from "@angular/core";
+import { SortableModule } from "ng-hub-ui-sortable";
+
+@NgModule({
+  imports: [SortableModule.forRoot({ animation: 150 })],
+})
+export class AppModule {}
 ```
 
 ## Directive API
@@ -276,7 +290,7 @@ interface SortableOptions extends Options {
 ### Simple Sortable List
 
 ```html
-<ul [hubUISortable]="items">
+<ul [hubSortable]="items">
   @for (item of items; track item) {
   <li>{{ item }}</li>
   }
@@ -286,7 +300,7 @@ interface SortableOptions extends Options {
 ### With Animation and Handle
 
 ```html
-<div [hubUISortable]="items" [options]="{ animation: 150, handle: '.drag-handle' }">
+<div [hubSortable]="items" [options]="{ animation: 150, handle: '.drag-handle' }">
   @for (item of items; track item.id) {
   <div class="item">
     <span class="drag-handle">&#9776;</span>
@@ -302,14 +316,14 @@ interface SortableOptions extends Options {
 @Component({
   selector: "app-multi-list",
   standalone: true,
-  imports: [SortableModule],
+  imports: [SortableDirective],
   template: `
-    <div class="list" [hubUISortable]="list1" [options]="options">
+    <div class="list" [hubSortable]="list1" [options]="options">
       @for (item of list1; track item) {
         <div>{{ item }}</div>
       }
     </div>
-    <div class="list" [hubUISortable]="list2" [options]="options">
+    <div class="list" [hubSortable]="list2" [options]="options">
       @for (item of list2; track item) {
         <div>{{ item }}</div>
       }
@@ -333,10 +347,10 @@ export class MultiListComponent {
 @Component({
   selector: "app-form-array",
   standalone: true,
-  imports: [ReactiveFormsModule, SortableModule],
+  imports: [ReactiveFormsModule, SortableDirective],
   template: `
     <form [formGroup]="form">
-      <div [hubUISortable]="formArray" [options]="{ animation: 150 }">
+      <div [hubSortable]="formArray" [options]="{ animation: 150 }">
         @for (control of formArray.controls; track control; let i = $index) {
           <div>
             <input [formControlName]="i" />
@@ -361,14 +375,14 @@ export class FormArrayComponent {
 
 ```typescript
 import { Component, signal, computed } from "@angular/core";
-import { SortableModule } from "ng-hub-ui-sortable";
+import { SortableDirective } from "ng-hub-ui-sortable";
 
 @Component({
   selector: "app-signal-sortable",
   standalone: true,
-  imports: [SortableModule],
+  imports: [SortableDirective],
   template: `
-    <div [hubUISortable]="items" [options]="{ animation: 150 }">
+    <div [hubSortable]="items" [options]="{ animation: 150 }">
       @for (item of items(); track item.id) {
         <div class="item">{{ item.name }}</div>
       }
@@ -398,9 +412,9 @@ export class SignalSortableComponent {
 @Component({
   selector: "app-clone",
   standalone: true,
-  imports: [SortableModule],
+  imports: [SortableDirective],
   template: `
-    <div [hubUISortable]="items" [options]="cloneOptions" [cloneFunction]="cloneItem">
+    <div [hubSortable]="items" [options]="cloneOptions" [cloneFunction]="cloneItem">
       @for (item of items; track item.name) {
         <div>{{ item.name }}</div>
       }
@@ -427,7 +441,7 @@ export class CloneComponent {
 For cases where the directive host is wrapped by another component (e.g., Angular Material):
 
 ```html
-<mat-list [hubUISortable]="items" container=".mat-list-inner">
+<mat-list [hubSortable]="items" container=".mat-list-inner">
   @for (item of items; track item) {
   <mat-list-item>{{ item }}</mat-list-item>
   }
@@ -657,8 +671,8 @@ Here are some common issues and how to resolve them:
 
 ### Drag and drop not working
 
-- **Check imports**: Ensure `SortableModule` is properly imported
-- **Verify binding**: Make sure `[hubUISortable]` is bound to an array or FormArray
+- **Check imports**: Ensure the standalone `SortableDirective` is properly imported
+- **Verify binding**: Make sure `[hubSortable]` is bound to an array or FormArray
 - **Check container**: Items must be direct children of the sortable container
 
 ### Array not updating
@@ -674,7 +688,7 @@ Here are some common issues and how to resolve them:
 ### Multi-list issues
 
 - **Group name**: Ensure all lists share the same `group` name in options
-- **Module import**: `SortableModule` must be imported in both components' modules
+- **Directive import**: `SortableDirective` must be imported by both components hosting the connected lists
 
 ### FormArray sync issues
 
@@ -683,15 +697,9 @@ Here are some common issues and how to resolve them:
 
 If problems persist, open an issue at: https://github.com/carlos-morcillo/ng-hub-ui-sortable/issues
 
-## Scripts
+## Changelog
 
-| Command             | Description                                                          |
-| ------------------- | -------------------------------------------------------------------- |
-| `npm run start`     | Run the demo app locally                                             |
-| `npm run build:app` | Production build for GitHub Pages (base href `/ng-hub-ui-sortable/`) |
-| `npm run build:lib` | Build the library package                                            |
-| `npm run test:app`  | Run demo app tests                                                   |
-| `npm run pub`       | Publish workflow (uses `wpm publish` then `npm publish`)             |
+See [CHANGELOG.md](./CHANGELOG.md) for the full version history.
 
 ## Contributing
 
@@ -715,7 +723,7 @@ Your support is greatly appreciated and helps maintain and improve this project!
 
 This project is licensed under the **MIT License**.
 
-For full license details, see the [LICENSE](LICENSE.md) file.
+For full license details, see the [LICENSE](LICENSE) file.
 
 ---
 

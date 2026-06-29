@@ -1,6 +1,8 @@
 export * from './lib/array-helpers';
 export * from './lib/sortable.directive';
 export * from './lib/sortable.module';
+export * from './lib/sortable.provider';
+export * from './lib/sortable.types';
 // Re-export SortableJS types to provide a complete wrapper
 // This allows consumers to use the library without installing @types/sortablejs
 // or importing directly from sortablejs
