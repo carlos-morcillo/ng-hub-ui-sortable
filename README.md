@@ -697,6 +697,15 @@ Here are some common issues and how to resolve them:
 
 If problems persist, open an issue at: https://github.com/carlos-morcillo/ng-hub-ui-sortable/issues
 
+## Accessibility
+
+SortableJS reordering is **pointer-only**: there is no built-in keyboard or screen-reader
+path for drag-and-drop, and this wrapper does not add one yet. Where reordering is an
+essential capability, pair the sortable list with an alternative affordance operating on
+the same array — for example per-item "move up / move down" buttons — so keyboard and
+assistive-technology users can achieve the same result. An `aria-live` announcer story
+for drag operations is tracked as future work.
+
 ## Changelog
 
 See [CHANGELOG.md](./CHANGELOG.md) for the full version history.

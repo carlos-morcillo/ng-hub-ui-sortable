@@ -698,6 +698,15 @@ Aquí tienes algunos problemas comunes y cómo resolverlos:
 
 Si los problemas persisten, abre una incidencia en: https://github.com/carlos-morcillo/ng-hub-ui-sortable/issues
 
+## Accesibilidad
+
+La reordenación de SortableJS es **solo con puntero**: no existe un camino de teclado ni
+de lector de pantalla para el drag-and-drop, y este wrapper aún no lo añade. Cuando
+reordenar sea una capacidad esencial, acompaña la lista de una alternativa que opere
+sobre el mismo array — por ejemplo botones de "subir / bajar" por elemento — para que
+los usuarios de teclado y tecnologías de asistencia logren el mismo resultado. Un
+announcer `aria-live` para las operaciones de arrastre queda como trabajo futuro.
+
 ## Changelog
 
 Consulta [CHANGELOG.md](./CHANGELOG.md) para el historial completo de versiones.
