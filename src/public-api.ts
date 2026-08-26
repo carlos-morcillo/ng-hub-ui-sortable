@@ -7,11 +7,4 @@ export * from './lib/sortable.types';
 // This allows consumers to use the library without installing @types/sortablejs
 // or importing directly from sortablejs
 export { default as Sortable } from 'sortablejs';
-export type {
-	GroupOptions,
-	MoveEvent,
-	Options,
-	PullResult,
-	PutResult,
-	SortableEvent
-} from 'sortablejs';
+export type { GroupOptions, MoveEvent, Options, PullResult, PutResult, SortableEvent } from 'sortablejs';

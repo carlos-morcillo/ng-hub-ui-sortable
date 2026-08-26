@@ -30,22 +30,13 @@
  * // Result: ['A', 'C', 'D', 'B']
  * ```
  */
-export function moveItemInArray<T = any>(
-	array: T[],
-	fromIndex: number,
-	toIndex: number
-): void {
+export function moveItemInArray<T = any>(array: T[], fromIndex: number, toIndex: number): void {
 	if (!array || array.length === 0) {
 		return;
 	}
 
 	// Ensure indices are within bounds
-	if (
-		fromIndex < 0 ||
-		fromIndex >= array.length ||
-		toIndex < 0 ||
-		toIndex >= array.length
-	) {
+	if (fromIndex < 0 || fromIndex >= array.length || toIndex < 0 || toIndex >= array.length) {
 		console.warn(
 			`[moveItemInArray] Invalid indices: fromIndex=${fromIndex}, toIndex=${toIndex}, array length=${array.length}`
 		);
@@ -95,17 +86,13 @@ export function transferArrayItem<T = any>(
 
 	// Validate current index
 	if (currentIndex < 0 || currentIndex >= currentArray.length) {
-		console.warn(
-			`[transferArrayItem] Invalid currentIndex=${currentIndex}, array length=${currentArray.length}`
-		);
+		console.warn(`[transferArrayItem] Invalid currentIndex=${currentIndex}, array length=${currentArray.length}`);
 		return;
 	}
 
 	// Validate target index (can be equal to length for append)
 	if (targetIndex < 0 || targetIndex > targetArray.length) {
-		console.warn(
-			`[transferArrayItem] Invalid targetIndex=${targetIndex}, array length=${targetArray.length}`
-		);
+		console.warn(`[transferArrayItem] Invalid targetIndex=${targetIndex}, array length=${targetArray.length}`);
 		return;
 	}
 
@@ -134,12 +121,7 @@ export function transferArrayItem<T = any>(
  * // target: ['1', '2', 'B', '3']
  * ```
  */
-export function copyArrayItem<T = any>(
-	currentArray: T[],
-	targetArray: T[],
-	currentIndex: number,
-	targetIndex: number
-): void {
+export function copyArrayItem<T = any>(currentArray: T[], targetArray: T[], currentIndex: number, targetIndex: number): void {
 	if (!currentArray || !targetArray) {
 		console.warn('[copyArrayItem] One or both arrays are undefined');
 		return;
@@ -147,17 +129,13 @@ export function copyArrayItem<T = any>(
 
 	// Validate current index
 	if (currentIndex < 0 || currentIndex >= currentArray.length) {
-		console.warn(
-			`[copyArrayItem] Invalid currentIndex=${currentIndex}, array length=${currentArray.length}`
-		);
+		console.warn(`[copyArrayItem] Invalid currentIndex=${currentIndex}, array length=${currentArray.length}`);
 		return;
 	}
 
 	// Validate target index (can be equal to length for append)
 	if (targetIndex < 0 || targetIndex > targetArray.length) {
-		console.warn(
-			`[copyArrayItem] Invalid targetIndex=${targetIndex}, array length=${targetArray.length}`
-		);
+		console.warn(`[copyArrayItem] Invalid targetIndex=${targetIndex}, array length=${targetArray.length}`);
 		return;
 	}
 

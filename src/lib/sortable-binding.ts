@@ -40,9 +40,7 @@ export class SortableBinding {
 	 * @private
 	 */
 	private isSignalArray(): boolean {
-		return (
-			isSignal(this.target) && typeof (this.target as any).set === 'function'
-		);
+		return isSignal(this.target) && typeof (this.target as any).set === 'function';
 	}
 
 	/**
@@ -55,9 +53,7 @@ export class SortableBinding {
 	 * @private
 	 */
 	private get arrayValue(): any[] {
-		return this.isSignalArray()
-			? (this.target as WritableSignal<any[]>)()
-			: (this.target as any[]);
+		return this.isSignalArray() ? (this.target as WritableSignal<any[]>)() : (this.target as any[]);
 	}
 
 	/**
@@ -150,10 +146,6 @@ export class SortableBinding {
 	 */
 	private isFormArray(): boolean {
 		// just checking for random FormArray methods not available on a standard array
-		return (
-			!!(this.target as any).at &&
-			!!(this.target as any).insert &&
-			!!(this.target as any).reset
-		);
+		return !!(this.target as any).at && !!(this.target as any).insert && !!(this.target as any).reset;
 	}
 }

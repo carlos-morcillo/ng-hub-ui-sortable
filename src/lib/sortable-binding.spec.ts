@@ -58,11 +58,7 @@ describe('SortableBinding', () => {
 		let formArray: FormArray;
 
 		beforeEach(() => {
-			formArray = new FormArray([
-				new FormControl('A'),
-				new FormControl('B'),
-				new FormControl('C')
-			]);
+			formArray = new FormArray([new FormControl('A'), new FormControl('B'), new FormControl('C')]);
 			binding = new SortableBinding(formArray as any);
 		});
 
