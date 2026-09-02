@@ -12,6 +12,12 @@ This package is part of [Hub UI](https://hubui.dev/en/), a collection of Angular
 - Live examples: https://hubui.dev/en/sortable/examples/
 - Hub UI: https://hubui.dev/en/
 
+## Migrating from ngx-sortablejs
+
+`ngx-sortablejs` last published 11.1.0 in December 2020 and is a View Engine (pre-Ivy) library, so it stops compiling at Angular 13. **[Read the migration guide](./MIGRATION.md)** — it maps every member of the old API, shows before/after code, and is explicit about the behaviour changes that compile cleanly and fail at runtime.
+
+The guide also tells you when *not* to migrate here: if you only need to follow Angular forward, `@worktile/ngx-sortablejs` keeps the same selector and input names and is a smaller change.
+
 ## 🧩 Library Family `ng-hub-ui`
 
 This library is part of the **ng-hub-ui** ecosystem:
