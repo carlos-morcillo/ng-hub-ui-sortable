@@ -23,6 +23,11 @@
  * @param fromIndex - The current index of the item (0-based)
  * @param toIndex - The target index where the item should be moved (0-based)
  *
+ * @remarks
+ * Invalid input (missing array, out-of-range index) is a no-op: the array is left untouched
+ * and nothing is logged, since a library has no business writing into the console output of
+ * the application that consumes it.
+ *
  * @example
  * ```typescript
  * const items = ['A', 'B', 'C', 'D'];
@@ -37,9 +42,6 @@ export function moveItemInArray<T = any>(array: T[], fromIndex: number, toIndex:
 
 	// Ensure indices are within bounds
 	if (fromIndex < 0 || fromIndex >= array.length || toIndex < 0 || toIndex >= array.length) {
-		console.warn(
-			`[moveItemInArray] Invalid indices: fromIndex=${fromIndex}, toIndex=${toIndex}, array length=${array.length}`
-		);
 		return;
 	}
 
@@ -64,6 +66,10 @@ export function moveItemInArray<T = any>(array: T[], fromIndex: number, toIndex:
  * @param currentIndex - The index of the item in the current array (0-based)
  * @param targetIndex - The index at which to insert in the target array (0-based)
  *
+ * @remarks
+ * Invalid input (missing array, out-of-range index) is a no-op, and nothing is logged into
+ * the consuming application's console output.
+ *
  * @example
  * ```typescript
  * const source = ['A', 'B', 'C'];
@@ -80,19 +86,16 @@ export function transferArrayItem<T = any>(
 	targetIndex: number
 ): void {
 	if (!currentArray || !targetArray) {
-		console.warn('[transferArrayItem] One or both arrays are undefined');
 		return;
 	}
 
 	// Validate current index
 	if (currentIndex < 0 || currentIndex >= currentArray.length) {
-		console.warn(`[transferArrayItem] Invalid currentIndex=${currentIndex}, array length=${currentArray.length}`);
 		return;
 	}
 
 	// Validate target index (can be equal to length for append)
 	if (targetIndex < 0 || targetIndex > targetArray.length) {
-		console.warn(`[transferArrayItem] Invalid targetIndex=${targetIndex}, array length=${targetArray.length}`);
 		return;
 	}
 
@@ -112,6 +115,10 @@ export function transferArrayItem<T = any>(
  * @param currentIndex - The index of the item in the current array (0-based)
  * @param targetIndex - The index at which to insert in the target array (0-based)
  *
+ * @remarks
+ * Invalid input (missing array, out-of-range index) is a no-op, and nothing is logged into
+ * the consuming application's console output.
+ *
  * @example
  * ```typescript
  * const source = ['A', 'B', 'C'];
@@ -123,19 +130,16 @@ export function transferArrayItem<T = any>(
  */
 export function copyArrayItem<T = any>(currentArray: T[], targetArray: T[], currentIndex: number, targetIndex: number): void {
 	if (!currentArray || !targetArray) {
-		console.warn('[copyArrayItem] One or both arrays are undefined');
 		return;
 	}
 
 	// Validate current index
 	if (currentIndex < 0 || currentIndex >= currentArray.length) {
-		console.warn(`[copyArrayItem] Invalid currentIndex=${currentIndex}, array length=${currentArray.length}`);
 		return;
 	}
 
 	// Validate target index (can be equal to length for append)
 	if (targetIndex < 0 || targetIndex > targetArray.length) {
-		console.warn(`[copyArrayItem] Invalid targetIndex=${targetIndex}, array length=${targetArray.length}`);
 		return;
 	}
 

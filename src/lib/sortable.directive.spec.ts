@@ -365,8 +365,9 @@ describe('SortableDirective', () => {
 			expect(directive).toBeTruthy();
 		});
 
-		it('should log error when container selector does not match', async () => {
-			vi.spyOn(console, 'error').mockReturnValue(undefined);
+		it('should stay inert and quiet when container selector does not match', async () => {
+			const errorSpy = vi.spyOn(console, 'error').mockReturnValue(undefined);
+			const warnSpy = vi.spyOn(console, 'warn').mockReturnValue(undefined);
 			TestBed.configureTestingModule({
 				imports: [SortableModule, BadContainerTestComponent]
 			});
@@ -374,7 +375,13 @@ describe('SortableDirective', () => {
 			fixture.detectChanges();
 			await new Promise<void>((resolve) => setTimeout(resolve, 0));
 
-			expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Container not found'));
+			const directive = getSortableDirective(fixture) as any;
+			expect(directive.sortableInstance).toBeNull();
+			expect(errorSpy).not.toHaveBeenCalled();
+			expect(warnSpy).not.toHaveBeenCalled();
+
+			errorSpy.mockRestore();
+			warnSpy.mockRestore();
 		});
 	});
 

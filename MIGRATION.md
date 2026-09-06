@@ -60,7 +60,7 @@ Every other subpath is blocked. The bundle's entire export line is `SortableDire
 - **Your app is below Angular 18.** The declared peer range is `>= 18.0.0`, so the Angular upgrade comes first — treat the migration as the last step of that upgrade, not as an independent task. And note there is no published 18.x or 19.x line at all (see *Version selection*).
 - **You depend on `SortablejsBindings`, `SortablejsBinding`, `GLOBALS` (`ɵa`) or `SortablejsService` (`ɵb`).** None has a public replacement, and none is reachable in the published bundle (section 5).
 - **You cannot re-test lists containing form controls.** The replacement installs capture-phase listeners that stop `change` (among others) at the container. See 5.7.
-- **You have a `[sortablejsContainer]` selector pointing at conditionally rendered content.** That pattern never worked in either package; what the migration changes is the failure mode — from a thrown error to a silent `console.error`. See 5.6.
+- **You have a `[sortablejsContainer]` selector pointing at conditionally rendered content.** That pattern never worked in either package; what the migration changes is the failure mode — from a thrown error to a silent no-op. See 5.6.
 
 ### Maturity, stated so you can price the risk
 
@@ -179,7 +179,7 @@ On the replacement side, "Missing" means **unreachable**: the published package 
 | --- | --- | --- | --- |
 | `[sortablejs]` (selector) | `[hubSortable]` | Renamed | Activation is equivalent (bare attribute or property binding). Every template occurrence must be rewritten. |
 | `[sortablejs]` (input) | `[hubSortable]` (signal input `items`) | Renamed, one behaviour delta | Array and `FormArray` semantics unchanged; `WritableSignal<any[]>` added. See 5.9 for clone sources with no array bound. |
-| `[sortablejsContainer]` | `[container]` | Renamed, **different failure mode** | Still `querySelector` inside the host, and — as in the incumbent — still resolved **synchronously in `ngOnInit`**, before `@if` / `*ngIf` / `*ngFor` embedded views exist. What changed is what happens on no match: the incumbent passed `null` into `Sortable.create` and threw; the replacement logs `[hubSortable] Container not found with selector: …` to `console.error` and returns permanently. See 5.6. |
+| `[sortablejsContainer]` | `[container]` | Renamed, **different failure mode** | Still `querySelector` inside the host, and — as in the incumbent — still resolved **synchronously in `ngOnInit`**, before `@if` / `*ngIf` / `*ngFor` embedded views exist. What changed is what happens on no match: the incumbent passed `null` into `Sortable.create` and threw; the replacement catches the null container and returns permanently, without throwing. Lines up to 22.1.3 also logged `[hubSortable] Container not found with selector: …` to `console.error`; that message has since been dropped. See 5.6. |
 | `[sortablejsOptions]` | `[options]` | **Different semantics** | Still the whole SortableJS `Options` object, but the merge gained a third layer and 32 individual inputs now override it. See 5.5. |
 | `[sortablejsCloneFunction]` | `[cloneFunction]` | Renamed | Same `(item: any) => any` signature and the same call site: consulted inside `onRemove` only when the drag is a clone pull, bindings are provided **and** `autoUpdateArray` is `true`. Dead code in manual mode. |
 | `(sortablejsInit)` | `(init)` | **Different semantics** | Same payload, now typed `Sortable` instead of `any`. Emission moved from `setTimeout(0)` to `afterNextRender`. See 5.8. |
@@ -632,7 +632,7 @@ Angular flushes a host directive's `ngOnInit` before the `@if` / `*ngIf` / `*ngF
 has **never** worked, in either package. What changed is the failure mode:
 
 - **Incumbent:** `querySelector` returned `null`, `null` went into `Sortable.create`, and SortableJS threw an uncaught `Sortable: \`el\` must be an HTMLElement` from inside the `setTimeout`. Loud, with a stack trace.
-- **Replacement:** the null container is caught, `[hubSortable] Container not found with selector: .list` goes to `console.error`, and `create()` returns permanently. No Sortable instance, no `(init)`, no retry, no exception.
+- **Replacement:** the null container is caught and `create()` returns permanently. No Sortable instance, no `(init)`, no retry, no exception. Lines up to 22.1.3 at least wrote `[hubSortable] Container not found with selector: .list` to `console.error`; that message has since been removed, so the failure now leaves no trace at all.
 
 **Consequence:** if you have this pattern, drag is already dead on that screen today and there is a stack trace in your console. The migration does not break it — it removes the evidence. Because nothing throws afterwards, CI will not catch it either. The library's own spec covers only a statically present inner container.
 
@@ -734,10 +734,10 @@ Your array holds draggable items only, so the draggable-filtered pair is the one
 
 ### 5.13 The array helpers are not interchangeable with the CDK ones at the edges
 
-- `moveItemInArray(array, from, to)` returns **silently** when `array` is empty or undefined — the first guard is `if (!array || array.length === 0) return;` with no output. Out-of-range indices, including `toIndex === array.length`, hit a second guard that emits `console.warn('[moveItemInArray] Invalid indices: …')` and no-ops. `@angular/cdk` (checked against `@angular/cdk` 22.0.6) instead clamps both indices to `array.length - 1` and completes the move.
-- `transferArrayItem` and `copyArrayItem` warn on a missing array, warn on an out-of-range `currentIndex`, and accept `targetIndex === targetArray.length` (append), rejecting only `targetIndex > length`.
+- `moveItemInArray(array, from, to)` returns **silently** when `array` is empty or undefined — the first guard is `if (!array || array.length === 0) return;` with no output. Out-of-range indices, including `toIndex === array.length`, hit a second guard that also no-ops — up to 22.1.3 it emitted `console.warn('[moveItemInArray] Invalid indices: …')` first, and that warning has since been removed. `@angular/cdk` (checked against `@angular/cdk` 22.0.6) instead clamps both indices to `array.length - 1` and completes the move.
+- `transferArrayItem` and `copyArrayItem` no-op on a missing array and on an out-of-range `currentIndex`, and accept `targetIndex === targetArray.length` (append), rejecting only `targetIndex > length`.
 
-**Consequence:** two different failures, with two different levels of evidence. Handlers ported from a CDK implementation **drop tail-of-list moves with a `console.warn`**, where CDK clamped and completed them. And a manual-mode handler running against an array that has not been populated yet gets a **no-op with nothing in the console**. The second one matters more than it looks, because manual mode is the replacement for the deleted `SortablejsBindings` capability.
+**Consequence:** every rejected call is a **silent no-op**. Handlers ported from a CDK implementation drop tail-of-list moves where CDK clamped and completed them, and a manual-mode handler running against an array that has not been populated yet does nothing at all. Neither leaves anything in the console — up to 22.1.3 the out-of-range cases at least warned — which matters more than it looks, because manual mode is the replacement for the deleted `SortablejsBindings` capability.
 
 **Workaround:** validate indices in your own handler before calling the helpers, or clamp them yourself if you are matching CDK behaviour.
 

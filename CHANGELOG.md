@@ -4,6 +4,61 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [22.1.4] - 2026-09-06
+
+### Added
+
+- **`FUNCTIONALITIES.md`**, the coverage matrix the rest of the family ships. Nothing until now
+  answered "is this supported, and is there a working example of it?" without reading the
+  directive source, and twenty-four sibling libraries already answer it in one table.
+- **`BREAKING_CHANGES.md`**. This package's major tracks the Angular major it targets, so a
+  breaking change can never raise the major and SemVer cannot warn anybody — this file is the
+  warning, and it is the only one a consumer gets.
+- **The reference documents ship inside the tarball** — `CHANGELOG.md`, `MIGRATION.md` and
+  `BREAKING_CHANGES.md`, the last of which the README now links from its Changelog section as the
+  rest of the family does. All three are linked with repository-relative paths, which npm and
+  GitHub rewrite but `node_modules` does not: a reader opening the packaged README followed those
+  links to nothing.
+
+### Changed
+
+- **The library no longer writes into the consuming application's console.** Eight guard rails —
+  the out-of-range check in `moveItemInArray`, the three in `transferArrayItem`, the three in
+  `copyArrayItem` and the directive's `container` lookup — reported invalid input with
+  `console.warn` / `console.error`. A dependency has no standing to put noise in an application's
+  console, least of all in a production build, and the message was addressed to whoever wrote the
+  call rather than to whoever runs the app. Every guard keeps the behaviour it always had: the
+  call is a no-op and the arrays are left untouched. A `container` selector that matches nothing
+  likewise leaves the directive inert, now without a message, so audit those selectors
+  (see `MIGRATION.md`, 5.6) instead of waiting for the console to point at them.
+
+### Fixed
+
+- **The directive's JSDoc examples teach the `@for` block** rather than `*ngFor`. Those snippets
+  ship in the published typings, so they are what a consumer's editor shows on hover over
+  `hubSortable` — and they contradicted the README's Quick Start, leaving the reader to work out
+  which surface of the same library to believe. Each `@for` sits on the line that opens the host
+  element on purpose: TypeScript reads a line-initial `@for` inside a JSDoc comment as a tag and
+  splits the example in two.
+
+- **Four published releases the changelog never recorded** — 21.0.1, 21.1.0, 21.1.1 and 21.2.0 —
+  are written up from the commits that cut them. Manual control mode, the array helpers and the
+  move of `sortablejs` into `dependencies` all shipped in that window, so the file skipped the
+  three releases a consumer is most likely to be looking for.
+- **`22.0.0` says plainly that it was never published.** It sat between two published versions as
+  if it were one of them, which made the rebranding look available under a version npm has never
+  served.
+- **The outputs are documented as `OutputEmitterRef`, not `EventEmitter`,** in both READMEs. The
+  directive declares them with `output()`, and the two are not interchangeable: a reader who
+  trusted the table would reach for `.pipe()` on `init` and find nothing there — an
+  `OutputEmitterRef` has `subscribe()`, but it is not an `Observable`.
+- **The installation instructions stop asking for `sortablejs`.** It has been a regular dependency
+  since 21.2.0, so npm installs it unasked; telling the reader to add it by hand invites a second,
+  unpinned copy in their manifest that nothing keeps aligned with the one this package resolves.
+- **`README.es.md` gains the "Migrating from ngx-sortablejs" section**, the only part of the
+  English README with no Spanish counterpart — and the part a reader arriving from the abandoned
+  package needs first.
+
 ## [22.1.3] - 2026-09-01
 
 ### Changed
@@ -51,6 +106,10 @@ Metadata only — no code, no types, no styles change, and nothing a consumer im
 
 ## [22.0.0] - 2026-06-17
 
+> **Never published to npm.** The version was cut in the repository but no tarball was ever
+> released under it; the rebranding below reached consumers with `22.1.0`. The registry goes
+> straight from `21.3.0` to `22.1.0`.
+
 ### Changed
 
 - Rebranded the package and standardized its metadata and README to match the ng-hub-ui family.
@@ -61,6 +120,50 @@ Metadata only — no code, no types, no styles change, and nothing a consumer im
 
 - Enhanced sortable directive with improved binding support for signals and FormArrays.
 - Comprehensive test coverage for the sortable directive.
+
+## [21.2.0] - 2026-02-10
+
+### Added
+
+- **The library re-exports the SortableJS types from its own root** — `Sortable`, `SortableEvent`,
+  `Options`, `MoveEvent`, `GroupOptions`, `PullResult` and `PutResult`. Typing a handler no longer
+  means importing from two packages.
+
+### Changed
+
+- **`sortablejs` moved from `peerDependencies` to `dependencies`**, so it installs with this
+  package instead of being one more thing to remember.
+
+## [21.1.1] - 2026-02-10
+
+### Fixed
+
+- **Duplicate `update` and `add` emissions in manual mode.** SortableJS calls its own `onUpdate`
+  and `onAdd` more than once for a single drop when the DOM is rearranged inside the handler; a
+  guard now lets the first call through and drops the rest until the next drag starts.
+- **The DOM and the bound array no longer disagree in manual mode.** SortableJS moves the element
+  itself, but manual mode leaves the array to the consumer, so the directive reverts that move and
+  lets Angular render from the array it was actually given.
+- **Native SortableJS events no longer reach template listeners twice.** The container's own
+  `start`, `update`, `add` and friends are CustomEvents with the same names as the directive's
+  outputs, so `(update)` fired once for each.
+
+## [21.1.0] - 2026-02-09
+
+### Added
+
+- **Manual control mode through the `autoUpdateArray` input** (default `true`). Set it to `false`
+  and the directive stops mutating the bound array: it only reports what happened, which is what
+  validation before the move, persistence, undo and immutable state all need.
+- **The array helpers `moveItemInArray`, `transferArrayItem` and `copyArrayItem`**, so manual mode
+  does not mean rewriting index arithmetic in every application.
+- An events guide and a manual-control example covering a single list and a Kanban board.
+
+## [21.0.1] - 2025-12-12
+
+### Added
+
+- **A README inside the package.** The npm page had been blank since the first release.
 
 ## [21.0.0] - 2025-12-12
 
@@ -73,7 +176,9 @@ Metadata only — no code, no types, no styles change, and nothing a consumer im
 
 ### Added
 
-- Preview groundwork for Angular 20 compatibility.
+- **First version published as `ng-hub-ui-sortable`**, with the groundwork for Angular 20
+  compatibility. Everything the registry serves under this name starts here; the numbering
+  continues the fork it came from.
 
 ## [19.0.0] - 2025-04-08
 

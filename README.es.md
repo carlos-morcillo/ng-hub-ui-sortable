@@ -12,6 +12,12 @@ Este paquete forma parte de [Hub UI](https://hubui.dev/en/), una colección de b
 - Ejemplos en vivo: https://hubui.dev/en/sortable/examples/
 - Hub UI: https://hubui.dev/en/
 
+## Migrar desde ngx-sortablejs
+
+`ngx-sortablejs` publicó su última versión, la 11.1.0, en diciembre de 2020 y es una biblioteca View Engine (anterior a Ivy), así que deja de compilar a partir de Angular 13. **[Lee la guía de migración](./MIGRATION.md)**: recorre miembro a miembro la API antigua, muestra el código antes y después, y es explícita con los cambios de comportamiento que compilan sin quejarse y fallan en tiempo de ejecución.
+
+La guía también dice cuándo *no* migrar aquí: si lo único que necesitas es seguir avanzando con Angular, `@worktile/ngx-sortablejs` mantiene el mismo selector y los mismos nombres de input, y es un cambio más pequeño.
+
 ## 🧩 Familia de bibliotecas `ng-hub-ui`
 
 Esta biblioteca forma parte del ecosistema **ng-hub-ui**:
@@ -61,24 +67,26 @@ Este paquete es un fork de `@worktile/ngx-sortablejs`, que conserva la API proba
 ## Instalación
 
 ```bash
-# Instala el componente y SortableJS
-npm install ng-hub-ui-sortable sortablejs
+# SortableJS es una dependencia de este paquete: se instala con él
+npm install ng-hub-ui-sortable
 
-# Instala los tipos para el desarrollo
+# Los typings publicados hacen referencia a los tipos de SortableJS, así que instálalos también
 npm install -D @types/sortablejs
 ```
 
 O usando yarn:
 
 ```bash
-yarn add ng-hub-ui-sortable sortablejs
+yarn add ng-hub-ui-sortable
 yarn add -D @types/sortablejs
 ```
 
-### Requisitos de peer dependencies
+### Requisitos
 
-- Angular `>=18.0.0`
-- SortableJS `>=1.7.0`
+- Angular `>=18.0.0`: la única peer dependency, junto a `@angular/common`.
+- SortableJS `>=1.7.0`: es una **dependencia** normal desde la 21.2.0, así que se resuelve sola. No
+  la añadas a tu propio manifiesto: una segunda copia fijada aparte es un desajuste de versiones
+  esperando a ocurrir.
 
 ## Inicio rápido
 
@@ -226,23 +234,27 @@ Todas las opciones de SortableJS pueden pasarse a través del input `[options]` 
 
 ### Outputs
 
-Todos los outputs emiten eventos que se canalizan a través de la zone de Angular para una detección de cambios adecuada:
+Todos los outputs emiten eventos que se canalizan a través de la zone de Angular para una detección de cambios adecuada.
 
-| Output        | Tipo                                                       | Descripción                                                   |
-| ------------- | ---------------------------------------------------------- | ------------------------------------------------------------- |
-| `init`        | `EventEmitter<Sortable>`                                   | Emite la instancia de Sortable instanciada en la inicialización |
-| `start`       | `EventEmitter<SortableEvent>`                              | Se dispara cuando empieza el arrastre                         |
-| `end`         | `EventEmitter<SortableEvent>`                              | Se dispara cuando termina el arrastre                         |
-| `add`         | `EventEmitter<SortableEvent>`                              | Se añade un elemento desde otra lista                         |
-| `remove`      | `EventEmitter<SortableEvent>`                              | Se elimina un elemento hacia otra lista                       |
-| `update`      | `EventEmitter<SortableEvent>`                              | La posición de un elemento se actualiza dentro de la misma lista |
-| `sortEvent`   | `EventEmitter<SortableEvent>`                              | Se llama cuando la lista se ordena (cualquier cambio en el orden) |
-| `filterEvent` | `EventEmitter<SortableEvent>`                              | Se llama cuando se intenta arrastrar un elemento filtrado     |
-| `change`      | `EventEmitter<SortableEvent>`                              | Se llama cuando la lista cambia al añadir o eliminar un elemento |
-| `choose`      | `EventEmitter<SortableEvent>`                              | Se elige un elemento (mouse down sobre el elemento arrastrable) |
-| `unchoose`    | `EventEmitter<SortableEvent>`                              | Se desselecciona un elemento (mouse up sin arrastre)          |
-| `clone`       | `EventEmitter<SortableEvent>`                              | Se clona un elemento al arrastrar entre listas con el modo de clonación |
-| `move`        | `EventEmitter<{ event: MoveEvent; originalEvent: Event }>` | Se llama durante el movimiento de arrastre con los detalles del evento de movimiento |
+Se declaran con la función `output()` de Angular, así que cada uno es un `OutputEmitterRef`, no un
+`EventEmitter`: se vincula desde la plantilla como cualquier output y en TypeScript ofrece
+`subscribe()`, pero no es un `Observable` y no tiene `.pipe()`.
+
+| Output        | Tipo                                                           | Descripción                                                                          |
+| ------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `init`        | `OutputEmitterRef<Sortable>`                                   | Emite la instancia de Sortable instanciada en la inicialización                      |
+| `start`       | `OutputEmitterRef<SortableEvent>`                              | Se dispara cuando empieza el arrastre                                                |
+| `end`         | `OutputEmitterRef<SortableEvent>`                              | Se dispara cuando termina el arrastre                                                |
+| `add`         | `OutputEmitterRef<SortableEvent>`                              | Se añade un elemento desde otra lista                                                |
+| `remove`      | `OutputEmitterRef<SortableEvent>`                              | Se elimina un elemento hacia otra lista                                              |
+| `update`      | `OutputEmitterRef<SortableEvent>`                              | La posición de un elemento se actualiza dentro de la misma lista                     |
+| `sortEvent`   | `OutputEmitterRef<SortableEvent>`                              | Se llama cuando la lista se ordena (cualquier cambio en el orden)                    |
+| `filterEvent` | `OutputEmitterRef<SortableEvent>`                              | Se llama cuando se intenta arrastrar un elemento filtrado                            |
+| `change`      | `OutputEmitterRef<SortableEvent>`                              | Se llama cuando la lista cambia al añadir o eliminar un elemento                     |
+| `choose`      | `OutputEmitterRef<SortableEvent>`                              | Se elige un elemento (mouse down sobre el elemento arrastrable)                      |
+| `unchoose`    | `OutputEmitterRef<SortableEvent>`                              | Se desselecciona un elemento (mouse up sin arrastre)                                 |
+| `clone`       | `OutputEmitterRef<SortableEvent>`                              | Se clona un elemento al arrastrar entre listas con el modo de clonación              |
+| `move`        | `OutputEmitterRef<{ event: MoveEvent; originalEvent: Event }>` | Se llama durante el movimiento de arrastre con los detalles del evento de movimiento |
 
 ## Opciones de SortableJS
 
@@ -709,7 +721,8 @@ announcer `aria-live` para las operaciones de arrastre queda como trabajo futuro
 
 ## Changelog
 
-Consulta [CHANGELOG.md](./CHANGELOG.md) para el historial completo de versiones.
+Consulta [CHANGELOG.md](./CHANGELOG.md) para el historial completo de versiones, y
+[BREAKING_CHANGES.md](./BREAKING_CHANGES.md) para las notas de migración.
 
 ## Contribuir
 

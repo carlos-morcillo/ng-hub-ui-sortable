@@ -67,24 +67,25 @@ This package is a fork of `@worktile/ngx-sortablejs`, keeping the proven API whi
 ## Installation
 
 ```bash
-# Install the component and SortableJS
-npm install ng-hub-ui-sortable sortablejs
+# SortableJS is a dependency of this package — it installs with it
+npm install ng-hub-ui-sortable
 
-# Install types for development
+# The published typings refer to the SortableJS types, so install them too
 npm install -D @types/sortablejs
 ```
 
 Or using yarn:
 
 ```bash
-yarn add ng-hub-ui-sortable sortablejs
+yarn add ng-hub-ui-sortable
 yarn add -D @types/sortablejs
 ```
 
-### Peer Requirements
+### Requirements
 
-- Angular `>=18.0.0`
-- SortableJS `>=1.7.0`
+- Angular `>=18.0.0` — the only peer dependency, alongside `@angular/common`.
+- SortableJS `>=1.7.0` — a regular **dependency** since 21.2.0, resolved for you. Do not add it to
+  your own manifest: a second, separately-pinned copy is a version skew waiting to happen.
 
 ## Quick Start
 
@@ -231,23 +232,27 @@ All SortableJS options can be passed either through the `[options]` input or as 
 
 ### Outputs
 
-All outputs emit events that are proxied through Angular's zone for proper change detection:
+All outputs emit events that are proxied through Angular's zone for proper change detection.
 
-| Output        | Type                                                       | Description                                                   |
-| ------------- | ---------------------------------------------------------- | ------------------------------------------------------------- |
-| `init`        | `EventEmitter<Sortable>`                                   | Emits the instantiated Sortable instance on initialization    |
-| `start`       | `EventEmitter<SortableEvent>`                              | Fired when dragging starts                                    |
-| `end`         | `EventEmitter<SortableEvent>`                              | Fired when dragging ends                                      |
-| `add`         | `EventEmitter<SortableEvent>`                              | Element is added from another list                            |
-| `remove`      | `EventEmitter<SortableEvent>`                              | Element is removed to another list                            |
-| `update`      | `EventEmitter<SortableEvent>`                              | Element position is updated within the same list              |
-| `sortEvent`   | `EventEmitter<SortableEvent>`                              | Called when the list is sorted (any change in order)          |
-| `filterEvent` | `EventEmitter<SortableEvent>`                              | Called when an attempt is made to drag a filtered element     |
-| `change`      | `EventEmitter<SortableEvent>`                              | Called when list changes by adding or removing an item        |
-| `choose`      | `EventEmitter<SortableEvent>`                              | Element is chosen (mouse down on draggable element)           |
-| `unchoose`    | `EventEmitter<SortableEvent>`                              | Element is unchosen (mouse up without drag)                   |
-| `clone`       | `EventEmitter<SortableEvent>`                              | Element is cloned when dragging between lists with clone mode |
-| `move`        | `EventEmitter<{ event: MoveEvent; originalEvent: Event }>` | Called during drag move with move event details               |
+They are declared with Angular's `output()` function, so each one is an `OutputEmitterRef`, not an
+`EventEmitter`: it is bound from a template like any output, and in TypeScript it offers
+`subscribe()` — but it is not an `Observable` and has no `.pipe()`.
+
+| Output        | Type                                                           | Description                                                   |
+| ------------- | -------------------------------------------------------------- | ------------------------------------------------------------- |
+| `init`        | `OutputEmitterRef<Sortable>`                                   | Emits the instantiated Sortable instance on initialization    |
+| `start`       | `OutputEmitterRef<SortableEvent>`                              | Fired when dragging starts                                    |
+| `end`         | `OutputEmitterRef<SortableEvent>`                              | Fired when dragging ends                                      |
+| `add`         | `OutputEmitterRef<SortableEvent>`                              | Element is added from another list                            |
+| `remove`      | `OutputEmitterRef<SortableEvent>`                              | Element is removed to another list                            |
+| `update`      | `OutputEmitterRef<SortableEvent>`                              | Element position is updated within the same list              |
+| `sortEvent`   | `OutputEmitterRef<SortableEvent>`                              | Called when the list is sorted (any change in order)          |
+| `filterEvent` | `OutputEmitterRef<SortableEvent>`                              | Called when an attempt is made to drag a filtered element     |
+| `change`      | `OutputEmitterRef<SortableEvent>`                              | Called when list changes by adding or removing an item        |
+| `choose`      | `OutputEmitterRef<SortableEvent>`                              | Element is chosen (mouse down on draggable element)           |
+| `unchoose`    | `OutputEmitterRef<SortableEvent>`                              | Element is unchosen (mouse up without drag)                   |
+| `clone`       | `OutputEmitterRef<SortableEvent>`                              | Element is cloned when dragging between lists with clone mode |
+| `move`        | `OutputEmitterRef<{ event: MoveEvent; originalEvent: Event }>` | Called during drag move with move event details               |
 
 ## SortableJS Options
 
@@ -714,7 +719,8 @@ for drag operations is tracked as future work.
 
 ## Changelog
 
-See [CHANGELOG.md](./CHANGELOG.md) for the full version history.
+See [CHANGELOG.md](./CHANGELOG.md) for the full version history, and
+[BREAKING_CHANGES.md](./BREAKING_CHANGES.md) for migration notes.
 
 ## Contributing
 

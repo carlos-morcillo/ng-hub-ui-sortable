@@ -1,6 +1,6 @@
 {
 	"name": "ng-hub-ui-sortable",
-	"version": "22.1.3",
+	"version": "22.1.4",
 	"description": "Angular bindings for Sortable.js (ng-hub-ui fork of @worktile/ngx-sortablejs)",
 	"keywords": [
 		"ng-hub-ui",

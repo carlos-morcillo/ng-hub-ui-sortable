@@ -1,6 +1,15 @@
 import { copyArrayItem, moveItemInArray, transferArrayItem } from './array-helpers';
 
 describe('array-helpers', () => {
+	beforeEach(() => {
+		vi.spyOn(console, 'warn').mockReturnValue(undefined);
+		vi.spyOn(console, 'error').mockReturnValue(undefined);
+	});
+
+	afterEach(() => {
+		vi.restoreAllMocks();
+	});
+
 	describe('moveItemInArray', () => {
 		it('should move an item forward in the array', () => {
 			const arr = ['A', 'B', 'C', 'D'];
@@ -44,36 +53,32 @@ describe('array-helpers', () => {
 			// No error thrown
 		});
 
-		it('should warn and return on invalid fromIndex (negative)', () => {
-			vi.spyOn(console, 'warn').mockReturnValue(undefined);
+		it('should return silently on invalid fromIndex (negative)', () => {
 			const arr = ['A', 'B', 'C'];
 			moveItemInArray(arr, -1, 1);
 			expect(arr).toEqual(['A', 'B', 'C']);
-			expect(console.warn).toHaveBeenCalled();
+			expect(console.warn).not.toHaveBeenCalled();
 		});
 
-		it('should warn and return on invalid fromIndex (out of bounds)', () => {
-			vi.spyOn(console, 'warn').mockReturnValue(undefined);
+		it('should return silently on invalid fromIndex (out of bounds)', () => {
 			const arr = ['A', 'B', 'C'];
 			moveItemInArray(arr, 5, 1);
 			expect(arr).toEqual(['A', 'B', 'C']);
-			expect(console.warn).toHaveBeenCalled();
+			expect(console.warn).not.toHaveBeenCalled();
 		});
 
-		it('should warn and return on invalid toIndex (negative)', () => {
-			vi.spyOn(console, 'warn').mockReturnValue(undefined);
+		it('should return silently on invalid toIndex (negative)', () => {
 			const arr = ['A', 'B', 'C'];
 			moveItemInArray(arr, 0, -1);
 			expect(arr).toEqual(['A', 'B', 'C']);
-			expect(console.warn).toHaveBeenCalled();
+			expect(console.warn).not.toHaveBeenCalled();
 		});
 
-		it('should warn and return on invalid toIndex (out of bounds)', () => {
-			vi.spyOn(console, 'warn').mockReturnValue(undefined);
+		it('should return silently on invalid toIndex (out of bounds)', () => {
 			const arr = ['A', 'B', 'C'];
 			moveItemInArray(arr, 0, 5);
 			expect(arr).toEqual(['A', 'B', 'C']);
-			expect(console.warn).toHaveBeenCalled();
+			expect(console.warn).not.toHaveBeenCalled();
 		});
 
 		it('should mutate the original array', () => {
@@ -118,52 +123,46 @@ describe('array-helpers', () => {
 			expect(target).toEqual(['A']);
 		});
 
-		it('should warn and return on null/undefined arrays', () => {
-			vi.spyOn(console, 'warn').mockReturnValue(undefined);
+		it('should return silently on null/undefined arrays', () => {
 			transferArrayItem(null as any, ['1'], 0, 0);
-			expect(console.warn).toHaveBeenCalled();
+			expect(console.warn).not.toHaveBeenCalled();
 		});
 
-		it('should warn and return when target is null', () => {
-			vi.spyOn(console, 'warn').mockReturnValue(undefined);
+		it('should return silently when target is null', () => {
 			transferArrayItem(['A'], null as any, 0, 0);
-			expect(console.warn).toHaveBeenCalled();
+			expect(console.warn).not.toHaveBeenCalled();
 		});
 
-		it('should warn on invalid currentIndex (negative)', () => {
-			vi.spyOn(console, 'warn').mockReturnValue(undefined);
+		it('should return silently on invalid currentIndex (negative)', () => {
 			const source = ['A'];
 			const target = ['1'];
 			transferArrayItem(source, target, -1, 0);
 			expect(source).toEqual(['A']);
-			expect(console.warn).toHaveBeenCalled();
+			expect(console.warn).not.toHaveBeenCalled();
 		});
 
-		it('should warn on invalid currentIndex (out of bounds)', () => {
-			vi.spyOn(console, 'warn').mockReturnValue(undefined);
+		it('should return silently on invalid currentIndex (out of bounds)', () => {
 			const source = ['A'];
 			const target = ['1'];
 			transferArrayItem(source, target, 5, 0);
 			expect(source).toEqual(['A']);
-			expect(console.warn).toHaveBeenCalled();
+			expect(console.warn).not.toHaveBeenCalled();
 		});
 
-		it('should warn on invalid targetIndex (negative)', () => {
-			vi.spyOn(console, 'warn').mockReturnValue(undefined);
+		it('should return silently on invalid targetIndex (negative)', () => {
 			const source = ['A', 'B'];
 			const target = ['1'];
 			transferArrayItem(source, target, 0, -1);
 			expect(source).toEqual(['A', 'B']);
-			expect(console.warn).toHaveBeenCalled();
+			expect(console.warn).not.toHaveBeenCalled();
 		});
 
-		it('should warn on invalid targetIndex (out of bounds)', () => {
-			vi.spyOn(console, 'warn').mockReturnValue(undefined);
+		it('should return silently on invalid targetIndex (out of bounds)', () => {
 			const source = ['A', 'B'];
 			const target = ['1'];
 			transferArrayItem(source, target, 0, 5);
 			expect(source).toEqual(['A', 'B']);
-			expect(console.warn).toHaveBeenCalled();
+			expect(console.warn).not.toHaveBeenCalled();
 		});
 
 		it('should mutate both arrays in place', () => {
@@ -210,52 +209,46 @@ describe('array-helpers', () => {
 			expect(target).toEqual(['A']);
 		});
 
-		it('should warn and return on null/undefined source', () => {
-			vi.spyOn(console, 'warn').mockReturnValue(undefined);
+		it('should return silently on null/undefined source', () => {
 			copyArrayItem(null as any, ['1'], 0, 0);
-			expect(console.warn).toHaveBeenCalled();
+			expect(console.warn).not.toHaveBeenCalled();
 		});
 
-		it('should warn and return on null/undefined target', () => {
-			vi.spyOn(console, 'warn').mockReturnValue(undefined);
+		it('should return silently on null/undefined target', () => {
 			copyArrayItem(['A'], null as any, 0, 0);
-			expect(console.warn).toHaveBeenCalled();
+			expect(console.warn).not.toHaveBeenCalled();
 		});
 
-		it('should warn on invalid currentIndex', () => {
-			vi.spyOn(console, 'warn').mockReturnValue(undefined);
+		it('should return silently on invalid currentIndex', () => {
 			const source = ['A'];
 			const target = ['1'];
 			copyArrayItem(source, target, -1, 0);
 			expect(target).toEqual(['1']);
-			expect(console.warn).toHaveBeenCalled();
+			expect(console.warn).not.toHaveBeenCalled();
 		});
 
-		it('should warn on currentIndex out of bounds', () => {
-			vi.spyOn(console, 'warn').mockReturnValue(undefined);
+		it('should return silently on currentIndex out of bounds', () => {
 			const source = ['A'];
 			const target = ['1'];
 			copyArrayItem(source, target, 5, 0);
 			expect(target).toEqual(['1']);
-			expect(console.warn).toHaveBeenCalled();
+			expect(console.warn).not.toHaveBeenCalled();
 		});
 
-		it('should warn on invalid targetIndex (negative)', () => {
-			vi.spyOn(console, 'warn').mockReturnValue(undefined);
+		it('should return silently on invalid targetIndex (negative)', () => {
 			const source = ['A'];
 			const target = ['1'];
 			copyArrayItem(source, target, 0, -1);
 			expect(target).toEqual(['1']);
-			expect(console.warn).toHaveBeenCalled();
+			expect(console.warn).not.toHaveBeenCalled();
 		});
 
-		it('should warn on targetIndex out of bounds', () => {
-			vi.spyOn(console, 'warn').mockReturnValue(undefined);
+		it('should return silently on targetIndex out of bounds', () => {
 			const source = ['A'];
 			const target = ['1'];
 			copyArrayItem(source, target, 0, 5);
 			expect(target).toEqual(['1']);
-			expect(console.warn).toHaveBeenCalled();
+			expect(console.warn).not.toHaveBeenCalled();
 		});
 
 		it('should not mutate the source array', () => {

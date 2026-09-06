@@ -27,9 +27,9 @@ import { SortableData, SortableEventName, SortableMoveEventPayload } from './sor
  *
  * @example
  * ```html
- * <div [hubSortable]="items" (update)="onUpdate($event)">
- *   <div *ngFor="let item of items">{{ item }}</div>
- * </div>
+ * <div [hubSortable]="items" (update)="onUpdate($event)">@for (item of items; track item) {
+ *   <div>{{ item }}</div>
+ * }</div>
  * ```
  *
  * @example
@@ -37,9 +37,9 @@ import { SortableData, SortableEventName, SortableMoveEventPayload } from './sor
  * <div [hubSortable]="items"
  *      [options]="{ animation: 150, group: 'shared' }"
  *      (start)="onDragStart($event)"
- *      (end)="onDragEnd($event)">
- *   <div *ngFor="let item of items">{{ item }}</div>
- * </div>
+ *      (end)="onDragEnd($event)">@for (item of items; track item) {
+ *   <div>{{ item }}</div>
+ * }</div>
  * ```
  */
 @Directive({
@@ -282,6 +282,9 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 	/**
 	 * Creates the Sortable instance on the appropriate container element.
 	 * Uses afterNextRender to ensure the DOM is fully rendered before initialization.
+	 *
+	 * A `container` selector that matches nothing leaves the directive inert — no instance,
+	 * no `(init)`, and nothing logged into the consuming application's console output.
 	 */
 	private create(): void {
 		const containerSelector = this.container();
@@ -290,7 +293,6 @@ export class SortableDirective implements OnInit, OnChanges, OnDestroy {
 			: this.element.nativeElement;
 
 		if (!container) {
-			console.error(`[hubSortable] Container not found with selector: ${containerSelector}`);
 			return;
 		}
 
